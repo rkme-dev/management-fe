@@ -1,0 +1,203 @@
+<template>
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="products"
+      sort-by="name"
+      class="elevation-1"
+      :search="search"
+      :loading="loading"
+    >
+      <template #item.name="{ item }">
+        <router-link :to="{ name: 'update-product', params: { id: item.id } }">
+          {{ item.name }}
+        </router-link>
+      </template>
+      <template v-slot:top>
+        <v-toolbar
+          color="teal"
+          outlined
+        >
+          <v-toolbar-title>Raw Materials</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            class="mr-4"
+          ></v-text-field>
+          <router-link :to="{ name: 'create-product' }">
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+            >
+              Add New Raw Material
+            </v-btn>
+          </router-link>
+          <v-dialog
+            v-model="dialogDelete"
+            max-width="500px"
+          >
+            <v-card>
+              <v-card-title class="text-h3">
+                Are you sure you want to delete this client?
+              </v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="closeDelete"
+                >
+                  Cancel
+                </v-btn>
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="deleteItemConfirm"
+                >
+                  OK
+                </v-btn>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <router-link :to="{ name: 'update-product', params: { id: item.id } }">
+          <v-icon
+            small
+            class="mr-2"
+          >
+            {{ mdiAccountEdit }}
+          </v-icon>
+        </router-link>
+        <v-icon
+          small
+          @click="deleteItem(item)"
+        >
+          {{ mdiDeleteCircle }}
+        </v-icon>
+      </template>
+      <template v-slot:no-data>
+        <v-btn
+          color="primary"
+          @click="initialize"
+        >
+          Reset
+        </v-btn>
+      </template>
+    </v-data-table>
+  </div>
+</template>
+
+<script>
+import { mdiAccountEdit, mdiDeleteCircle } from '@mdi/js'
+import {
+  GET_PRODUCTS,
+  REMOVE_PRODUCT,
+} from '@/store/actions.type'
+import {
+  ref, nextTick, computed, onMounted,
+} from '@vue/composition-api'
+import store from '@/store'
+
+export default {
+  setup() {
+    const search = ref('')
+    const dialogDelete = ref(false)
+    const headers = ref([
+      {
+        text: 'Name',
+        align: 'start',
+        sortable: false,
+        value: 'name',
+      },
+      {
+        text: 'Item Number',
+        align: 'start',
+        sortable: true,
+        value: 'product_number',
+      },
+      { text: 'Sku', value: 'sku' },
+      { text: 'Item Per Box', value: 'items_per_box' },
+    ])
+
+    const defaultItem = ref({
+      name: '',
+      sku: '',
+      description: '',
+      in_stock: '',
+    })
+    const deletedIndex = ref(-1)
+    const deletedItem = ref({
+      name: '',
+      sku: '',
+      description: '',
+      in_stock: '',
+    })
+
+    const products = computed(() => store.getters.products)
+    const product = computed(() => store.getters.product)
+    const errors = computed(() => store.getters.errors)
+    const loading = computed(() => store.getters.loading)
+
+    const initialize = () => {
+      store.dispatch(GET_PRODUCTS)
+    }
+
+    const deleteItem = item => {
+      deletedIndex.value = products.value.indexOf(item)
+      deletedItem.value = { ...item }
+      dialogDelete.value = true
+    }
+
+    const closeDelete = () => {
+      dialogDelete.value = false
+      nextTick(() => {
+        deletedItem.value = { ...defaultItem.value }
+        deletedIndex.value = -1
+      })
+    }
+
+    const deleteItemConfirm = () => {
+      store.dispatch(REMOVE_PRODUCT, deletedItem.value).then(() => {
+        products.value.splice(deletedIndex.value, 1)
+        closeDelete()
+      })
+    }
+
+    onMounted(() => {
+      initialize()
+    })
+
+    return {
+      mdiAccountEdit,
+      mdiDeleteCircle,
+      defaultItem,
+      headers,
+      dialogDelete,
+      search,
+      products,
+      product,
+      errors,
+      deleteItem,
+      deleteItemConfirm,
+      closeDelete,
+      initialize,
+      deletedItem,
+      deletedIndex,
+      loading,
+    }
+  },
+}
+</script>
