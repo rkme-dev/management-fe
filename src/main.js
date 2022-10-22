@@ -37,23 +37,19 @@ Vue.use(Vuetify, {
   },
 })
 
-window.Pusher = require('pusher-js')
+// window.Pusher = require('pusher-js')
 
-console.log(process.env.VUE_APP_PUSHER_APP_KEY)
-console.log(process.env.VUE_APP_PUSHER_HOST)
-console.log(process.env.VUE_APP_PUSHER_PORT)
-
-window.Echo = new Echo({
-  broadcaster: 'pusher',
-  key: process.env.VUE_APP_PUSHER_APP_KEY,
-  wsHost: process.env.VUE_APP_PUSHER_HOST,
-  wsPort: process.env.VUE_APP_PUSHER_PORT,
-  wssPort: process.env.VUE_APP_PUSHER_PORT,
-  forceTLS: false,
-  encrypted: true,
-  disableStats: true,
-  enabledTransports: ['ws', 'wss'],
-})
+// window.Echo = new Echo({
+//   broadcaster: 'pusher',
+//   key: process.env.VUE_APP_PUSHER_APP_KEY,
+//   wsHost: process.env.VUE_APP_PUSHER_HOST,
+//   wsPort: process.env.VUE_APP_PUSHER_PORT,
+//   wssPort: process.env.VUE_APP_PUSHER_PORT,
+//   forceTLS: false,
+//   encrypted: true,
+//   disableStats: true,
+//   enabledTransports: ['ws', 'wss'],
+// })
 
 new Vue({
   router,
