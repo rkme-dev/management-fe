@@ -2,7 +2,6 @@ import '@/plugins/vue-composition-api'
 import '@/styles/styles.scss'
 import Vue from 'vue'
 import VCurrencyField from 'v-currency-field'
-import Echo from 'laravel-echo'
 import AxiosInterceptors from '@/service/AxiosInterceptors'
 import { VTextField } from 'vuetify/lib' // Globally import VTextField
 import Ripple from 'vuetify/lib/directives/ripple'

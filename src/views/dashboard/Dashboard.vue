@@ -173,15 +173,15 @@ export default {
       change: '-18%',
     }
 
-
-
-    setTimeout(() => {
-      Echo.channel(
-        'enco-channel'
-      ).listen('MessageEvent', (e) => {
-        console.log(e);
-      });
-    }, 1000)
+    //
+    //
+    // setTimeout(() => {
+    //   Echo.channel(
+    //     'enco-channel'
+    //   ).listen('MessageEvent', (e) => {
+    //     console.log(e);
+    //   });
+    // }, 1000)
 
 
     return {
