@@ -12,6 +12,9 @@ import router from './router'
 import store from './store'
 import './interceptors/axios'
 import VueQrcodeReader from "vue-qrcode-reader";
+import VueQRCodeComponent from 'vue-qrcode-component'
+
+Vue.component('qr-code', VueQRCodeComponent)
 
 AxiosInterceptors(store)
 

@@ -81,7 +81,7 @@
               v-model="formData.area"
               :items="areas"
               label="Area"
-              :disabled="formData.status === 'In Transit'"
+              :disabled="formData.status === 'In Transit' || modeData !== 'Create'"
               :error-messages="errors.area"
               outlined
               dense
@@ -425,6 +425,12 @@ export default {
     }
 
     const areaChanged = () => {
+      const data = {
+        area: formData.value.area,
+        id: formData.value.id,
+      }
+
+      store.dispatch('SalesDrStore/getUnlinkItems', data)
       selectedDrItems.value = []
     }
 
@@ -457,6 +463,7 @@ export default {
     })
 
     return {
+      modeData,
       areaChanged,
       addOrUpdateItems,
       areas,

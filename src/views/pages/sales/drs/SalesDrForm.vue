@@ -26,7 +26,7 @@
           </v-col>
           <v-col
             cols="6"
-            class="pr-8 pl-8"
+            class="pr-8 pl-8 mt-16"
           >
             <v-menu
               v-model="formData.dateModal"
@@ -57,6 +57,16 @@
               ></v-date-picker>
             </v-menu>
           </v-col>
+          <v-col
+              cols="4"
+              class="pr-8 pl-8 mt-10"
+          >
+            <qr-code :text="formData.qr_code"
+                     :size=150
+                     error-level="L"
+            ></qr-code>
+          </v-col>
+
           <v-col
             cols="3"
             class="pr-8 pl-8"

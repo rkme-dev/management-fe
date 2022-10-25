@@ -281,45 +281,6 @@
               </div>
             </v-alert>
           </v-col>
-          <v-row
-            justify="center"
-            align="center"
-            class="mt-3"
-          >
-            <v-col
-              v-show="showScanner"
-              cols="3"
-            >
-              <v-alert
-                color="info"
-                text
-                style="margin-bottom: -10px"
-              >
-                <div class="d-flex align-start">
-                  <v-icon color="info">
-                    {{ icons.mdiCardOff }}
-                  </v-icon>
-                  <div class="ms-3">
-                    <p class="text-base font-weight-medium mb-1">
-                      QR Code Scanner
-                    </p>
-                  </div>
-                </div>
-              </v-alert>
-              <qrcode-stream
-                v-if="showScanner"
-                :track="scannerOptions"
-                @decode="onDecode"
-                @init="onInit"
-              ></qrcode-stream>
-            </v-col>
-            <div class="d-flex align-center mb-2">
-              <v-btn @click="showScanner = !showScanner">
-                {{ showScanner ? 'Hide' : 'Show' }} Scanner
-              </v-btn>
-            </div>
-          </v-row>
-
           <v-col
             v-if="formData.customer_id"
             cols="12"
@@ -500,7 +461,6 @@ import {
 import CustomerForm from '@/views/pages/master-files/customers/CustomerForm.vue'
 import store from '@/store'
 import DrListSelection from '@/views/pages/sales/collections/DrListSelection.vue'
-import { QrcodeStream } from 'vue-qrcode-reader'
 import SalesDrTable from './SalesDrTable.vue'
 import CollectionPayment from './CollectionPayment.vue'
 import PaymentForm from './PaymentForm.vue'
@@ -513,7 +473,6 @@ export default {
     CollectionPayment,
     DrListSelection,
     PaymentForm,
-    QrcodeStream,
   },
   props: {
     mode: {
