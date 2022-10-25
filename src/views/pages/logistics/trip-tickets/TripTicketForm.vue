@@ -377,6 +377,8 @@ export default {
 
       formData.value = dataProp.value ?? formData.value
 
+      formData.value.area = formData.value.area ?? ''
+
       if (dataProp.value.area && dataProp.value.id) {
         const data = {
           area: dataProp.value.area,

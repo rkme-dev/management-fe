@@ -5,6 +5,7 @@
         <v-data-table
           v-model="selectedDrItems"
           show-select
+          :loading="loading"
           :items="salesDrItems"
           :headers="headers"
         >
@@ -78,6 +79,7 @@ export default {
     const areaData = toRef(props, 'area')
     const selectedItemsProp = toRef(props, 'selectedItems')
     const selectedDrItems = ref([])
+    const loading = computed(() => store.state.SalesDrStore.loading)
     const salesDrItems = computed(() => store.state.SalesDrStore.items)
     const headers = [
       {
@@ -112,7 +114,7 @@ export default {
     })
 
     watch(areaData, () => {
-      store.dispatch('SalesDrStore/getUnlinkItems', data.value)
+      // store.dispatch('SalesDrStore/getUnlinkItems', data.value)
     })
 
     const cancel = () => {
@@ -124,6 +126,7 @@ export default {
     }
 
     return {
+      loading,
       addOrUpdateItems,
       cancel,
       icons: {
