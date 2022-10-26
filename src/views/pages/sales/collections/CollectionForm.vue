@@ -697,7 +697,7 @@ export default {
       salesDrs.forEach(element => {
         element.remaining_balance = parseFloat(element.remaining_balance)
         element.amount_to_pay = 0
-        console.log(element)
+
         formData.value.area = element.area ?? formData.value.area
         formData.value.term_id = element.term_id ?? formData.value.term_id
         formData.value.address = element.address ?? formData.value.address

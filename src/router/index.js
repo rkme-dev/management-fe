@@ -336,9 +336,9 @@ const routes = [
     component: () => import('@/views/pages/sales/collections/Index.vue'),
   },
   {
-    path: '/collections/:id',
+    path: '/collections/dr/:id',
     name: 'collection-page',
-    component: () => import('@/views/pages/sales/collections/CollectionPage.vue'),
+    component: () => import('@/views/pages/sales/collections/CollectionByQR.vue'),
   },
   {
     path: '/trip-tickets',

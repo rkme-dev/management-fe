@@ -41,6 +41,15 @@
             class="mr-4"
           ></v-text-field>
           <v-btn
+              color="success"
+              dark
+              class="mb-2 mr-4"
+              @click="openQrModal"
+          >
+            <v-icon>{{icons.mdiQrcodeScan}}</v-icon>
+            Scan DR QR
+          </v-btn>
+          <v-btn
             color="primary"
             dark
             class="mb-2"
@@ -63,6 +72,27 @@
               @submit="initialize"
             >
             </collection-form>
+          </v-dialog>
+          <v-dialog
+              v-model="qrModal"
+              width="900px"
+              height="500px"
+              transition="dialog-bottom-transition"
+          >
+            <v-card>
+              <v-card-title>
+                Scan Sales DR QR
+              </v-card-title>
+            </v-card>
+            <v-card-text>
+              <qrcode-stream
+                :track="scannerOptions"
+                @decode="onDecode"
+                @init="onInit"
+              >
+
+              </qrcode-stream>
+            </v-card-text>
           </v-dialog>
         </v-toolbar>
       </template>
@@ -95,18 +125,21 @@
 </template>
 
 <script>
-import { mdiAccountEdit, mdiDeleteCircle } from '@mdi/js'
+import {mdiAccountEdit, mdiDeleteCircle, mdiQrcodeScan} from '@mdi/js'
+import { QrcodeStream } from 'vue-qrcode-reader'
 import {
   ref, computed, onMounted,
 } from '@vue/composition-api'
 import store from '@/store'
 import { dateFormat1 } from '@/utils/time'
 import CollectionForm from './CollectionForm.vue'
+import router from "@/router";
 
 export default {
   name: 'CollectionListTable',
   components: {
     CollectionForm,
+    QrcodeStream,
   },
   setup() {
     store.dispatch('ProductStore/list')
@@ -181,6 +214,8 @@ export default {
       }
     }
 
+    const qrModal = ref(false)
+
     const editItem = item => {
       collectionOrder.value = item
       modeData.value = 'Edit'
@@ -191,7 +226,42 @@ export default {
       initialize()
     })
 
+    const openQrModal = () => {
+      qrModal.value = !qrModal.value
+    }
+
+    const onInit = promise => {
+      promise
+          .then()
+          .catch()
+    }
+
+    const onDecode = result => {
+      router.replace(result)
+    }
+
+    const scannerOptions = (detectedCodes, ctx) => {
+      for (const detectedCode of detectedCodes) {
+        const [firstPoint, ...otherPoints] = detectedCode.cornerPoints
+
+        ctx.strokeStyle = 'red'
+
+        ctx.beginPath()
+        ctx.moveTo(firstPoint.x, firstPoint.y)
+        for (const { x, y } of otherPoints) {
+          ctx.lineTo(x, y)
+        }
+        ctx.lineTo(firstPoint.x, firstPoint.y)
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
+
     return {
+      onInit,
+      onDecode,
+      scannerOptions,
+      openQrModal,
       editItem,
       collectionOrder,
       createCollection,
@@ -208,9 +278,11 @@ export default {
       loading,
       dateFormat1,
       icons: {
+        mdiQrcodeScan,
         mdiAccountEdit,
         mdiDeleteCircle,
       },
+      qrModal,
     }
   },
 }
