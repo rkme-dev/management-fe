@@ -418,6 +418,7 @@ import {
   computed,
   watch, onUnmounted, onMounted,
 } from '@vue/composition-api'
+import { customerTypes } from '@/constants/CustomerTypes'
 import { mdiAlertOutline, mdiInformation } from '@mdi/js'
 import store from '@/store'
 
@@ -452,10 +453,7 @@ export default {
     const customersLoading = computed(() => store.state.CustomerStore.loading)
     const terms = computed(() => store.state.TermStore.terms)
     const vats = computed(() => store.state.VatStore.vats)
-    const types = ref([
-      'Regular',
-      'Distributor',
-    ])
+    const types = customerTypes()
     const customer = ref({})
     const salesmans = computed(() => store.state.SalesmanStore.salesmans)
     const initializeFormData = ref({
