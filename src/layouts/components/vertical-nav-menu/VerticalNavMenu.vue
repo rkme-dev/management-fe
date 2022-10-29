@@ -236,6 +236,11 @@ export default {
             icon: mdiCurrencySign,
             link: 'collections',
           },
+          {
+            title: 'Deposits',
+            icon: mdiCurrencySign,
+            link: 'deposits',
+          },
         ],
       },
       {

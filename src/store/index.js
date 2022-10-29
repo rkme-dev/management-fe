@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import { AccountStore } from '@/store/AccountStore'
 import { AuthStore } from '@/store/AuthStore'
 import { CollectionStore } from '@/store/CollectionStore'
+import { DepositStore } from "@/store/DepositStore";
 import { DocumentStore } from '@/store/DocumentStore'
 import { LocationStore } from '@/store/LocationStore'
 import { UserAccessManagementStore } from '@/store/UserAccessManagementStore'
@@ -31,6 +32,7 @@ export default new Vuex.Store({
     AuthStore,
     CollectionStore,
     CustomerStore,
+    DepositStore,
     DocumentStore,
     customers,
     products,
