@@ -347,7 +347,7 @@ export default {
     }
 
     const redirectPrint = () => {
-      window.open(`https://enco-api.herokuapp.com/print-purchase-order/${id}`, '_blank')
+      window.open(`https://management-api-v1.herokuapp.com/print-purchase-order/${id}`, '_blank')
     }
 
     const redirectBarcodePrint = () => {
