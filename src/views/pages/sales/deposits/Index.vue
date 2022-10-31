@@ -88,6 +88,7 @@ import {
 } from "@mdi/js";
 import CreateDepositForm from './CreateDepositForm.vue'
 import { dateFormat1 } from '@/utils/time'
+import router from "@/router";
 
 export default {
   components : {
@@ -118,7 +119,8 @@ export default {
     const deleteItem = () => {
     }
 
-    const editItem = () => {
+    const editItem = (data) => {
+        router.push('/deposits/' + data.id)
     }
 
     const toggleCreateModal = () => {

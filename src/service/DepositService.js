@@ -29,7 +29,15 @@ export default class DepositService {
         .then(response => response.data)
         .catch(error => error.response)
 
-    checks = () => AxiosInstance.get('/check-payments')
-        .then(response => response.data)
-        .catch(error => error.response)
+    checks = (id = null) => {
+        let url = '/check-payments'
+
+        if (id) {
+            url = url + '?id=' + id
+        }
+
+        return AxiosInstance.get(url)
+            .then(response => response.data)
+            .catch(error => error.response)
+    }
 }

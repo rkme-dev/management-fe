@@ -336,14 +336,20 @@ const routes = [
     component: () => import('@/views/pages/sales/collections/Index.vue'),
   },
   {
+    path: '/collections/dr/:id',
+    name: 'collection-page',
+    component: () => import('@/views/pages/sales/collections/CollectionByQR.vue'),
+  },
+
+  {
     path: '/deposits',
     name: 'deposits',
     component: () => import('@/views/pages/sales/deposits/Index.vue'),
   },
   {
-    path: '/collections/dr/:id',
-    name: 'collection-page',
-    component: () => import('@/views/pages/sales/collections/CollectionByQR.vue'),
+    path: '/deposits/:id',
+    name: 'deposits',
+    component: () => import('@/views/pages/sales/deposits/EditDepositForm.vue'),
   },
   {
     path: '/trip-tickets',

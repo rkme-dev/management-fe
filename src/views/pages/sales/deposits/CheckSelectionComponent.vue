@@ -69,6 +69,11 @@ export default {
 
   },
   props: {
+    depositId : {
+      type: Number,
+      required: false,
+      default: null,
+    },
     ids : {
       type: Array,
       required: false,
@@ -107,7 +112,7 @@ export default {
     }
 
     onMounted(async () => {
-      await store.dispatch('DepositStore/getChecks')
+      await store.dispatch('DepositStore/getChecks', props.depositId)
 
       await reSelectChecks()
     })

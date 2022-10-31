@@ -8,7 +8,9 @@ export const DepositStore = {
         loading: false,
         errors: [],
         list: [],
-        row: {},
+        row: {
+
+        },
         originalData: [],
         items: [],
         checks: [],
@@ -53,10 +55,10 @@ export const DepositStore = {
                     commit('setLoading', false)
                 })
         },
-        getChecks({ commit }) {
+        getChecks({ commit }, id = null) {
             commit('setLoading', true)
 
-            return depositService.checks().then(
+            return depositService.checks(id).then(
                 response => {
                     commit('fetchChecksSuccess', response.data)
                     commit('setLoading', false)

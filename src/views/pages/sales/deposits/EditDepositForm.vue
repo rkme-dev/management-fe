@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="">
-      Create Deposit
+      Edit Deposit
     </v-card-title>
     <v-card-text>
       <v-form>
@@ -33,7 +33,7 @@
                   :close-on-content-click="false"
                   transition="scale-transition"
                   offset-y
-                  :disabled="formData.status === 'In Transit'"
+                  :disabled="formData.status === 'posted'"
                   max-width="290px"
                   min-width="auto"
               >
@@ -42,6 +42,7 @@
                       v-model="datePosted"
                       label="Transaction Date"
                       persistent-hint
+                      :disabled="formData.status === 'posted'"
                       :prepend-icon="icons.mdiCalendar"
                       readonly
                       outlined
@@ -67,7 +68,7 @@
                   rows="3"
                   outlined
                   dense
-                  :disabled="formData.status === 'In Transit'"
+                  :disabled="formData.status === 'posted'"
                   label="Remarks"
               ></v-textarea>
             </v-col>
@@ -79,6 +80,7 @@
                   v-model="formData.deposit_number"
                   outlined
                   :error-messages="errors.deposit_number"
+                  :disabled="formData.status === 'posted'"
                   dense
                   hide-details="auto"
                   label="Deposit Number"
@@ -92,7 +94,7 @@
                   item-text="title"
                   item-value="id"
                   label="Document"
-                  :disabled="formData.status === 'In Transit'"
+                  :disabled="formData.status === 'posted'"
                   :error-messages="errors.document_id"
                   outlined
                   dense
@@ -117,6 +119,7 @@
                       v-model="clearingDate"
                       label="Clearing Date"
                       persistent-hint
+                      :disabled="formData.status === 'posted'"
                       :prepend-icon="icons.mdiCalendar"
                       readonly
                       outlined
@@ -141,6 +144,7 @@
                   item-text="account_title"
                   item-value="id"
                   label="Account"
+                  :disabled="formData.status === 'posted'"
                   :error-messages="errors.account_id"
                   outlined
                   dense
@@ -166,7 +170,7 @@
                 </div>
               </v-alert>
             </v-col>
-            <v-col cols="10"></v-col>
+            <v-col cols="9"></v-col>
             <v-col cols="1" class="ml-n10">
               <v-dialog
                   v-model="selectCheckDialog"
@@ -177,6 +181,7 @@
                   <v-btn
                       color="success"
                       dark
+                      :disabled="formData.status === 'posted'"
                       v-bind="attrs"
                       v-on="on"
                   >
@@ -185,6 +190,7 @@
                 </template>
                 <check-selection-component
                     :ids="selectedIds"
+                    :deposit-id="formData.id"
                     @onSubmit="onSubmit"
                     @onCancel="onCancel"
                 ></check-selection-component>
@@ -213,14 +219,37 @@
               class="d-flex"
           >
             <v-btn
+                v-if="formData.status === 'for_review'"
+                color="success"
+                class="me-3 mt-4"
+                @click="postDeposit"
+            >
+              <v-icon>
+                {{ icons.mdiFinance }}
+              </v-icon>
+              Post
+            </v-btn>
+            <v-btn
+                v-if="formData.status === 'posted'"
+                color="error"
+                class="me-3 mt-4"
+                @click="unpostDeposit"
+            >
+              <v-icon>
+                {{ icons.mdiFinance }}
+              </v-icon>
+              Unpost
+            </v-btn>
+            <v-btn
+                v-if="formData.status !== 'posted'"
                 color="primary"
                 class="me-3 mt-4"
-                @click="create"
+                @click="update"
             >
               <v-icon>
                 {{ icons.mdiContentSave }}
               </v-icon>
-              Create
+              Update
             </v-btn>
             <v-btn
                 outlined
@@ -232,7 +261,7 @@
               <v-icon>
                 {{ icons.mdiProgressClose }}
               </v-icon>
-              Close
+              Cancel
             </v-btn>
           </v-col>
         </v-row>
@@ -242,21 +271,21 @@
 </template>
 
 <script>
-import {computed, ref} from "@vue/composition-api";
+import {computed, ref, watch} from "@vue/composition-api";
 import store from "@/store";
 import {mdiAccountPlusOutline, mdiCardOff, mdiCurrencyPhp, mdiCurrencySign, mdiInformation} from "@mdi/js";
 import CheckSelectionComponent from '@/views/pages/sales/deposits/CheckSelectionComponent.vue'
 import {onMounted} from "@vue/composition-api/dist/vue-composition-api";
+import context from "vue-apexcharts/.eslintrc";
+import router from "@/router";
 
 export default {
-  name: "CreateDepositForm.vue",
+  name: "EditDepositForm.vue",
   components: {
     CheckSelectionComponent,
   },
-  setup(props, { emit }) {
-    store.dispatch('DocumentStore/list')
-    store.dispatch('AccountStore/list')
-
+  setup(props,context) {
+    const id = context.root.$route.params.id
     const datePosted = ref(new Date().toISOString().substr(0, 10))
     const clearingDate = ref(new Date().toISOString().substr(0, 10))
     const formData = ref({})
@@ -269,10 +298,11 @@ export default {
         return documentItem
       }
     }))
+    const deposit = computed(() => store.state.DepositStore.row)
+    const checks = computed(() => store.state.DepositStore.checks)
     const selectCheckDialog = ref(false)
     const selectedChecks = ref([])
     const selectedIds = ref([])
-
     const headers = [
       {
         text: 'Date',
@@ -286,6 +316,28 @@ export default {
       { text: 'Amount', value: 'collection_payment.amount' },
     ]
     const amount = ref(0)
+
+    const initialize = () => {
+      store.dispatch('DocumentStore/list')
+      store.dispatch('AccountStore/list')
+      store.dispatch('DepositStore/get', id)
+      store.dispatch('DepositStore/getChecks', id)
+    }
+
+    const setData = () => {
+      formData.value = deposit.value
+      selectedIds.value = deposit.value.checks.map(item => item.id)
+
+      checks.value.forEach(check => {
+        if (selectedIds.value.includes(check.id) === true) {
+          selectedChecks.value.push(check)
+        }
+      })
+    }
+
+    watch(deposit, () => {
+      setData()
+    })
 
     const onSubmit = (checks) => {
       selectedChecks.value = checks
@@ -301,22 +353,24 @@ export default {
     }
 
     onMounted(async () => {
+      await initialize()
       selectedIds.value = []
     })
 
-    const create = () => {
+    const update = () => {
       const payload = formData.value
       payload.date_posted = datePosted.value
       payload.clearing_date = clearingDate.value
       payload.check_ids = selectedChecks.value.map(check => check.id)
       payload.amount = amount.value
+      payload.id = id
 
-      store.dispatch('DepositStore/create', payload).then(
+      store.dispatch('DepositStore/update', payload).then(
           response => {
             if (response.status === undefined) {
               selectedIds.value = []
               selectedChecks.value = []
-              emit('onSubmit')
+              router.push('/deposits')
             }
           },
       )
@@ -325,12 +379,36 @@ export default {
     const close = () => {
       selectedIds.value = []
       selectedChecks.value = []
-      emit('onSubmit')
+      router.push('/deposits')
+    }
+
+    const postDeposit = () => {
+      store.dispatch('DepositStore/postOrder', id).then(
+          response => {
+            if (response.status === undefined) {
+              selectedIds.value = []
+              selectedChecks.value = []
+              router.push('/deposits')
+            }
+          })
+    }
+
+    const unpostDeposit = () => {
+      store.dispatch('DepositStore/unpostOrder', id).then(
+          response => {
+            if (response.status === undefined) {
+              selectedIds.value = []
+              selectedChecks.value = []
+              router.push('/deposits')
+            }
+          })
     }
 
     return {
+      postDeposit,
+      unpostDeposit,
       close,
-      create,
+      update,
       selectedIds,
       headers,
       accounts,
