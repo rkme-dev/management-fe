@@ -736,8 +736,6 @@ export default {
         if (payment.payment_type === 'Online Payment') {
           payments.value[index].type = 'online_payment'
         }
-
-        totalPaymentAmount.value = parseFloat(totalPaymentAmount.value) - parseFloat(payment.amount)
       })
 
       if (totalPaymentAmount.value > 0) {
