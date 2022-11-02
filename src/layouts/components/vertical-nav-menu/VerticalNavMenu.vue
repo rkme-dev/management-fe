@@ -263,6 +263,12 @@ export default {
         ],
       },
       {
+        title: 'Physical Counts',
+        link: 'physical-counts',
+        permission: 'view-supplier-list',
+        icon: mdiChartBellCurveCumulative,
+      },
+      {
         type: 'sub-menu',
         title: 'Purchase Orders',
         link: 'purchase-orders',
