@@ -340,7 +340,16 @@ const routes = [
     name: 'collection-page',
     component: () => import('@/views/pages/sales/collections/CollectionByQR.vue'),
   },
-
+  {
+    path: '/bounced-deposits',
+    name: 'bounced-deposits',
+    component: () => import('@/views/pages/sales/bounced-deposits/Index.vue'),
+  },
+  {
+    path: '/bounced-deposits/:id',
+    name: 'edit-bounced-deposits',
+    component: () => import('@/views/pages/sales/bounced-deposits/EditBouncedDepositForm.vue'),
+  },
   {
     path: '/deposits',
     name: 'deposits',
@@ -348,7 +357,7 @@ const routes = [
   },
   {
     path: '/deposits/:id',
-    name: 'deposits',
+    name: 'edit-deposits',
     component: () => import('@/views/pages/sales/deposits/EditDepositForm.vue'),
   },
   {

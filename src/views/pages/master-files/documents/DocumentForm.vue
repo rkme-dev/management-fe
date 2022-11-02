@@ -155,6 +155,7 @@ export default {
       'Trip-ticket',
       'Collection',
       'Deposit',
+      'Bounced',
     ]
 
     const documentData = ref({

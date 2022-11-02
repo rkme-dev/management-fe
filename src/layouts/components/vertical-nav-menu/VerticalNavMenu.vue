@@ -241,6 +241,11 @@ export default {
             icon: mdiCurrencySign,
             link: 'deposits',
           },
+          {
+            title: 'Bounced Deposits',
+            icon: mdiCurrencySign,
+            link: 'bounced-deposits',
+          },
         ],
       },
       {

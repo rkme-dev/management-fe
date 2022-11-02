@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="">
-      Edit Deposit
+      Edit Bounced Checks
     </v-card-title>
     <v-card-text>
       <v-form>
@@ -77,9 +77,9 @@
                 class="pr-8 pl-8 mt-n16"
             >
               <v-text-field
-                  v-model="formData.deposit_number"
+                  v-model="formData.bounced_number"
                   outlined
-                  :error-messages="errors.deposit_number"
+                  :error-messages="errors.bounced_number"
                   :disabled="formData.status === 'posted'"
                   dense
                   hide-details="auto"
@@ -289,17 +289,17 @@ export default {
     const datePosted = ref(new Date().toISOString().substr(0, 10))
     const clearingDate = ref(new Date().toISOString().substr(0, 10))
     const formData = ref({})
-    const errors = computed(() => store.state.DepositStore.errors)
+    const errors = computed(() => store.state.BouncedDepositStore.errors)
     const accounts = computed(() => store.state.AccountStore.accounts.filter(account => account.type === 'Bank'))
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
-      if (documentItem.module === 'Deposit') {
+      if (documentItem.module === 'Deposit' || documentItem.module === 'Bounced') {
         documentItem.title = `${documentItem.document_name}`
 
         return documentItem
       }
     }))
-    const deposit = computed(() => store.state.DepositStore.row)
-    const checks = computed(() => store.state.DepositStore.checks)
+    const deposit = computed(() => store.state.BouncedDepositStore.row)
+    const checks = computed(() => store.state.BouncedDepositStore.checks)
     const selectCheckDialog = ref(false)
     const selectedChecks = ref([])
     const selectedIds = ref([])
@@ -320,8 +320,8 @@ export default {
     const initialize = () => {
       store.dispatch('DocumentStore/list')
       store.dispatch('AccountStore/list')
-      store.dispatch('DepositStore/get', id)
-      store.dispatch('DepositStore/getChecks', id)
+      store.dispatch('BouncedDepositStore/get', id)
+      store.dispatch('BouncedDepositStore/getChecks', id)
     }
 
     const setData = () => {
@@ -344,6 +344,7 @@ export default {
       selectedChecks.value = checks
       selectedChecks.value.forEach(check => {
         amount.value += parseFloat(check.collection_payment.amount)
+        console.log(check.collection_payment.amount)
       })
 
       selectCheckDialog.value = false
@@ -366,12 +367,12 @@ export default {
       payload.amount = amount.value
       payload.id = id
 
-      store.dispatch('DepositStore/update', payload).then(
+      store.dispatch('BouncedDepositStore/update', payload).then(
           response => {
             if (response.status === undefined) {
               selectedIds.value = []
               selectedChecks.value = []
-              router.push('/deposits')
+              router.push('/bounced-deposits')
             }
           },
       )
@@ -380,27 +381,27 @@ export default {
     const close = () => {
       selectedIds.value = []
       selectedChecks.value = []
-      router.push('/deposits')
+      router.push('/bounced-deposits')
     }
 
     const postDeposit = () => {
-      store.dispatch('DepositStore/postOrder', id).then(
+      store.dispatch('BouncedDepositStore/postOrder', id).then(
           response => {
             if (response.status === undefined) {
               selectedIds.value = []
               selectedChecks.value = []
-              router.push('/deposits')
+              router.push('/bounced-deposits')
             }
           })
     }
 
     const unpostDeposit = () => {
-      store.dispatch('DepositStore/unpostOrder', id).then(
+      store.dispatch('BouncedDepositStore/unpostOrder', id).then(
           response => {
             if (response.status === undefined) {
               selectedIds.value = []
               selectedChecks.value = []
-              router.push('/deposits')
+              router.push('/bounced-deposits')
             }
           })
     }

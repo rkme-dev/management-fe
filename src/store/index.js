@@ -24,12 +24,14 @@ import customers from './customers.module'
 import products from './products.module'
 import suppliers from './suppliers.module'
 import purchaseOrders from './purchase-orders-module'
+import {BouncedDepositStore} from "@/store/BouncedDepositStore";
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
     AuthStore,
+    BouncedDepositStore,
     CollectionStore,
     CustomerStore,
     DepositStore,
