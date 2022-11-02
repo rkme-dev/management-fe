@@ -47,7 +47,7 @@
 
 <script>
 // eslint-disable-next-line object-curly-newline
-import { mdiHelpCircleOutline, mdiWheelBarrow, mdiHeart, mdiShareVariant, mdiOfficeBuilding, mdiFormatListNumbered } from '@mdi/js'
+import { mdiHelpCircleOutline, mdiHeart, mdiShareVariant, mdiOfficeBuilding, mdiFormatListNumbered } from '@mdi/js'
 import router from '@/router'
 
 export default {
@@ -57,13 +57,6 @@ export default {
     }
 
     const solidCardData = [
-      {
-        cardBg: 'info',
-        title: 'Raw Materials',
-        link: '/products',
-        cardImage: require('@/assets/images/logos/bottled-water.jpg'),
-        icon: mdiWheelBarrow,
-      },
       {
         cardBg: 'primary',
         cardImage: require('@/assets/images/logos/warehouse-building.jpg'),
@@ -86,7 +79,6 @@ export default {
       icons: {
         mdiOfficeBuilding,
         mdiHelpCircleOutline,
-        mdiWheelBarrow,
         mdiHeart,
         mdiShareVariant,
       },

@@ -331,6 +331,11 @@ const routes = [
     component: () => import('@/views/pages/master-files/finish-products/IndexPage.vue'),
   },
   {
+    path: '/raw-materials',
+    name: 'raw-materials',
+    component: () => import('@/views/pages/master-files/raw-materials/Index.vue'),
+  },
+  {
     path: '/collections',
     name: 'collections',
     component: () => import('@/views/pages/sales/collections/Index.vue'),

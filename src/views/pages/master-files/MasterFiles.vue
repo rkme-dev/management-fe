@@ -59,7 +59,8 @@ import {
   mdiAccountBoxMultipleOutline,
   mdiHeadPlusOutline,
   mdiInboxFullOutline,
-  mdiAccountKey
+  mdiAccountKey,
+  mdiWheelBarrow
 } from '@mdi/js'
 import router from '@/router'
 
@@ -133,6 +134,13 @@ export default {
         cardImage: require('@/assets/images/pages/master-file/packing.jpg'),
         icon: mdiPackageVariant,
       },
+      {
+        cardBg: 'info',
+        title: 'Raw Materials',
+        link: '/raw-materials',
+        cardImage: require('@/assets/images/logos/bottled-water.jpg'),
+        icon: mdiWheelBarrow,
+      },
     ]
 
     return {
@@ -143,6 +151,7 @@ export default {
         mdiAccountBoxMultipleOutline,
         mdiFormatListNumbered,
         mdiAccountKey,
+        mdiWheelBarrow
       },
     }
   },

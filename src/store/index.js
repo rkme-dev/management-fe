@@ -18,6 +18,7 @@ import { SalesOrderStore } from '@/store/SalesOrderStore'
 import { SalesDrStore } from '@/store/SalesDrStore'
 import { UnitPackingStore } from '@/store/UnitPackingStore'
 import { FinishProductStore } from '@/store/FinishProductStore'
+import { RawMaterialStore } from '@/store/RawMaterialStore'
 import { TripTicketStore } from '@/store/TripTicketStore'
 import { ReportStore } from '@/store/ReportStore'
 import customers from './customers.module'
@@ -52,6 +53,7 @@ export default new Vuex.Store({
     SalesDrStore,
     UnitPackingStore,
     FinishProductStore,
+    RawMaterialStore,
     TripTicketStore,
   },
 })
