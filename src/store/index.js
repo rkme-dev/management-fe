@@ -13,6 +13,7 @@ import { SalesmanStore } from '@/store/SalesmanStore'
 import { TermStore } from '@/store/TermStore'
 import { VatStore } from '@/store/VatStore'
 import { CustomerStore } from '@/store/CustomerStore'
+import { PhysicalCountStore } from '@/store/PhysicalCountStore'
 import { ProductStore } from '@/store/ProductStore'
 import { SalesOrderStore } from '@/store/SalesOrderStore'
 import { SalesDrStore } from '@/store/SalesDrStore'
@@ -44,6 +45,7 @@ export default new Vuex.Store({
     UserAccessManagementStore,
     ReleaseOrderStore,
     WarehouseStore,
+    PhysicalCountStore,
     TermStore,
     VatStore,
     SalesmanStore,

@@ -381,6 +381,11 @@ const routes = [
     component: () => import('@/views/pages/reports/accounts-receivable/SubsidiaryLedger.vue'),
   },
   {
+    path: '/physical-counts',
+    name: 'physical-counts',
+    component: () => import('@/views/pages/physical-counts/Index.vue'),
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/Error.vue'),
