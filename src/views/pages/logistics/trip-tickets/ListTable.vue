@@ -190,7 +190,10 @@ export default {
     });
 
     const redirectPrint = (id) => {
-      window.open(`https://management-api-v1.herokuapp.com/print-trip-ticket/${id}`, "_blank");
+      window.open(
+        `https://management-api-v1.herokuapp.com/print-trip-ticket/${id}`,
+        "_blank"
+      );
     };
 
     return {
