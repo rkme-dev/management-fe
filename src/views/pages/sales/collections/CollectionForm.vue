@@ -378,7 +378,7 @@
               Post
             </v-btn>
             <v-btn
-              v-if="formData.status === 'Posted'"
+              v-if="formData.status === 'Posted' && formData.has_deposit === 0"
               color="error"
               class="me-3 mt-4"
               @click="unpostOrder"

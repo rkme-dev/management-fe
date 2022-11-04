@@ -134,7 +134,7 @@ export default {
       {
         text: 'Date',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'created_at',
       },
       { text: 'DR No', value: 'sales_dr_number' },

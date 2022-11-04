@@ -105,7 +105,7 @@ export default {
       {
         text: 'Date',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'created_at',
       },
       { text: 'Deposit No', value: 'deposit_number' },

@@ -134,7 +134,7 @@ export default {
       {
         text: "Date",
         align: "start",
-        sortable: false,
+        sortable: true,
         value: "created_at",
       },
       { text: "Collection No", value: "collection_order_number" },
