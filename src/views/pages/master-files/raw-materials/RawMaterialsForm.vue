@@ -92,7 +92,7 @@
       <v-col
         cols="1"
       >
-        <label for="rawMaterialSRP">SRP</label>
+        <label for="rawMaterialCost">Cost</label>
       </v-col>
 
       <v-col
@@ -100,12 +100,12 @@
         class="mr-16"
       >
         <v-currency-field
-          id="rawMaterialSRP"
+          id="rawMaterialCost"
           v-model="formData.price"
           outlined
           dense
           :error-messages="errors.price"
-          label="SRP"
+          label="Cost"
           hide-details="auto"
         ></v-currency-field>
       </v-col>
