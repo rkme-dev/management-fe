@@ -130,7 +130,7 @@ export default {
       {
         text: 'Date',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'created_at',
       },
       { text: 'SO No', value: 'sales_order_number' },
