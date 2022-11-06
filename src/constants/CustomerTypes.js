@@ -3,6 +3,7 @@ import { shallowRef } from '@vue/composition-api'
 export function customerTypes() {
   const types = [
     'Distributor',
+    'Hawker',
     'Regular',
     'Regular - Kiosk',
     'Regular - BWS',
