@@ -30,7 +30,7 @@
           >
             <v-menu
               v-model="formData.dateModal"
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
+              :disabled="formData.status === 'Posted'"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -40,7 +40,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="datePosted"
-                  :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
+                  :disabled="formData.status === 'Posted'"
                   label="Date"
                   persistent-hint
                   :prepend-icon="icons.mdiCalendar"
@@ -53,7 +53,7 @@
               <v-date-picker
                 v-model="datePosted"
                 no-title
-                :disabled="formData.has_dr === 1  && formData.status === 'Posted'"
+                :disabled="formData.status === 'Posted'"
                 color="primary"
                 @input="formData.dateModal = false"
               ></v-date-picker>
@@ -78,7 +78,7 @@
           >
             <v-menu
               v-model="formData.countDateModal"
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
+              :disabled="formData.status === 'Posted'"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -88,7 +88,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="countDate"
-                  :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
+                  :disabled="formData.status === 'Posted'"
                   label="Count Date"
                   persistent-hint
                   :prepend-icon="icons.mdiCalendar"
@@ -101,7 +101,7 @@
               <v-date-picker
                 v-model="countDate"
                 no-title
-                :disabled="formData.has_dr === 1  && formData.status === 'Posted'"
+                :disabled="formData.status === 'Posted'"
                 color="primary"
                 @input="formData.countDateModal = false"
               ></v-date-picker>
@@ -116,7 +116,7 @@
               :items="documents"
               item-text="title"
               item-value="id"
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
+              :disabled="formData.status === 'Posted'"
               label="Document"
               :error-messages="errors.document_id"
               outlined
@@ -155,16 +155,19 @@
             cols="4"
             class="pr-8 pl-8"
           >
-            <v-textarea
-              v-model="formData.location"
-              outlined
-              rows="2"
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
-              dense
-              :error-messages="errors.location"
-              hide-details="auto"
+            <v-select
+              v-model="formData.location_id"
+              :items="locations"
+              item-text="address"
+              item-value="id"
+              :disabled="formData.status === 'Posted'"
               label="Location"
-            ></v-textarea>
+              :error-messages="errors.location_id"
+              outlined
+              dense
+              clearable
+              hide-details="auto"
+            ></v-select>
           </v-col>
           <v-col
             cols="4"
@@ -175,7 +178,7 @@
               outlined
               rows="2"
               dense
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
+              :disabled="formData.status === 'Posted'"
               :error-messages="errors.remarks"
               hide-details="auto"
               label="Remarks"
@@ -299,6 +302,7 @@ export default {
   },
   setup(props, { emit }) {
     store.dispatch('DocumentStore/list')
+    store.dispatch('LocationStore/list')
     store.dispatch('PhysicalCountStore/list')
     const modeData = toRef(props, 'mode')
     const dataProp = toRef(props, 'data')
@@ -307,7 +311,7 @@ export default {
       countDateModal: false,
       date_posted: null,
       document_id: null,
-      location: null,
+      location_id: null,
       group_1: null,
       group_2: null,
       remarks: null,
@@ -324,6 +328,7 @@ export default {
 
       return documentItem
     }))
+    const locations = computed(() => store.state.LocationStore.locations)
 
     const fetchTotalAmount = totalAmount => {
       physicalCountTotalAmount.value = totalAmount
@@ -355,7 +360,7 @@ export default {
           countDateModal: false,
           date_posted: null,
           document_id: null,
-          location: null,
+          location_id: null,
           group_1: null,
           group_2: null,
           remarks: null,
@@ -447,6 +452,7 @@ export default {
         mdiInformation,
         mdiAccountPlusOutline,
       },
+      locations,
     }
   },
 }
