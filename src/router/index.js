@@ -381,6 +381,16 @@ const routes = [
     component: () => import('@/views/pages/reports/accounts-receivable/SubsidiaryLedger.vue'),
   },
   {
+    path: '/inventory-reports',
+    name: 'inventory-reports',
+    component: () => import('@/views/pages/reports/inventory-reports/Index.vue'),
+  },
+  {
+    path: '/stockcard-report',
+    name: 'stockcard-report',
+    component: () => import('@/views/pages/reports/inventory-reports/StockcardReport.vue'),
+  },
+  {
     path: '/physical-counts',
     name: 'physical-counts',
     component: () => import('@/views/pages/physical-counts/Index.vue'),
