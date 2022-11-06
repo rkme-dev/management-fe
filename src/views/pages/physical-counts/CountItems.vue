@@ -327,6 +327,9 @@ export default {
       brand: null,
       group_1: null,
       group_2: null,
+      name: null,
+      sku: null,
+      slug: null,
     })
 
     const product = ref({
@@ -347,20 +350,12 @@ export default {
 
         physicalCountTotalAmount.value = parseFloat(physicalCountTotalAmount.value) + parseFloat(countItem.total_amount)
         
-        if (countItem.name) {
-          // eslint-disable-next-line no-param-reassign
-          countItem.name = productRaw?.name
-        }
-
-        if (countItem.slug) {
-          // eslint-disable-next-line no-param-reassign
-          countItem.slug = productRaw?.slug
-        }
-        
-        if (countItem.sku) {
-          // eslint-disable-next-line no-param-reassign
-          countItem.sku = productRaw?.sku
-        }
+        // eslint-disable-next-line no-param-reassign
+        countItem.name = productRaw?.name
+        // eslint-disable-next-line no-param-reassign
+        countItem.slug = productRaw?.slug
+        // eslint-disable-next-line no-param-reassign
+        countItem.sku = productRaw?.sku
 
         return countItem
       })
@@ -380,20 +375,12 @@ export default {
 
           physicalCountTotalAmount.value = parseFloat(physicalCountTotalAmount.value) + parseFloat(countItem.total_amount)
 
-          if (countItem.name) {
-            // eslint-disable-next-line no-param-reassign
-            countItem.name = productRaw?.name
-          }
-
-          if (countItem.slug) {
-            // eslint-disable-next-line no-param-reassign
-            countItem.slug = productRaw?.slug
-          }
-          
-          if (countItem.sku) {
-            // eslint-disable-next-line no-param-reassign
-            countItem.sku = productRaw?.sku
-          }
+          // eslint-disable-next-line no-param-reassign
+          countItem.name = productRaw?.name
+          // eslint-disable-next-line no-param-reassign
+          countItem.slug = productRaw?.slug
+          // eslint-disable-next-line no-param-reassign
+          countItem.sku = productRaw?.sku
 
           return countItem
         })
