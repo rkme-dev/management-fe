@@ -64,13 +64,13 @@
             class="pr-8 pl-8"
           >
             <v-text-field
-              v-model="formData.sales_order_number"
-              outlined
-              :error-messages="errors.sales_order_number"
-              dense
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
-              hide-details="auto"
-              label="Sales Order Number"
+                v-if="formData.id !== undefined"
+                v-model="formData.sales_order_number"
+                outlined
+                :error-messages="errors.sales_order_number"
+                readonly
+                hide-details="auto"
+                label="Sales Order Number"
             ></v-text-field>
           </v-col>
           <v-col

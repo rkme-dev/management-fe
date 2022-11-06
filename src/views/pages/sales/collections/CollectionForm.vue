@@ -62,13 +62,13 @@
             class="pr-8 pl-8"
           >
             <v-text-field
-              v-model="formData.collection_order_number"
-              outlined
-              :disabled="formData.id !== undefined"
-              :error-messages="errors.collection_order_number"
-              dense
-              hide-details="auto"
-              label="Collection Number"
+                v-if="formData.id !== undefined"
+                v-model="formData.collection_order_number"
+                outlined
+                readonly
+                dense
+                hide-details="auto"
+                label="Collection Number"
             ></v-text-field>
           </v-col>
           <v-col
