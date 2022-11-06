@@ -7,6 +7,7 @@ export const ReportStore = {
   state: {
     loading: false,
     ledgerReport: [],
+    stockcardReport: [],
   },
   actions: {
     clearReport({ commit }, index) {
@@ -28,6 +29,22 @@ export const ReportStore = {
         },
       )
     },
+    getStockcardReport({ commit, dispatch }, id) {
+      dispatch('setLoading', true)
+
+      return reportService.getStockcard(id).then(
+        response => {
+          commit('fetchStockcardReport', response.data)
+          dispatch('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => {
+          dispatch('setLoading', false)
+          Promise.reject(error)
+        },
+      )
+    },
     setLoading({ commit }, state) {
       commit('setLoading', state)
     },
@@ -38,6 +55,9 @@ export const ReportStore = {
     },
     fetchLedgerReport(state, data) {
       state.ledgerReport = data
+    },
+    fetchStockcardReport(state, data) {
+      state.stockcardReport = data
     },
     setErrors(state, errors) {
       state.errors = errors

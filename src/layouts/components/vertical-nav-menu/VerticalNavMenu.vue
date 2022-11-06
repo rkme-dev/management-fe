@@ -178,6 +178,7 @@
 <script>
 // eslint-disable-next-line object-curly-newline
 import {
+  mdiArchiveOutline,
   mdiHomeOutline,
   mdiAlphaTBoxOutline,
   mdiEyeOutline,
@@ -269,6 +270,11 @@ export default {
             title: 'Accounts Receivable',
             icon: mdiCardAccountDetailsStarOutline,
             link: 'accounts-receivables',
+          },
+          {
+            title: 'Inventory Reports',
+            icon: mdiArchiveOutline,
+            link: 'inventory-reports',
           },
         ],
       },
