@@ -56,6 +56,7 @@
           <v-dialog
             v-model="salesOrderDialog"
             width="900px"
+            persistent
             fullscreen
             max-width="900px"
             max-height="900px"

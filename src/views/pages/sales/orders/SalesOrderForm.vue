@@ -492,6 +492,24 @@ export default {
     }
 
     const cancel = () => {
+      formData.value = {
+        status: null,
+        has_dr: 0,
+        dateModal: false,
+        customer_name: null,
+        customer_id: null,
+        date_posted: null,
+        sales_order_number: null,
+        document_id: null,
+        address: null,
+        remarks: null,
+        area: null,
+        salesman_id_1: null,
+        salesman_id_2: null,
+        term_id: null,
+        vat_id: null,
+      }
+
       emit('submit')
     }
 

@@ -60,7 +60,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  v-if="isDisabled === false"
+                  v-show="isDisabled === false"
                   elevation="10"
                   color="success"
                   dark
