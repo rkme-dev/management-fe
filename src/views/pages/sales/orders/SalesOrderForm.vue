@@ -577,6 +577,7 @@ export default {
       store.dispatch('SalesOrderStore/postOrder', formData.value.id).then(
         response => {
           if (response.status === undefined) {
+            store.dispatch('UnitPackingStore/list')
             emit('submit', response.data)
           }
         },

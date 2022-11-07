@@ -127,19 +127,15 @@
                       <v-col
                         cols="4"
                       >
-                        <v-text-field
+                        <v-currency-field
                           v-model="currentItem.quantity"
                           outlined
                           dense
                           type="number"
-                          min="0"
-                          step="1"
-                          onfocus="this.previousValue = this.value"
-                          onkeydown="this.previousValue = this.value"
-                          oninput="validity.valid || (value = this.previousValue)"
+                          :decimal-length="0"
                           hide-details="auto"
                           label="Quantity"
-                        ></v-text-field>
+                        ></v-currency-field>
                       </v-col>
                       <v-col
                         cols="4"
