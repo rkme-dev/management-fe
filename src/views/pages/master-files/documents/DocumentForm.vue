@@ -149,6 +149,7 @@ export default {
     const documentProp = toRef(props, 'document')
 
     const modulesList = [
+      'Physical',
       'Purchase Order',
       'Sales',
       'Orders',

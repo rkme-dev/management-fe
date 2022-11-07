@@ -180,13 +180,13 @@
                         cols="4"
                       >
                         <v-currency-field
-                          v-model="currentItem.price"
+                          v-model="currentItem.cost"
                           outlined
                           prefix="PHP"
                           dense
                           class="text-green"
                           hide-details="auto"
-                          label="Price"
+                          label="Cost"
                         ></v-currency-field>
                       </v-col>
                       <v-col
@@ -208,7 +208,7 @@
                         class="d-flex"
                       >
                         <v-btn
-                          v-if="currentItem.quantity && currentItem.price && currentItem.product_id"
+                          v-if="currentItem.quantity && currentItem.product_id"
                           color="primary"
                           class="me-3 mt-4"
                           @click="addItem(false)"
@@ -216,7 +216,7 @@
                           Submit
                         </v-btn>
                         <v-btn
-                          v-if="currentItem.quantity && currentItem.price && currentItem.product_id"
+                          v-if="currentItem.quantity && currentItem.product_id"
                           color="info"
                           class="me-3 mt-4"
                           @click="addItem(true)"
@@ -253,9 +253,9 @@
             {{ icons.mdiDeleteCircle }}
           </v-icon>
         </template>
-        <template #item.price="{ item }">
+        <template #item.cost="{ item }">
           <v-currency-field
-            v-model="item.price"
+            v-model="item.cost"
             prefix="PHP"
             class="text-green"
             disabled
@@ -321,7 +321,7 @@ export default {
     const currentItem = ref({
       product_id: null,
       quantity: null,
-      price: null,
+      cost: null,
       total_amount: 0,
       unit: null,
       brand: null,
@@ -421,8 +421,8 @@ export default {
         })
       }
 
-      if (currentItem.value.quantity && currentItem.value.price) {
-        totalAmount.value = parseFloat(currentItem.value.quantity * currentItem.value.price)
+      if (currentItem.value.quantity && currentItem.value.cost) {
+        totalAmount.value = parseFloat(currentItem.value.quantity * currentItem.value.cost)
       } else {
         totalAmount.value = 0
       }
@@ -442,7 +442,7 @@ export default {
       countItems.value.push({
         product_id: currentItem.value.product_id,
         quantity: currentItem.value.quantity,
-        price: currentItem.value.price,
+        cost: currentItem.value.cost,
         total_amount: currentItem.value.total_amount,
         unit: currentItem.value.unit,
         brand: currentItem.value.brand,
@@ -463,7 +463,7 @@ export default {
         filteredUnits.value = []
         currentItem.value.product_id = null
         currentItem.value.quantity = null
-        currentItem.value.price = null
+        currentItem.value.cost = null
         currentItem.value.total_amount = 0
         currentItem.value.unit = null
         currentItem.value.brand = null
@@ -492,7 +492,7 @@ export default {
       itemFormModal.value = false
       currentItem.value.product_id = null
       currentItem.value.quantity = null
-      currentItem.value.price = null
+      currentItem.value.cost = null
       currentItem.value.total_amount = 0
       currentItem.value.unit = null
       currentItem.value.brand = null
@@ -536,8 +536,8 @@ export default {
           value: 'unit',
         },
         {
-          text: 'Price',
-          value: 'price',
+          text: 'Cost',
+          value: 'cost',
         },
         {
           text: 'Total Amount',

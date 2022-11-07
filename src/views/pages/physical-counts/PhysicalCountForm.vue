@@ -129,14 +129,19 @@
             cols="4"
             class="pr-8 pl-8"
           >
-            <v-text-field
-              v-model="formData.account_title"
+            <v-select
+              v-model="formData.account_id"
+              :items="accounts"
+              item-text="title"
+              item-value="id"
+              :disabled="formData.status === 'Posted'"
+              label="Account"
+              :error-messages="errors.account_id"
               outlined
-              :error-messages="errors.account_title"
               dense
+              clearable
               hide-details="auto"
-              label="Account Title"
-            ></v-text-field>
+            ></v-select>
           </v-col>
           <v-col
             cols="4"
@@ -158,7 +163,7 @@
             <v-select
               v-model="formData.location_id"
               :items="locations"
-              item-text="address"
+              item-text="title"
               item-value="id"
               :disabled="formData.status === 'Posted'"
               label="Location"
@@ -301,6 +306,7 @@ export default {
     },
   },
   setup(props, { emit }) {
+    store.dispatch('AccountStore/list')
     store.dispatch('DocumentStore/list')
     store.dispatch('LocationStore/list')
     store.dispatch('PhysicalCountStore/list')
@@ -317,18 +323,33 @@ export default {
       remarks: null,
       count_by: null,
       count_date: null,
-      account_title: null,
+      account_id: null,
     })
     const physicalCountTotalAmount = ref(0)
     const countItems = ref([])
     const terms = computed(() => store.state.TermStore.terms)
     const vats = computed(() => store.state.VatStore.vats)
-    const documents = computed(() => store.state.DocumentStore.documents.map(documentItem => {
-      documentItem.title = `${documentItem.document_name}`
+    const accounts = computed(() => store.state.AccountStore.accounts.filter(accountItem => {
+      if (accountItem.type === 'Asset') {
+        accountItem.title = `${accountItem.account_code}`
 
-      return documentItem
+        return accountItem
+      }
     }))
-    const locations = computed(() => store.state.LocationStore.locations)
+    const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
+      if (documentItem.module === 'Physical') {
+        documentItem.title = `${documentItem.document_name}`
+
+        return documentItem
+      }
+    }))
+    const locations = computed(() => store.state.LocationStore.locations.filter(locationItem => {
+      if (locationItem.type === 'Warehouse') {
+        locationItem.title = `${locationItem.location_code}`
+
+        return locationItem
+      }
+    }))
 
     const fetchTotalAmount = totalAmount => {
       physicalCountTotalAmount.value = totalAmount
@@ -366,7 +387,7 @@ export default {
           remarks: null,
           count_by: null,
           count_date: null,
-          account_title: null,
+          account_id: null,
         }
 
         countItems.value = []
@@ -453,6 +474,7 @@ export default {
         mdiAccountPlusOutline,
       },
       locations,
+      accounts,
     }
   },
 }
