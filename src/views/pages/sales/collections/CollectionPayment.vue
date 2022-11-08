@@ -84,6 +84,8 @@ export default {
         value: 'payment_date',
       },
       { text: 'Payment Type', value: 'payment_type' },
+      { text: 'Bank of Check', value: 'payment.bank' },
+      { text: 'Check Number', value: 'payment.check_number' },
       { text: 'Reference #', value: 'reference_number' },
       { text: 'Amount', value: 'amount' },
       { text: 'Actions', value: 'actions', sortable: false },
