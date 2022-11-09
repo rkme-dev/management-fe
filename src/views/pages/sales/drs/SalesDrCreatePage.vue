@@ -140,13 +140,13 @@
             class="pr-8 pl-8"
           >
             <v-text-field
-              v-model="formData.sales_dr_number"
-              outlined
-              :disabled="formData.id !== undefined"
-              :error-messages="errors.sales_dr_number"
-              dense
-              hide-details="auto"
-              label="Sales DR Number"
+                v-if="formData.id !== undefined"
+                v-model="formData.sales_dr_number"
+                outlined
+                readonly
+                dense
+                hide-details="auto"
+                label="Sales DR Number"
             ></v-text-field>
           </v-col>
           <v-col

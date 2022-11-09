@@ -98,10 +98,10 @@ export const SalesDrStore = {
     updateOrderItems({ commit }, items) {
       commit('fetchOrderItemsSuccess', items)
     },
-    list({ commit, dispatch }) {
+    list({ commit, dispatch }, todayOnly = false) {
       dispatch('setLoading', true)
 
-      return salesDrService.list().then(
+      return salesDrService.list(todayOnly).then(
         response => {
           commit('fetchListSuccess', response.data)
           dispatch('setLoading', false)

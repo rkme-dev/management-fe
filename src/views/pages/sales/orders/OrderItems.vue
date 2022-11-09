@@ -60,7 +60,7 @@
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  v-if="isDisabled === false"
+                  v-show="isDisabled === false"
                   elevation="10"
                   color="success"
                   dark
@@ -119,6 +119,7 @@
                           label="Unit"
                           outlined
                           dense
+                          @change="test"
                           clearable
                           hide-details="auto"
                         ></v-select>
@@ -126,19 +127,15 @@
                       <v-col
                         cols="4"
                       >
-                        <v-text-field
+                        <v-currency-field
                           v-model="currentItem.quantity"
                           outlined
                           dense
                           type="number"
-                          min="0"
-                          step="1"
-                          onfocus="this.previousValue = this.value"
-                          onkeydown="this.previousValue = this.value"
-                          oninput="validity.valid || (value = this.previousValue)"
+                          :decimal-length="0"
                           hide-details="auto"
                           label="Quantity"
-                        ></v-text-field>
+                        ></v-currency-field>
                       </v-col>
                       <v-col
                         cols="4"
@@ -167,9 +164,42 @@
                           label="Total Amount"
                         ></v-currency-field>
                       </v-col>
+                      <v-col cols="12"></v-col>
+                      <v-col cols="12"></v-col>
+
+                      <v-col cols="4"></v-col>
+                      <v-col cols="4" class="pr-16 pl-16 mt-n2">Actual Balance: </v-col>
+                      <v-col cols="4" class="pr-16 pl-16 mt-n4">
+                        <v-currency-field
+                          class="shrink text-green"
+                          v-model="currentItem.actual_balance"
+                          single-line
+                          readonly
+                          :decimal-length="0"
+                          outlined
+                          dense
+                          label="Actual Balance"
+                        >
+                        </v-currency-field>
+                      </v-col>
+                      <v-col cols="4"></v-col>
+                      <v-col cols="4" class="pr-16 pl-16 mt-n8">Reserved Balance: </v-col>
+                      <v-col cols="4" class="pr-16 pl-16 mt-n10">
+                        <v-currency-field
+                            class="shrink text-green"
+                            single-line
+                            v-model="currentItem.reserved_balance"
+                            readonly
+                            :decimal-length="0"
+                            outlined
+                            dense
+                            label="Reserved Balance"
+                        >
+                        </v-currency-field>
+                      </v-col>
                       <v-col
                         cols="12"
-                        class="d-flex"
+                        class="d-flex mt-n8"
                       >
                         <v-btn
                           v-if="currentItem.quantity && currentItem.price && currentItem.product_id"
@@ -442,6 +472,15 @@ export default {
       emit('totalAmount', salesOrderTotalAmount.value)
     }
 
+    const test = () => {
+      const product = products.value.find(item => item.id === currentItem.value.product_id)
+
+      const productUnit = product.units.find(unit => unit.name === currentItem.value.unit)
+
+      currentItem.value.actual_balance = productUnit.pivot.actual_balance
+      currentItem.value.reserved_balance = productUnit.pivot.reserved_balance
+    }
+
     const cancel = () => {
       itemFormModal.value = false
       currentItem.value.product_id = null
@@ -455,6 +494,7 @@ export default {
     }
 
     return {
+      test,
       filteredUnits,
       isDisabled,
       salesOrderTotalAmount,

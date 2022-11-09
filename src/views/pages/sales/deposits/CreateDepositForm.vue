@@ -5,208 +5,199 @@
     </v-card-title>
     <v-card-text>
       <v-form>
-          <v-row>
-            <v-col cols="12">
-              <v-alert
-                  color="primary"
-                  text
-                  style="margin-bottom: -10px"
-              >
-                <div class="d-flex align-start">
-                  <v-icon color="primary">
-                    {{ icons.mdiInformation }}
-                  </v-icon>
-                  <div class="ms-3">
-                    <p class="text-base font-weight-medium mb-1">
-                      Information
-                    </p>
-                  </div>
-                </div>
-              </v-alert>
-            </v-col>
-            <v-col
-                cols="4"
-                class="pr-8 pl-8 mr-16"
+        <v-row>
+          <v-col cols="12">
+            <v-alert
+                color="primary"
+                text
+                style="margin-bottom: -10px"
             >
-              <v-menu
-                  v-model="formData.dateModal"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  :disabled="formData.status === 'In Transit'"
-                  max-width="290px"
-                  min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      v-model="datePosted"
-                      label="Transaction Date"
-                      persistent-hint
-                      :prepend-icon="icons.mdiCalendar"
-                      readonly
-                      outlined
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
-                </template>
-
-                <v-date-picker
+              <div class="d-flex align-start">
+                <v-icon color="primary">
+                  {{ icons.mdiInformation }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                    Information
+                  </p>
+                </div>
+              </div>
+            </v-alert>
+          </v-col>
+          <v-col
+              cols="4"
+              class="pr-8 pl-8 mr-16"
+          >
+            <v-menu
+                v-model="formData.dateModal"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                :disabled="formData.status === 'In Transit'"
+                max-width="290px"
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                     v-model="datePosted"
-                    no-title
-                    color="primary"
-                    @input="formData.dateModal = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col
-                cols="4"
-                class="mr-16 ml-16"
-            >
-              <v-textarea
-                  v-model="formData.remarks"
-                  rows="3"
-                  outlined
-                  dense
-                  :disabled="formData.status === 'In Transit'"
-                  label="Remarks"
-              ></v-textarea>
-            </v-col>
-            <v-col
-                cols="4"
-                class="pr-8 pl-8 mt-n16"
-            >
-              <v-text-field
-                  v-model="formData.deposit_number"
-                  outlined
-                  :error-messages="errors.deposit_number"
-                  dense
-                  hide-details="auto"
-                  label="Deposit Number"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="8"></v-col>
-            <v-col cols="4" class="pr-8 pl-8 mt-n6">
-              <v-select
-                  v-model="formData.document_id"
-                  :items="documents"
-                  item-text="title"
-                  item-value="id"
-                  label="Document"
-                  :disabled="formData.status === 'In Transit'"
-                  :error-messages="errors.document_id"
-                  outlined
-                  dense
-                  hide-details="auto"
-              ></v-select>
-            </v-col>
-            <v-col cols="8"></v-col>
-            <v-col
-                cols="4"
-                class="pr-8 pl-8 mr-16"
-            >
-              <v-menu
-                  v-model="formData.clearingDate"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      v-model="clearingDate"
-                      label="Clearing Date"
-                      persistent-hint
-                      :prepend-icon="icons.mdiCalendar"
-                      readonly
-                      outlined
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
-                </template>
+                    label="Transaction Date"
+                    persistent-hint
+                    :prepend-icon="icons.mdiCalendar"
+                    readonly
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
 
-                <v-date-picker
+              <v-date-picker
+                  v-model="datePosted"
+                  no-title
+                  color="primary"
+                  @input="formData.dateModal = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col
+              cols="4"
+              class="pr-8 pl-8"
+          >
+            <v-textarea
+                v-model="formData.remarks"
+                rows="3"
+                outlined
+                dense
+                :disabled="formData.status === 'In Transit'"
+                label="Remarks"
+            ></v-textarea>
+
+          </v-col>
+          <v-col cols="4" class="pr-8 pl-8 mr-16  mt-n16">
+            <v-select
+                v-model="formData.document_id"
+                :items="documents"
+                item-text="title"
+                item-value="id"
+                label="Document"
+                :disabled="formData.status === 'In Transit'"
+                :error-messages="errors.document_id"
+                outlined
+                dense
+                hide-details="auto"
+            ></v-select>
+          </v-col>
+          <v-col
+              cols="4"
+              class="pr-8 pl-8"
+          >
+          </v-col>
+          <v-col
+              cols="4"
+              class="pr-8 pl-8 mr-16 mt-n4"
+          >
+            <v-menu
+                v-model="formData.clearingDate"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                max-width="290px"
+                min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                     v-model="clearingDate"
-                    no-title
-                    color="primary"
-                    @input="formData.clearingDate = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col cols="10"></v-col>
-            <v-col cols="4" class="pr-8 pl-8 mt-n14">
-              <v-select
-                  v-model="formData.account_id"
-                  :items="accounts"
-                  item-text="account_title"
-                  item-value="id"
-                  label="Account"
-                  :error-messages="errors.account_id"
-                  outlined
-                  dense
-                  hide-details="auto"
-              >
-              </v-select>
-            </v-col>
-            <v-col cols="12">
-              <v-alert
-                  color="success"
-                  text
-                  style="margin-bottom: -10px"
-              >
-                <div class="d-flex align-start">
-                  <v-icon color="success">
-                    {{ icons.mdiCurrencyPhp }}
-                  </v-icon>
-                  <div class="ms-3">
-                    <p class="text-base font-weight-medium mb-1">
-                      Checks
-                    </p>
-                  </div>
+                    label="Clearing Date"
+                    persistent-hint
+                    :prepend-icon="icons.mdiCalendar"
+                    readonly
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                ></v-text-field>
+              </template>
+
+              <v-date-picker
+                  v-model="clearingDate"
+                  no-title
+                  color="primary"
+                  @input="formData.clearingDate = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="10"></v-col>
+          <v-col cols="4" class="pr-8 pl-8 mt-n14">
+            <v-select
+                v-model="formData.account_id"
+                :items="accounts"
+                item-text="account_title"
+                item-value="id"
+                label="Account"
+                :error-messages="errors.account_id"
+                outlined
+                dense
+                hide-details="auto"
+            >
+            </v-select>
+          </v-col>
+          <v-col cols="12">
+            <v-alert
+                color="success"
+                text
+                style="margin-bottom: -10px"
+            >
+              <div class="d-flex align-start">
+                <v-icon color="success">
+                  {{ icons.mdiCurrencyPhp }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                    Checks
+                  </p>
                 </div>
-              </v-alert>
-            </v-col>
-            <v-col cols="10"></v-col>
-            <v-col cols="1" class="ml-n10">
-              <v-dialog
-                  v-model="selectCheckDialog"
-                  width="1000"
-                  height="1000"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                      color="success"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                  >
-                    Get Collected Checks
-                  </v-btn>
-                </template>
-                <check-selection-component
-                    :ids="selectedIds"
-                    @onSubmit="onSubmit"
-                    @onCancel="onCancel"
-                ></check-selection-component>
-              </v-dialog>
-            </v-col>
-            <v-col cols="12">
-              <v-data-table
-                  :headers="headers"
-                  :items="selectedChecks"
-              >
-                <template #item.collection_payment.amount="{ item }">
-                  <v-currency-field
-                      v-model="item.collection_payment.amount"
-                      prefix="PHP"
-                      class="text-green"
-                      disabled
-                  >
-                  </v-currency-field>
-                </template>
-              </v-data-table>
-            </v-col>
-          </v-row>
+              </div>
+            </v-alert>
+          </v-col>
+          <v-col cols="10"></v-col>
+          <v-col cols="1" class="ml-n10">
+            <v-dialog
+                v-model="selectCheckDialog"
+                width="1000"
+                height="1000"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    color="success"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                  Get Collected Checks
+                </v-btn>
+              </template>
+              <check-selection-component
+                  :ids="selectedIds"
+                  @onSubmit="onSubmit"
+                  @onCancel="onCancel"
+              ></check-selection-component>
+            </v-dialog>
+          </v-col>
+          <v-col cols="12">
+            <v-data-table
+                :headers="headers"
+                :items="selectedChecks"
+            >
+              <template #item.collection_payment.amount="{ item }">
+                <v-currency-field
+                    v-model="item.collection_payment.amount"
+                    prefix="PHP"
+                    class="text-green"
+                    disabled
+                >
+                </v-currency-field>
+              </template>
+            </v-data-table>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col
               cols="auto"

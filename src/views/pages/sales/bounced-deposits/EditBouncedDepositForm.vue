@@ -79,8 +79,7 @@
               <v-text-field
                   v-model="formData.bounced_number"
                   outlined
-                  :error-messages="errors.bounced_number"
-                  :disabled="formData.status === 'posted'"
+                  readonly
                   dense
                   hide-details="auto"
                   label="Deposit Number"
@@ -292,7 +291,7 @@ export default {
     const errors = computed(() => store.state.BouncedDepositStore.errors)
     const accounts = computed(() => store.state.AccountStore.accounts.filter(account => account.type === 'Bank'))
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
-      if (documentItem.module === 'Deposit' || documentItem.module === 'Bounced') {
+      if (documentItem.module === 'Bounced') {
         documentItem.title = `${documentItem.document_name}`
 
         return documentItem

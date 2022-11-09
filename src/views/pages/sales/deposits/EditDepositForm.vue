@@ -79,8 +79,7 @@
               <v-text-field
                   v-model="formData.deposit_number"
                   outlined
-                  :error-messages="errors.deposit_number"
-                  :disabled="formData.status === 'posted'"
+                  readonly
                   dense
                   hide-details="auto"
                   label="Deposit Number"

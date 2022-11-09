@@ -64,13 +64,13 @@
             class="pr-8 pl-8"
           >
             <v-text-field
-              v-model="formData.sales_order_number"
-              outlined
-              :error-messages="errors.sales_order_number"
-              dense
-              :disabled="formData.has_dr === 1 || formData.status === 'Posted'"
-              hide-details="auto"
-              label="Sales Order Number"
+                v-if="formData.id !== undefined"
+                v-model="formData.sales_order_number"
+                outlined
+                :error-messages="errors.sales_order_number"
+                readonly
+                hide-details="auto"
+                label="Sales Order Number"
             ></v-text-field>
           </v-col>
           <v-col
@@ -440,11 +440,6 @@ export default {
     },
   },
   setup(props, { emit }) {
-    store.dispatch('TermStore/list')
-    store.dispatch('VatStore/list')
-    store.dispatch('SalesmanStore/list')
-    store.dispatch('DocumentStore/list')
-    store.dispatch('SalesOrderStore/list')
     const customerModal = ref(false)
     const drDialog = ref(false)
     const modeData = toRef(props, 'mode')
@@ -492,6 +487,24 @@ export default {
     }
 
     const cancel = () => {
+      formData.value = {
+        status: null,
+        has_dr: 0,
+        dateModal: false,
+        customer_name: null,
+        customer_id: null,
+        date_posted: null,
+        sales_order_number: null,
+        document_id: null,
+        address: null,
+        remarks: null,
+        area: null,
+        salesman_id_1: null,
+        salesman_id_2: null,
+        term_id: null,
+        vat_id: null,
+      }
+
       emit('submit')
     }
 
@@ -559,6 +572,7 @@ export default {
       store.dispatch('SalesOrderStore/postOrder', formData.value.id).then(
         response => {
           if (response.status === undefined) {
+            store.dispatch('UnitPackingStore/list')
             emit('submit', response.data)
           }
         },

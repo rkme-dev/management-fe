@@ -150,6 +150,7 @@ export default {
     const typelist = [
       'Accounts Receivable',
       'Accounts Payable',
+      'Asset',
       'Bank',
       'Cash',
       'Fixed Asset',

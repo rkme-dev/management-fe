@@ -26,7 +26,7 @@
         v-model="selectedOrderItems"
         :headers="headers"
         :items="orderItems"
-        :items-per-page="5"
+        :items-per-page="20"
         :search="search"
         item-key="order_item_id"
         show-select

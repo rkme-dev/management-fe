@@ -12,9 +12,12 @@ export const AccountStore = {
     originalData: [],
   },
   actions: {
+    setLoading({ commit }, state) {
+      commit('setLoading', state)
+    },
     // eslint-disable-next-line no-shadow
-    create({ commit }, account) {
-      commit('setLoading', true)
+    create({ commit, dispatch }, account) {
+      dispatch('setLoading', true)
 
       return accountService.create(account)
         .then(
@@ -32,59 +35,62 @@ export const AccountStore = {
           error => Promise.reject(error),
         )
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
     removeErrors({ commit }) {
       commit('setErrors', {})
     },
-    deleteAccount({ commit }, account) {
-      commit('setLoading', true)
+    deleteAccount({ commit, dispatch }, account) {
+      dispatch('setLoading', true)
 
       return accountService.delete(account)
         .then(
           // eslint-disable-next-line no-shadow
           () => {
             commit('updateAccountSuccess', account)
-            commit('setLoading', false)
+            dispatch('setLoading', false)
 
             return Promise.resolve(account)
           },
           error => Promise.reject(error),
         )
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
-    list({ commit }) {
-      commit('setLoading', true)
+    list({ commit, dispatch }) {
+      dispatch('setLoading', true)
+
       commit('fetchAccountsSuccess', [])
 
       return accountService.list().then(
         accounts => {
+          dispatch('setLoading', false)
+
           commit('fetchAccountsSuccess', accounts.data)
-          commit('setLoading', false)
 
           return Promise.resolve(accounts)
         },
         error => Promise.reject(error),
       )
     },
-    get({ commit }, id) {
-      commit('setLoading', true)
+    get({ commit, dispatch }, id) {
+      dispatch('setLoading', true)
 
       return accountService.get(id).then(
         account => {
+          dispatch('setLoading', false)
+
           commit('fetchAccountSuccess', account.data)
-          commit('setLoading', false)
 
           return Promise.resolve(account)
         },
         error => Promise.reject(error),
       )
     },
-    update({ commit }, account) {
-      commit('setLoading', true)
+    update({ commit, dispatch }, account) {
+      dispatch('setLoading', true)
 
       return accountService.update(account)
         .then(
@@ -92,7 +98,7 @@ export const AccountStore = {
           account => {
             if (account.data.id) {
               commit('updateAccountSuccess', account.data)
-              commit('setLoading', false)
+              dispatch('setLoading', false)
             } else {
               commit('setErrors', account.data)
             }
@@ -126,7 +132,6 @@ export const AccountStore = {
     },
     updateAccountSuccess(state, account) {
       const index = state.accounts.findIndex(value => value.id === account.id)
-      console.log(account)
       state.accounts[index] = account
     },
     fetchAccountsSuccess(state, accounts) {
@@ -143,8 +148,6 @@ export const AccountStore = {
 
         return rowData
       })
-
-      state.loading = false
     },
     fetchAccountSuccess(state, account) {
       state.account = account

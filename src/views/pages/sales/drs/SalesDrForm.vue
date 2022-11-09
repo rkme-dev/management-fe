@@ -409,10 +409,6 @@ export default {
     })
     const orderItems = ref([])
 
-    store.dispatch('TermStore/list')
-    store.dispatch('VatStore/list')
-    store.dispatch('SalesmanStore/list')
-    store.dispatch('DocumentStore/list')
     const terms = computed(() => store.state.TermStore.terms)
     const vats = computed(() => store.state.VatStore.vats)
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {

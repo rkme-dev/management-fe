@@ -62,10 +62,10 @@
             class="pr-8 pl-8"
           >
             <v-text-field
+              v-if="formData.id !== undefined"
               v-model="formData.trip_ticket_number"
               outlined
-              :disabled="formData.status === 'In Transit'"
-              :error-messages="errors.trip_ticket_number"
+              readonly
               dense
               hide-details="auto"
               label="Trip Ticket Order Number"

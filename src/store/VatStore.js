@@ -12,9 +12,12 @@ export const VatStore = {
     originalVats: [],
   },
   actions: {
+    setLoading({ commit }, state) {
+      commit('setLoading', state)
+    },
     // eslint-disable-next-line no-shadow
-    create({ commit }, vat) {
-      commit('setLoading', true)
+    create({ commit, dispatch }, vat) {
+      dispatch('setLoading', true)
 
       return vatService.create(vat)
         .then(
@@ -32,52 +35,52 @@ export const VatStore = {
           error => Promise.reject(error),
         )
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
     removeErrors({ commit }) {
       commit('setErrors', {})
     },
-    deleteVat({ commit }, vat) {
-      commit('setLoading', true)
+    deleteVat({ commit, dispatch }, vat) {
+      dispatch('setLoading', true)
 
       commit('updateVatSuccess', vat)
 
       return vatService.delete(vat)
         .then()
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
-    list({ commit }) {
-      commit('setLoading', true)
+    list({ commit, dispatch }) {
+      dispatch('setLoading', true)
       commit('fetchVatsSuccess', [])
 
       return vatService.list().then(
         vats => {
           commit('fetchVatsSuccess', vats.data)
-          commit('setLoading', false)
+          dispatch('setLoading', false)
 
           return Promise.resolve(vats)
         },
         error => Promise.reject(error),
       )
     },
-    get({ commit }, id) {
-      commit('setLoading', true)
+    get({ commit, dispatch }, id) {
+      dispatch('setLoading', true)
 
       return vatService.get(id).then(
         vat => {
           commit('fetchVatSuccess', vat.data)
-          commit('setLoading', false)
+          dispatch('setLoading', false)
 
           return Promise.resolve(vat)
         },
         error => Promise.reject(error),
       )
     },
-    update({ commit }, vat) {
-      commit('setLoading', true)
+    update({ commit, dispatch }, vat) {
+      dispatch('setLoading', true)
 
       return vatService.update(vat)
         .then(
@@ -85,7 +88,7 @@ export const VatStore = {
           vat => {
             if (vat.data.id !== undefined) {
               commit('updateVatSuccess', vat.data)
-              commit('setLoading', false)
+              dispatch('setLoading', false)
             } else {
               commit('setErrors', vat.data)
             }
