@@ -13,9 +13,12 @@ export const SalesmanStore = {
 
   },
   actions: {
+    setLoading({ commit }, state) {
+      commit('setLoading', state)
+    },
     // eslint-disable-next-line no-shadow
-    create({ commit }, salesman) {
-      commit('setLoading', true)
+    create({ commit, dispatch }, salesman) {
+      dispatch('setLoading', true)
 
       return salesmanService.create(salesman)
         .then(
@@ -33,50 +36,50 @@ export const SalesmanStore = {
           error => Promise.reject(error),
         )
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
     removeErrors({ commit }) {
       commit('setErrors', {})
     },
-    deleteSalesman({ commit }, salesman) {
-      commit('setLoading', true)
+    deleteSalesman({ commit, dispatch }, salesman) {
+      dispatch('setLoading', true)
 
       return salesmanService.delete(salesman)
         .then()
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
-    list({ commit }) {
-      commit('setLoading', true)
+    list({ commit, dispatch }) {
+      dispatch('setLoading', true)
       commit('fetchSalesmansSuccess', [])
 
       return salesmanService.list().then(
         salesmans => {
           commit('fetchSalesmansSuccess', salesmans.data)
-          commit('setLoading', false)
+          dispatch('setLoading', false)
 
           return Promise.resolve(salesmans)
         },
         error => Promise.reject(error),
       )
     },
-    get({ commit }, id) {
-      commit('setLoading', true)
+    get({ commit, dispatch }, id) {
+      dispatch('setLoading', true)
 
       return salesmanService.get(id).then(
         salesman => {
           commit('fetchSalesmanSuccess', salesman.data)
-          commit('setLoading', false)
+          dispatch('setLoading', false)
 
           return Promise.resolve(salesman)
         },
         error => Promise.reject(error),
       )
     },
-    update({ commit }, salesman) {
-      commit('setLoading', true)
+    update({ commit, dispatch }, salesman) {
+      dispatch('setLoading', true)
 
       return salesmanService.update(salesman)
         .then(
@@ -84,7 +87,7 @@ export const SalesmanStore = {
           salesman => {
             if (salesman.data.id) {
               commit('updateSalesmanSuccess', salesman.data)
-              commit('setLoading', false)
+              dispatch('setLoading', false)
             } else {
               commit('setErrors', salesman.data)
             }

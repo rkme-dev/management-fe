@@ -122,7 +122,6 @@ export default {
     SalesOrderForm,
   },
   setup() {
-    store.dispatch('FinishProductStore/list')
     const showPosted = ref(false)
     const modeData = ref('Create')
     const salesOrderDialog = ref(false)
@@ -181,6 +180,12 @@ export default {
 
     const initialize = () => {
       salesOrderDialog.value = false
+      store.dispatch('FinishProductStore/list')
+      store.dispatch('TermStore/list')
+      store.dispatch('VatStore/list')
+      store.dispatch('SalesmanStore/list')
+      store.dispatch('DocumentStore/list')
+
       store.dispatch('SalesOrderStore/list')
     }
 

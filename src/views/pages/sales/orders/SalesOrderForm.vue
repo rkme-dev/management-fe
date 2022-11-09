@@ -440,11 +440,6 @@ export default {
     },
   },
   setup(props, { emit }) {
-    store.dispatch('TermStore/list')
-    store.dispatch('VatStore/list')
-    store.dispatch('SalesmanStore/list')
-    store.dispatch('DocumentStore/list')
-    store.dispatch('SalesOrderStore/list')
     const customerModal = ref(false)
     const drDialog = ref(false)
     const modeData = toRef(props, 'mode')

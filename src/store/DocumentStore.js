@@ -13,8 +13,8 @@ export const DocumentStore = {
   },
   actions: {
     // eslint-disable-next-line no-shadow
-    create({ commit }, document) {
-      commit('setLoading', true)
+    create({ commit, dispatch }, document) {
+      dispatch('setLoading', true)
 
       return documentService.create(document)
         .then(
@@ -32,59 +32,63 @@ export const DocumentStore = {
           error => Promise.reject(error),
         )
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
-    removeErrors({ commit }) {
+    setLoading({ commit }, state) {
+      commit('setLoading', state)
+    },
+    removeErrors({ commit, dispatch }) {
       commit('setErrors', {})
     },
-    deleteDocument({ commit }, document) {
-      commit('setLoading', true)
+    deleteDocument({ commit, dispatch }, document) {
+      dispatch('setLoading', true)
 
       return documentService.delete(document)
         .then(
           // eslint-disable-next-line no-shadow
           () => {
             commit('updateDocumentSuccess', document)
-            commit('setLoading', false)
 
             return Promise.resolve(document)
           },
           error => Promise.reject(error),
         )
         .finally(() => {
-          commit('setLoading', false)
+          dispatch('setLoading', false)
         })
     },
-    list({ commit }) {
-      commit('setLoading', true)
+    list({ commit, dispatch }) {
       commit('fetchDocumentsSuccess', [])
+
+      dispatch('setLoading', true)
 
       return documentService.list().then(
         documents => {
           commit('fetchDocumentsSuccess', documents.data)
-          commit('setLoading', false)
+
+          dispatch('setLoading', false)
 
           return Promise.resolve(documents)
         },
         error => Promise.reject(error),
       )
     },
-    get({ commit }, id) {
-      commit('setLoading', true)
+    get({ commit, dispatch }, id) {
+      dispatch('setLoading', true)
 
       return documentService.get(id).then(
         document => {
           commit('fetchDocumentSuccess', document.data)
-          commit('setLoading', false)
+          dispatch('setLoading', false)
 
           return Promise.resolve(document)
         },
         error => Promise.reject(error),
       )
     },
-    update({ commit }, document) {
-      commit('setLoading', true)
+    update({ commit, dispatch }, document) {
+      dispatch('setLoading', true)
 
       return documentService.update(document)
         .then(
@@ -92,7 +96,7 @@ export const DocumentStore = {
           document => {
             if (document.data.id) {
               commit('updateDocumentSuccess', document.data)
-              commit('setLoading', false)
+              dispatch('setLoading', false)
             } else {
               commit('setErrors', document.data)
             }
@@ -143,8 +147,6 @@ export const DocumentStore = {
 
         return rowData
       })
-
-      state.loading = false
     },
     fetchDocumentSuccess(state, document) {
       state.document = document

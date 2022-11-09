@@ -185,6 +185,7 @@ import {
 } from '@vue/composition-api'
 import AccountForm from '@/views/pages/master-files/accounts/AccountForm.vue'
 import store from '@/store'
+import {computed} from "@vue/composition-api/dist/vue-composition-api";
 
 export default {
   components: {
@@ -196,6 +197,9 @@ export default {
       Inactive: 'error',
     }
 
+    store.dispatch('AccountStore/list')
+
+    const loading = computed(() => store.state.AccountStore.loading)
     const search = ref()
     const filter = ref()
     const statusOptions = ref([
@@ -214,6 +218,7 @@ export default {
     })
 
     return {
+      loading,
       filter,
       statusOptions,
       alert,
@@ -277,9 +282,6 @@ export default {
     accounts() {
       return this.$store.state.AccountStore.accounts
     },
-    loading() {
-      return this.$store.state.AccountStore.loading
-    },
   },
 
   watch: {
@@ -291,7 +293,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('AccountStore/list')
     this.$store.dispatch('AccountStore/removeErrors')
   },
   methods: {

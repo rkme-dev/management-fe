@@ -126,7 +126,12 @@ export default {
     SalesDrForm,
   },
   setup() {
+    store.dispatch('TermStore/list')
+    store.dispatch('VatStore/list')
+    store.dispatch('SalesmanStore/list')
+    store.dispatch('DocumentStore/list')
     store.dispatch('ProductStore/list')
+
     const modeData = ref('Create')
     const salesOrderDialog = ref(false)
     const search = ref('')

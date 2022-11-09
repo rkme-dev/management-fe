@@ -12,8 +12,8 @@
       :items="documents"
       :search="search"
       class="elevation-1 font-weight-light"
-      :loading="loading"
       sort-by="name"
+      :loading="loading"
       fixed-header
     >
       <!-- is_active -->
@@ -188,11 +188,13 @@
 <script>
 import { mdiAccountEdit, mdiDeleteCircle, mdiCancel } from '@mdi/js'
 import {
+  computed,
   ref,
   watch,
 } from '@vue/composition-api'
 import DocumentForm from '@/views/pages/master-files/documents/DocumentForm.vue'
 import store from '@/store'
+import {DocumentStore} from "@/store/DocumentStore";
 
 export default {
   components: {
@@ -203,7 +205,10 @@ export default {
       Active: 'success',
       Inactive: 'error',
     }
+    store.dispatch('DocumentStore/list')
 
+    const loading = computed(() => store.state.DocumentStore.loading)
+    console.log(loading.value)
     const search = ref()
     const filter = ref()
     const statusOptions = ref([
@@ -222,6 +227,7 @@ export default {
     })
 
     return {
+      loading,
       filter,
       statusOptions,
       alert,
@@ -284,9 +290,6 @@ export default {
     documents() {
       return this.$store.state.DocumentStore.documents
     },
-    loading() {
-      return this.$store.state.DocumentStore.loading
-    },
   },
 
   watch: {
@@ -298,7 +301,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('DocumentStore/list')
     this.$store.dispatch('DocumentStore/removeErrors')
   },
   methods: {
