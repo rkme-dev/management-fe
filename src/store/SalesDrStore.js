@@ -6,7 +6,7 @@ export const SalesDrStore = {
   namespaced: true,
   state: {
     loading: false,
-    errors: [],
+    errors: {},
     list: [],
     row: {},
     originalData: [],
@@ -15,6 +15,9 @@ export const SalesDrStore = {
   },
   actions: {
     // eslint-disable-next-line no-shadow
+    addError({ commit }, error) {
+        commit('addError', error)
+    },
     setLoading({ commit }, state) {
       commit('setLoading', state)
     },
@@ -218,7 +221,11 @@ export const SalesDrStore = {
     //     state.list = result
     //   }
     // },
-
+    addError(state) {
+        state.errors = {
+            sales_invoice_number: "Sales Invoice Number required."
+        }
+    },
     add(state, row) {
       state.list.push(row)
     },

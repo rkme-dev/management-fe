@@ -208,7 +208,6 @@ export default {
     store.dispatch('DocumentStore/list')
 
     const loading = computed(() => store.state.DocumentStore.loading)
-    console.log(loading.value)
     const search = ref()
     const filter = ref()
     const statusOptions = ref([

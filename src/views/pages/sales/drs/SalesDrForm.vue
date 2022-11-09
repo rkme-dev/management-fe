@@ -94,12 +94,13 @@
               :disabled="formData.status === 'Posted'"
               :error-messages="errors.document_id"
               outlined
+              @change="checkDocument"
               dense
               hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-            cols="4"
+            cols="3"
             class="pl-8"
           >
             <v-text-field
@@ -112,22 +113,16 @@
               label="Customer"
             ></v-text-field>
           </v-col>
-          <v-col
-            cols="2"
-          >
-            <v-btn
-              v-if="modeData === 'Create'"
-              class="md4"
-              color="primary"
-              x-small
-              dark
-              @click="showCustomerModal"
-            >
-              Get Customer
-              <v-icon>
-                {{ icons.mdiAccountPlusOutline }}
-              </v-icon>
-            </v-btn>
+          <v-col cols="3" class="pr-8 pl-8">
+            <v-text-field
+                v-if="invoiceNumberRequired"
+                v-model="formData.sales_invoice_number"
+                outlined
+                :error-messages="errors.sales_invoice_number"
+                dense
+                hide-details="auto"
+                label="Sales Invoice Number"
+            ></v-text-field>
           </v-col>
           <v-col
             cols="3"
@@ -431,6 +426,14 @@ export default {
       orderItems.value = items
     }
 
+    const invoiceNumberRequired = ref(false)
+
+    const checkDocument = () => {
+      const document = documents.value.find(document => document.id === formData.value.document_id)
+
+      invoiceNumberRequired.value = document.document_name === 'Sales Invoice'
+    }
+
     if (modeData.value === 'Edit') {
       formData.value = dataProp.value
       formData.value.customer_name = dataProp.value.customer.name
@@ -575,6 +578,8 @@ export default {
     const errors = computed(() => store.state.SalesDrStore.errors)
 
     return {
+      checkDocument,
+      invoiceNumberRequired,
       postOrder,
       unpostOrder,
       fetchTotalAmount,
