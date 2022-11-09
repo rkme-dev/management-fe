@@ -37,10 +37,6 @@
                   <v-card-text>
                     <v-row class="mt-10">
                       <v-col
-                        cols="7"
-                      >
-                      </v-col>
-                      <v-col
                         cols="5"
                       >
                         <v-currency-field
@@ -73,7 +69,6 @@
               </template>
             </v-data-table>
           </v-col>
-          <v-col cols="8"></v-col>
           <v-col cols="4">
             <v-btn
               color="success"
@@ -82,13 +77,13 @@
               Get Sales Order Items
             </v-btn>
           </v-col>
+          <v-col cols="8"></v-col>
         </v-row>
         <v-row v-if="customer.id">
           <v-col cols="12">
             <v-alert
               color="primary"
               text
-              style="margin-bottom: -10px"
             >
               <div class="d-flex align-start">
                 <v-icon color="primary">
@@ -103,68 +98,64 @@
             </v-alert>
           </v-col>
           <v-col
-            cols="6"
-            class="pr-8 pl-8"
+              cols="4"
+              class="pl-8 pr-8"
           >
             <v-menu
-              v-model="formData.dateModal"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              :disabled="formData.status === 'Posted'"
-              max-width="290px"
-              min-width="auto"
+                v-model="formData.dateModal"
+                :close-on-content-click="false"
+                transition="scale-transition"
+                offset-y
+                :disabled="formData.status === 'Posted'"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="datePosted"
-                  label="Date"
-                  persistent-hint
-                  :prepend-icon="icons.mdiCalendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
+                    v-model="datePosted"
+                    label="Date"
+                    persistent-hint
+                    :prepend-icon="icons.mdiCalendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
                 ></v-text-field>
               </template>
 
               <v-date-picker
-                v-model="datePosted"
-                no-title
-                color="primary"
-                @input="formData.dateModal = false"
+                  v-model="datePosted"
+                  no-title
+                  color="primary"
+                  @input="formData.dateModal = false"
               ></v-date-picker>
             </v-menu>
           </v-col>
           <v-col
-            cols="3"
-            class="pr-8 pl-8"
-          >
-            <v-text-field
-                v-if="formData.id !== undefined"
-                v-model="formData.sales_dr_number"
-                outlined
-                readonly
-                dense
-                hide-details="auto"
-                label="Sales DR Number"
-            ></v-text-field>
-          </v-col>
-          <v-col
-            cols="3"
-            class="pr-8 pl-8"
+              cols="4"
+              class="pr-8 pl-8"
           >
             <v-select
-              v-model="formData.document_id"
-              :items="documents"
-              item-text="title"
-              item-value="id"
-              label="Document"
-              :disabled="formData.status === 'Posted'"
-              :error-messages="errors.document_id"
-              outlined
-              dense
-              hide-details="auto"
+                v-model="formData.document_id"
+                :items="documents"
+                item-text="title"
+                item-value="id"
+                label="Document"
+                :disabled="formData.status === 'Posted'"
+                :error-messages="errors.document_id"
+                @change="checkDocument"
+                outlined
+                dense
+                hide-details="auto"
             ></v-select>
+          </v-col>
+          <v-col cols="4" class="pr-8 pl-8">
+            <v-text-field
+                v-show="invoiceNumberRequired"
+                v-model="formData.sales_invoice_number"
+                outlined
+                :error-messages="errors.sales_invoice_number"
+                dense
+                hide-details="auto"
+                label="Sales Invoice Number"
+            ></v-text-field>
           </v-col>
           <v-col
             cols="4"
@@ -181,11 +172,7 @@
             ></v-text-field>
           </v-col>
           <v-col
-            cols="2"
-          >
-          </v-col>
-          <v-col
-            cols="3"
+            cols="4"
             class="pr-8 pl-8"
           >
             <v-select
@@ -201,7 +188,7 @@
             ></v-select>
           </v-col>
           <v-col
-            cols="3"
+            cols="4"
             class="pr-8 pl-8"
           >
             <v-text-field
@@ -442,6 +429,12 @@ export default {
     })
 
     const submit = () => {
+      if (invoiceNumberRequired.value === true && !formData.value.sales_invoice_number) {
+        store.dispatch('SalesDrStore/addError')
+
+        return
+      }
+
       const payload = formData.value
       payload.date_posted = datePosted.value
       payload.order_item_ids = orderItems.value.map(item => item.order_item_id)
@@ -460,6 +453,14 @@ export default {
 
     const fetchTotalAmount = amount => {
       totalAmount.value = amount
+    }
+
+    const invoiceNumberRequired = ref(false)
+
+    const checkDocument = () => {
+      const document = documents.value.find(document => document.id === formData.value.document_id)
+
+      invoiceNumberRequired.value = document.document_name === 'Sales Invoice'
     }
 
     const fetchOrderItems = items => {
@@ -500,6 +501,8 @@ export default {
     }
 
     return {
+      invoiceNumberRequired,
+      checkDocument,
       close,
       cancel,
       datePosted,

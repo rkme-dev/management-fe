@@ -239,6 +239,14 @@
             </v-dialog>
           </v-toolbar>
         </template>
+        <template #item.quantity="{ item }">
+          <v-currency-field
+              v-model="item.quantity"
+              disabled
+              :decimal-length="0"
+          >
+          </v-currency-field>
+        </template>
         <template #[`item.total_amount`]="{item}">
           <div class="d-flex justify-center text-green text--primary">
             <span class="text-green">{{ item.total_amount }}</span>
@@ -344,12 +352,12 @@ export default {
 
     if (modeData.value === 'Edit') {
       physicalCountTotalAmount.value = 0
-      
+
       countItems.value = itemsProp.value.map(countItem => {
         const productRaw = products.value.find(item => item.id === countItem.product_id)
 
         physicalCountTotalAmount.value = parseFloat(physicalCountTotalAmount.value) + parseFloat(countItem.total_amount)
-        
+
         // eslint-disable-next-line no-param-reassign
         countItem.name = productRaw?.name
         // eslint-disable-next-line no-param-reassign
