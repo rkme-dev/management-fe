@@ -49,6 +49,16 @@
             hide-details
             class="mr-4"
           ></v-text-field>
+          <v-switch
+              v-model="showPosted"
+              label="Display Posted"
+              class="mb-n4 mr-16"
+          ></v-switch>
+          <v-switch
+              v-model="todayPosted"
+              label="Today Only"
+              class="mb-n4 mr-16"
+          ></v-switch>
           <v-btn
             color="primary"
             dark
@@ -114,7 +124,7 @@
 <script>
 import { mdiAccountEdit, mdiDeleteCircle, mdiPrinter } from '@mdi/js'
 import {
-  ref, computed, onMounted,
+  ref, computed, onMounted, watch,
 } from '@vue/composition-api'
 import store from '@/store'
 import { dateFormat1 } from '@/utils/time'
@@ -126,12 +136,7 @@ export default {
     SalesDrForm,
   },
   setup() {
-    store.dispatch('TermStore/list')
-    store.dispatch('VatStore/list')
-    store.dispatch('SalesmanStore/list')
-    store.dispatch('DocumentStore/list')
-    store.dispatch('ProductStore/list')
-
+    const showPosted = ref(false)
     const modeData = ref('Create')
     const salesOrderDialog = ref(false)
     const search = ref('')
@@ -159,6 +164,7 @@ export default {
       contact_no: '',
       delivery_address: '',
     })
+    const todayPosted = ref(false)
     const salesOrder = ref({
       dateModal: false,
       customer_name: null,
@@ -175,13 +181,29 @@ export default {
       vat_id: null,
     })
 
-    const salesOrders = computed(() => store.state.SalesDrStore.list)
+    const salesOrders = computed(() => store.state.SalesDrStore.list.filter(order => {
+      if (showPosted.value === false && order.status !== 'Posted') {
+        return order
+      }
+
+      if (showPosted.value === true) {
+        return order
+      }
+    }))
     const errors = computed(() => store.getters.errors)
     const loading = computed(() => store.state.SalesDrStore.loading)
 
+    watch (todayPosted, value => {
+      store.dispatch('SalesDrStore/list', value)
+    })
     const initialize = () => {
       salesOrderDialog.value = false
-      store.dispatch('SalesDrStore/list')
+      store.dispatch('TermStore/list')
+      store.dispatch('VatStore/list')
+      store.dispatch('SalesmanStore/list')
+      store.dispatch('DocumentStore/list')
+      store.dispatch('ProductStore/list')
+      store.dispatch('SalesDrStore/list', todayPosted.value)
     }
 
     const createSalesOrder = () => {
@@ -219,6 +241,8 @@ export default {
     }
 
     return {
+      todayPosted,
+      showPosted,
       editItem,
       salesOrder,
       createSalesOrder,
