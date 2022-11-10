@@ -403,7 +403,7 @@ export default {
     const terms = computed(() => store.state.TermStore.terms)
     const vats = computed(() => store.state.VatStore.vats)
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
-      if (documentItem.module === 'Sales') {
+      if (documentItem.module === 'Sales'  && documentItem.is_active === 1) {
         documentItem.title = `${documentItem.document_name}`
 
         return documentItem

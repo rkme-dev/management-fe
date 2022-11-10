@@ -879,10 +879,16 @@ export default {
       terms: computed(() => store.state.TermStore.terms),
       vats: computed(() => store.state.VatStore.vats),
       documents: computed(() => store.state.DocumentStore.documents.filter(documentItem => {
-        if (documentItem.module === 'Collection') {
-          documentItem.title = `${documentItem.document_name}`
+        documentItem.title = `${documentItem.document_name}`
 
-          return documentItem
+        if (documentItem.module === 'Collection') {
+          if (modeData.value === 'Create' && documentItem.is_active === 1 ) {
+            return documentItem
+          }
+
+          if (modeData.value === 'Edit') {
+            return documentItem
+          }
         }
       })),
       types: ref([

@@ -279,9 +279,15 @@ export default {
         ],
       },
       {
-        title: 'Physical Counts',
-        link: 'physical-counts',
+        title: 'Inventory',
         permission: 'view-supplier-list',
+        children: [
+          {
+            title: 'Physical Count',
+            icon: mdiArchiveOutline,
+            link: 'physical-counts',
+          },
+        ],
         icon: mdiChartBellCurveCumulative,
       },
       {
@@ -297,11 +303,11 @@ export default {
         permission: 'view-supplier-list',
         icon: mdiCardAccountDetailsStarOutline,
       },
-      {
-        title: 'Warehouse',
-        link: 'warehouse page',
-        icon: mdiWarehouse,
-      },
+      // {
+      //   title: 'Warehouse',
+      //   link: 'warehouse page',
+      //   icon: mdiWarehouse,
+      // },
       {
         title: 'User Control',
         icon: mdiEyeSettings,

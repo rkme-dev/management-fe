@@ -464,10 +464,15 @@ export default {
     const terms = computed(() => store.state.TermStore.terms)
     const vats = computed(() => store.state.VatStore.vats)
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
+      documentItem.title = `${documentItem.document_name}`
       if (documentItem.module === 'Orders') {
-        documentItem.title = `${documentItem.document_name}`
+        if (modeData.value === 'Create' && documentItem.is_active === 1 ) {
+          return documentItem
+        }
 
-        return documentItem
+        if (modeData.value === 'Edit') {
+          return documentItem
+        }
       }
     }))
 
