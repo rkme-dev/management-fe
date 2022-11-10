@@ -6,18 +6,13 @@
     width="290"
     class="app-navigation-menu"
     :right="$vuetify.rtl"
-    @input="val => $emit('update:is-drawer-open', val)"
+    @input="(val) => $emit('update:is-drawer-open', val)"
   >
     <!-- Navigation Header -->
     <div class="vertical-nav-header d-flex items-center ps-6 pe-5 pt-5 pb-2">
-      <router-link
-        to="/"
-        class="d-flex align-center text-decoration-none"
-      >
+      <router-link to="/" class="d-flex align-center text-decoration-none">
         <v-slide-x-transition>
-          <h2 class="app-title text--primary">
-            Enco Group
-          </h2>
+          <h2 class="app-title text--primary">Enco Group</h2>
         </v-slide-x-transition>
       </router-link>
     </div>
@@ -37,15 +32,8 @@
         :icon="item.icon"
       ></nav-menu-link>
 
-      <nav-menu-group
-        v-else
-        :title="item.title"
-        :icon="item.icon"
-      >
-        <div
-          v-for="(subItem, subIndex) in item.children"
-          :key="subIndex"
-        >
+      <nav-menu-group v-else :title="item.title" :icon="item.icon">
+        <div v-for="(subItem, subIndex) in item.children" :key="subIndex">
           <nav-menu-link
             :title="subItem.title"
             :to="{ name: subItem.link }"
@@ -192,12 +180,14 @@ import {
   mdiHuman,
   mdiCarKey,
   mdiCog,
-  mdiWarehouse, mdiAccountGroup, mdiCurrencySign,
-} from '@mdi/js'
-import { ref } from '@vue/composition-api'
-import store from '@/store'
-import NavMenuGroup from './components/NavMenuGroup.vue'
-import NavMenuLink from './components/NavMenuLink.vue'
+  mdiWarehouse,
+  mdiAccountGroup,
+  mdiCurrencySign,
+} from "@mdi/js";
+import { ref } from "@vue/composition-api";
+import store from "@/store";
+import NavMenuGroup from "./components/NavMenuGroup.vue";
+import NavMenuLink from "./components/NavMenuLink.vue";
 
 export default {
   components: {
@@ -213,148 +203,157 @@ export default {
   setup() {
     const navigations = ref([
       {
-        title: 'Dashboard',
-        link: 'dashboard',
+        title: "Dashboard",
+        link: "dashboard",
         icon: mdiHomeOutline,
       },
       {
-        title: 'Sales',
+        title: "Sales",
         icon: mdiChartBellCurveCumulative,
-        permission: 'view-client-list',
+        permission: "view-client-list",
         children: [
           {
-            title: 'Sales Orders',
+            title: "Sales Orders",
             icon: mdiCardAccountDetailsStarOutline,
-            link: 'sales-orders',
+            link: "sales-orders",
           },
           {
-            title: 'Sales Drs',
+            title: "Sales Drs",
             icon: mdiEyeSettings,
-            link: 'sales-drs',
+            link: "sales-drs",
           },
           {
-            title: 'Collections',
+            title: "Collections",
             icon: mdiCurrencySign,
-            link: 'collections',
+            link: "collections",
           },
           {
-            title: 'Deposits',
+            title: "Deposits",
             icon: mdiCurrencySign,
-            link: 'deposits',
+            link: "deposits",
           },
           {
-            title: 'Bounced Checks',
+            title: "Bounced Checks",
             icon: mdiCurrencySign,
-            link: 'bounced-deposits',
+            link: "bounced-deposits",
           },
         ],
       },
       {
-        title: 'Logistics',
+        title: "Logistics",
         icon: mdiChartBellCurveCumulative,
-        permission: 'view-client-list',
+        permission: "view-client-list",
         children: [
           {
-            title: 'Trip Ticket',
+            title: "Trip Ticket",
             icon: mdiCardAccountDetailsStarOutline,
-            link: 'trip-tickets',
+            link: "trip-tickets",
           },
         ],
       },
       {
-        title: 'Reports',
+        title: "Reports",
         icon: mdiChartBellCurveCumulative,
-        permission: 'view-client-list',
+        permission: "view-client-list",
         children: [
           {
-            title: 'Accounts Receivable',
+            title: "Accounts Receivable",
             icon: mdiCardAccountDetailsStarOutline,
-            link: 'accounts-receivables',
+            link: "accounts-receivables",
           },
           {
-            title: 'Inventory Reports',
+            title: "Customers",
+            icon: mdiCardAccountDetailsStarOutline,
+            link: "customer-report",
+          },
+          {
+            title: "Inventory Reports",
             icon: mdiArchiveOutline,
-            link: 'inventory-reports',
+            link: "inventory-reports",
           },
         ],
       },
       {
-        title: 'Physical Counts',
-        link: 'physical-counts',
-        permission: 'view-supplier-list',
+        title: "Physical Counts",
+        link: "physical-counts",
+        permission: "view-supplier-list",
         icon: mdiChartBellCurveCumulative,
       },
       {
-        type: 'sub-menu',
-        title: 'Purchase Orders',
-        link: 'purchase-orders',
-        permission: 'view list-purchase order',
+        type: "sub-menu",
+        title: "Purchase Orders",
+        link: "purchase-orders",
+        permission: "view list-purchase order",
         icon: mdiCardAccountDetailsStarOutline,
       },
       {
-        title: 'Suppliers',
-        link: 'suppliers',
-        permission: 'view-supplier-list',
+        title: "Suppliers",
+        link: "suppliers",
+        permission: "view-supplier-list",
         icon: mdiCardAccountDetailsStarOutline,
       },
       {
-        title: 'Warehouse',
-        link: 'warehouse page',
+        title: "Warehouse",
+        link: "warehouse page",
         icon: mdiWarehouse,
       },
       {
-        title: 'User Control',
+        title: "User Control",
         icon: mdiEyeSettings,
-        link: 'user-access-menu',
+        link: "user-access-menu",
       },
       {
-        title: 'Master Files',
+        title: "Master Files",
         icon: mdiEyeSettings,
-        link: 'master-files',
+        link: "master-files",
       },
-    ])
+    ]);
 
-    const isSuperAdmin = store.getters['AuthStore/hasAbility']('*')
+    const isSuperAdmin = store.getters["AuthStore/hasAbility"]("*");
 
     if (isSuperAdmin === false) {
-      navigations.value = navigations.value.filter(navigation => {
+      navigations.value = navigations.value.filter((navigation) => {
         if (navigation.children) {
           // eslint-disable-next-line no-param-reassign
-          navigation.children = navigation.children.filter(subNavigation => {
+          navigation.children = navigation.children.filter((subNavigation) => {
             if (subNavigation.permission === undefined) {
-              return subNavigation
+              return subNavigation;
             }
 
-            const hasAbility = store.getters['AuthStore/hasAbility'](subNavigation.permission)
+            const hasAbility = store.getters["AuthStore/hasAbility"](
+              subNavigation.permission
+            );
 
             if (hasAbility === false) {
               // eslint-disable-next-line consistent-return
-              return
+              return;
             }
 
             // eslint-disable-next-line consistent-return
-            return subNavigation
-          })
+            return subNavigation;
+          });
 
           if (navigation.children.length > 0) {
-            return navigation
+            return navigation;
           }
         } else {
           if (navigation.permission === undefined) {
-            return navigation
+            return navigation;
           }
 
-          const hasAbility = store.getters['AuthStore/hasAbility'](navigation.permission)
+          const hasAbility = store.getters["AuthStore/hasAbility"](
+            navigation.permission
+          );
 
           if (hasAbility === false) {
             // eslint-disable-next-line consistent-return
-            return
+            return;
           }
 
           // eslint-disable-next-line consistent-return
-          return navigation
+          return navigation;
         }
-      })
+      });
     }
 
     return {
@@ -375,9 +374,9 @@ export default {
         mdiCarKey,
         mdiCog,
       },
-    }
+    };
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -399,7 +398,7 @@ export default {
 }
 
 @include theme(app-navigation-menu) using ($material) {
-  background-color: map-deep-get($material, 'background');
+  background-color: map-deep-get($material, "background");
 }
 
 .app-navigation-menu {

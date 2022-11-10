@@ -4,6 +4,9 @@ const CustomersService = {
   get() {
     return ApiService.get('sales/customers')
   },
+  aging() {
+    return ApiService.get('customers/aging')
+  },
   find(slug) {
     return ApiService.get('sales/customer', slug)
   },
