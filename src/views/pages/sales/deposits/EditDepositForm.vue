@@ -229,7 +229,7 @@
               Post
             </v-btn>
             <v-btn
-                v-if="formData.status === 'posted'"
+                v-if="formData.status === 'posted' && !hasBouncedCheck"
                 color="error"
                 class="me-3 mt-4"
                 @click="unpostDeposit"
@@ -315,6 +315,9 @@ export default {
       { text: 'Amount', value: 'collection_payment.amount' },
     ]
     const amount = ref(0)
+
+
+    const hasBouncedCheck = computed(() => store.state.DepositStore.row.checks.find(check => check.status === 'bounced'))
 
     const initialize = () => {
       store.dispatch('DocumentStore/list')
@@ -405,6 +408,7 @@ export default {
     }
 
     return {
+      hasBouncedCheck,
       postDeposit,
       unpostDeposit,
       close,
