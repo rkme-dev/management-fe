@@ -8,8 +8,8 @@
       :search="search"
       :loading="loading"
     >
-      <template #item.created_at="{ item }">
-        {{ dateFormat1(item.created_at) }}
+      <template #item.date_posted="{ item }">
+        {{ dateFormat1(item.date_posted) }}
       </template>
       <template #item.amount="{ item }">
         <v-currency-field
@@ -145,7 +145,7 @@ export default {
         text: 'Date',
         align: 'start',
         sortable: true,
-        value: 'created_at',
+        value: 'date_posted',
       },
       { text: 'DR No', value: 'sales_dr_number' },
       { text: 'Document', value: 'document.document_name' },
@@ -196,6 +196,11 @@ export default {
     watch (todayPosted, value => {
       store.dispatch('SalesDrStore/list', value)
     })
+
+    watch (showPosted, value => {
+      store.dispatch('SalesDrStore/list', todayPosted.value)
+    })
+
     const initialize = () => {
       salesOrderDialog.value = false
       store.dispatch('TermStore/list')
