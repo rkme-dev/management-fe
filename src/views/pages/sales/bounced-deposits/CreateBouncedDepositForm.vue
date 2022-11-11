@@ -252,7 +252,7 @@ export default {
     const clearingDate = ref(new Date().toISOString().substr(0, 10))
     const formData = ref({})
     const errors = computed(() => store.state.DepositStore.errors)
-    const accounts = computed(() => store.state.AccountStore.accounts.filter(account => account.type === 'Bank'))
+    const accounts = computed(() => store.state.AccountStore.accounts.filter(account => account.type === 'Accounts Receivable'))
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
       if (documentItem.module === 'Bounced') {
         documentItem.title = `${documentItem.document_name}`
