@@ -466,7 +466,8 @@ export default {
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
       documentItem.title = `${documentItem.document_name}`
       if (documentItem.module === 'Orders') {
-        if (modeData.value === 'Create' && documentItem.is_active === 1 ) {
+
+        if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
           return documentItem
         }
 

@@ -882,7 +882,7 @@ export default {
         documentItem.title = `${documentItem.document_name}`
 
         if (documentItem.module === 'Collection') {
-          if (modeData.value === 'Create' && documentItem.is_active === 1 ) {
+          if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
             return documentItem
           }
 
