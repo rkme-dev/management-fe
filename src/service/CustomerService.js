@@ -21,7 +21,7 @@ export default class CustomerService {
     .then(response => response.data)
     .catch(error => error.response)
 
-  aging = () => AxiosInstance.get('/customers/aging')
+  aging = params => AxiosInstance.get(`/customers/aging${params}`, params)
     .then(response => response.data)
     .catch(error => error.response)
 

@@ -216,7 +216,13 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("CustomerStore/aging");
+    let params = '';
+
+    if (this.$route.query.cId) {
+      params = `?cId=${this.$route.query.cId}`
+    }
+    this.$store.dispatch("CustomerStore/aging", params);
+    
     this.$store.dispatch("CustomerStore/removeErrors");
   },
   methods: {

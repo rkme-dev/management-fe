@@ -68,11 +68,11 @@ export const CustomerStore = {
         error => Promise.reject(error),
       )
     },
-    aging({ commit, dispatch }) {
+    aging({ commit, dispatch }, params) {
       commit('fetchAgingSuccess', [])
       dispatch('setLoading', true)
 
-      return customerService.aging().then(
+      return customerService.aging(params).then(
         response => {
           commit('fetchAgingSuccess', response.data)
           dispatch('setLoading', false)

@@ -125,6 +125,24 @@
           </v-col>
           <v-col
             cols="2"
+            v-if="formData.customer_name !== null"
+          >
+            <v-btn
+                class="ml-n16"
+                color="primary"
+                x-small
+                dark
+                :href="`/customer-aging?cId=${formData.customer_id}`"
+                target="_blank"
+              >
+                A/R 
+                <v-icon>
+                  {{ icons.mdiNotebook }}
+                </v-icon>
+              </v-btn>
+          </v-col>
+          <v-col
+            cols="2"
           >
             <v-btn
               v-if="formData.customer_name !== null"
@@ -409,6 +427,7 @@ import {
   mdiContentSave,
   mdiFinance,
   mdiProgressClose,
+  mdiNotebook,
 } from '@mdi/js'
 import CustomerForm from '@/views/pages/master-files/customers/CustomerForm.vue'
 import DrListTableForm from '@/views/pages/sales/orders/DrListTableForm.vue'
@@ -654,6 +673,7 @@ export default {
         mdiFinance,
         mdiContentSave,
         mdiBookInformationVariant,
+        mdiNotebook,
         mdiInformation,
         mdiAccountPlusOutline,
       },
