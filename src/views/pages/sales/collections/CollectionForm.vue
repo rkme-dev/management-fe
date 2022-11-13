@@ -339,13 +339,37 @@
             </v-alert>
           </v-col>
           <v-col
+            v-if="totalPaidWarning"
+            cols="12"
+          >
+            <v-alert
+              color="error"
+              text
+              style="margin-bottom: -10px"
+            >
+              <div class="d-flex align-start">
+                <v-icon color="error">
+                  {{ icons.mdiInformation }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                    Your total paid amount is greater than amount to pay.
+                  </p>
+                </div>
+              </div>
+            </v-alert>
+          </v-col>
+          <v-col
             v-if="formData.customer_id"
             cols="12"
           >
             <collection-payment
               :total-amount="totalAmount"
               :payments="payments"
+              :collection-status="formData.status"
+              :total-paid="totalPaid"
               @toggleModal="togglePaymentModal"
+              @editPayment="editPayment"
               @removePayment="removePayment"
             ></collection-payment>
           </v-col>
@@ -433,16 +457,18 @@
       </v-dialog>
       <v-dialog
         v-model="paymentModal"
-        hide-overlay
-        width="1100px"
-        height="700px"
+        persistent
+        width="1100"
         transition="dialog-bottom-transition"
       >
         <payment-form
           :total-amount="totalPaymentAmount"
+          :data="paymentData"
+          :mode="paymentModeData"
           @submit="onSelectCustomer"
           @clicked="cancel"
           @toggleModal="togglePaymentModal"
+          @editPayment="editPayment"
           @addedPayment="addedPayment"
         ></payment-form>
       </v-dialog>
@@ -498,6 +524,8 @@ export default {
     const customerModal = ref(false)
     const drListModal = ref(false)
     const paymentModal = ref(false)
+    const paymentData = ref({})
+    const paymentModeData = ref("Create")
     const showScanner = ref(false)
     const salesDrList = ref([])
     const formData = ref({
@@ -516,6 +544,7 @@ export default {
       vat_id: null,
     })
     const paymentWarning = ref(false)
+    const totalPaidWarning = ref(false)
     const totalAmount = ref(0)
     const payments = ref([])
     const paymentsReinitialize = () => {
@@ -539,6 +568,17 @@ export default {
           return payment
         })
       }
+      calculateTotalPaid()
+    }
+    const totalPaid = ref(0)
+
+    const calculateTotalPaid = () => {
+      let total = 0
+
+      payments.value.forEach((item, index) => {
+        total += parseFloat(item.amount)
+      });
+      totalPaid.value = total
     }
 
     if (modeData.value === 'Edit') {
@@ -595,6 +635,7 @@ export default {
 
     onUnmounted(async () => {
       paymentWarning.value = false
+      totalPaidWarning.value = false
 
       salesDrList.value = []
       formData.value = {
@@ -656,6 +697,7 @@ export default {
 
     const cancel = () => {
       emit('submit')
+      window.location.reload()
     }
 
     const totalPaymentAmount = ref(0)
@@ -687,8 +729,28 @@ export default {
       drListModal.value = !drListModal.value
     }
 
-    const togglePaymentModal = () => {
+    const paymentTypesMapping = {
+      cash_payment: 'Cash Payment',
+      check_payment: 'Check Payment',
+      online_payment: 'Online Payment',
+    }
+
+    const togglePaymentModal = (mode) => {
       paymentModal.value = !paymentModal.value
+      paymentModeData.value = mode
+    }
+    const editPayment = (data, index) => {
+      paymentData.value = data
+      paymentData.value.index = index
+      paymentModeData.value = "Edit";
+      paymentData.value.mode = paymentModeData.value
+      /**
+       * Identify payment type in passed data
+       */
+      data.payment_type = paymentTypesMapping[data.type]
+      paymentData.value.index = index
+
+      togglePaymentModal(paymentModeData.value)
     }
 
     const selectedDrs = salesDrs => {
@@ -738,13 +800,18 @@ export default {
         }
       })
 
-      if (totalPaymentAmount.value > 0) {
+      if (modeData.value === 'Create' && totalPaymentAmount.value > 0) {
         paymentWarning.value = true
 
         return
       }
 
+      if (totalPaid.value > totalAmount.value) {
+        totalPaidWarning.value = true
+        return
+      }
       paymentWarning.value = false
+      totalPaidWarning.value = false
 
       if (modeData.value === 'Create') {
         const payload = formData.value
@@ -775,14 +842,16 @@ export default {
           },
         )
       }
+      
     }
 
     watch(payments, value => {
       totalPaymentAmount.value = totalAmount.value ?? 0
-
+      
       value.forEach(payment => {
         totalPaymentAmount.value = parseFloat(totalPaymentAmount.value) - parseFloat(payment.amount)
       })
+      return payments
     })
 
     const postOrder = () => {
@@ -806,8 +875,13 @@ export default {
     }
 
     const addedPayment = payment => {
-      togglePaymentModal()
-      payments.value.push(payment)
+      togglePaymentModal('Create')
+      if (payment.mode != "Edit") {
+        payments.value.push(payment)
+      } else {
+        payments.value[payment.index] = payment
+      }
+      paymentsReinitialize()
     }
 
     const totalPaymentCheck = amount => {
@@ -847,6 +921,7 @@ export default {
     return {
       totalPaymentAmount,
       paymentWarning,
+      totalPaidWarning,
       totalPaymentCheck,
       postOrder,
       unpostOrder,
@@ -854,8 +929,14 @@ export default {
       addedPayment,
       totalAmount,
       togglePaymentModal,
+      editPayment,
+      calculateTotalPaid,
+      paymentTypesMapping,
       payments,
       paymentModal,
+      paymentData,
+      paymentModeData,
+      totalPaid,
       removeDr,
       salesDrList,
       drListModal,

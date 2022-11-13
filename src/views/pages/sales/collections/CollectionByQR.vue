@@ -370,13 +370,36 @@
             </v-alert>
           </v-col>
           <v-col
+            v-if="totalPaidWarning"
+            cols="12"
+          >
+            <v-alert
+              color="error"
+              text
+              style="margin-bottom: -10px"
+            >
+              <div class="d-flex align-start">
+                <v-icon color="error">
+                  {{ icons.mdiInformation }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                    Your total paid amount is greater than payment needed.
+                  </p>
+                </div>
+              </div>
+            </v-alert>
+          </v-col>
+          <v-col
               cols="12"
               v-if="formData.remaining_balance > 0"
           >
             <collection-payment
                 :total-amount="totalAmountToPay"
                 :payments="payments"
+                :total-paid="totalPaid"
                 @toggleModal="togglePaymentModal"
+                @editPayment="editPayment"
                 @removePayment="removePayment"
             ></collection-payment>
           </v-col>
@@ -421,8 +444,11 @@
       >
         <payment-form
             :total-amount="totalPaymentAmount"
+            :data="paymentData"
+            :mode="paymentModeData"
             @submit=""
             @toggleModal="togglePaymentModal"
+            @editPayment="editPayment"
             @addedPayment="addedPayment"
         ></payment-form>
       </v-dialog>
@@ -448,9 +474,15 @@ export default {
     PaymentForm,
   },
   props: {
-
+    mode: {
+      type: String,
+      required: true,
+      default: (() => 'Create'),
+    },
   },
   setup(props, context) {
+    const modeData = toRef(props, 'mode')
+
     const payments = ref([])
     const totalAmountToPay = ref(0)
     const salesDrService = new SalesDrService()
@@ -484,7 +516,11 @@ export default {
       { text: 'Amount To Pay', value: 'amount_to_pay' },
     ]
     const paymentWarning = ref(false)
+    const totalPaidWarning = ref(false)
     const paymentModal = ref(false)
+    const paymentData = ref({})
+    const paymentModeData = ref("Create")
+
     const totalPaymentAmount = ref(0)
 
     const initialize = () => {
@@ -503,6 +539,15 @@ export default {
       })
     }
 
+    const totalPaid = computed(() => {
+      let total = 0
+
+      payments.value.forEach((item, index) => {
+        total += parseFloat(item.amount)
+      });
+      return total
+    })
+
     const calculateAmountToPay = () => {
       totalAmountToPay.value = salesDrs.value[0].amount_to_pay
       totalPaymentAmount.value = salesDrs.value[0].amount_to_pay
@@ -517,8 +562,17 @@ export default {
       await initialize()
     })
 
-    const togglePaymentModal = () => {
+    const togglePaymentModal = (mode) => {
       paymentModal.value = !paymentModal.value
+      paymentModeData.value = mode
+    }
+
+    const editPayment = (data, index) => {
+      paymentData.value = data
+      paymentData.value.index = index
+      paymentModeData.value = "Edit";
+      paymentData.value.mode = paymentModeData.value
+      togglePaymentModal(paymentModeData.value)
     }
 
     const removePayment = (item, index) => {
@@ -526,8 +580,12 @@ export default {
     }
 
     const addedPayment = payment => {
-      togglePaymentModal()
-      payments.value.push(payment)
+      togglePaymentModal('Create')
+      if (payment.mode != "Edit") {
+        payments.value.push(payment)
+      } else {
+        payments.value[payment.index] = payment
+      }
     }
 
     const submit = () => {
@@ -547,13 +605,19 @@ export default {
         totalPaymentAmount.value = parseFloat(totalPaymentAmount.value) - parseFloat(payment.amount)
       })
 
-      if (totalPaymentAmount.value > 0) {
+      if (modeData.value === 'Create' && totalPaymentAmount.value > 0) {
         paymentWarning.value = true
 
         return
       }
 
+      if (totalPaid.value > totalAmount.value) {
+        totalPaidWarning.value = true
+        return
+      }
+
       paymentWarning.value = false
+      totalPaidWarning.value = false
 
       const payload = formData.value
       payload.amount = totalAmountToPay.value
@@ -587,13 +651,18 @@ export default {
       submit,
       addedPayment,
       paymentModal,
+      paymentData,
+      paymentModeData,
       togglePaymentModal,
+      editPayment,
       removePayment,
+      totalPaid,
       totalAmountToPay,
       payments,
       calculateAmountToPay,
       dateFormat1,
       paymentWarning,
+      totalPaidWarning,
       salesDrs,
       headers,
       datePosted,

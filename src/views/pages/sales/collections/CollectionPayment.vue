@@ -2,10 +2,16 @@
   <div class="pa-6">
     <v-data-table
       :headers="headers"
-      :items="paymentsData"
+      :items="paymentData"
       sort-by="name"
       class="elevation-1"
     >
+      <template #item.bank="{ item }">
+        {{ (item.payment && item.payment.bank) ? item.payment.bank : item.bank }}
+      </template>
+      <template #item.check_number="{ item }">
+        {{ (item.payment && item.payment.check_number) ? item.payment.check_number : item.check_number }}
+      </template>
       <template #item.created_at="{ item }">
         {{ dateFormat1(item.created_at) }}
       </template>
@@ -19,6 +25,9 @@
         </v-currency-field>
       </template>
       <template v-slot:item.actions="{ item, index}">
+        <v-icon small class="mr-2" @click="editPayment(item, index)" v-if="collectionStatus != 'Posted'">
+          {{ icons.mdiNotebookEdit }}
+        </v-icon>
         <v-icon
           small
           @click="removePayment(item, index)"
@@ -26,8 +35,14 @@
           {{ icons.mdiDeleteCircle }}
         </v-icon>
       </template>
-      <template v-slot:footer>
+      <template v-slot:footer="{ item }">
         <v-row>
+          <v-col
+            cols="2"
+            class="ml-auto mt-4 mb-4"
+          >
+            <div class="pl-4"> TOTAL: <b>PHP <span>{{ totalPaid.toLocaleString() }}</span></b></div>
+          </v-col>
           <v-col cols="8"></v-col>
           <v-col
             cols="2"
@@ -52,10 +67,7 @@
 </template>
 
 <script>
-import { mdiAccountEdit, mdiDeleteCircle } from '@mdi/js'
-import {
-  ref, toRef,
-} from '@vue/composition-api'
+import { mdiAccountEdit, mdiDeleteCircle, mdiNotebookEdit } from '@mdi/js'
 import { dateFormat1 } from '@/utils/time'
 
 export default {
@@ -68,54 +80,91 @@ export default {
       required: false,
       default: (() => 0),
     },
+    collectionStatus: {
+      type: String,
+      required: false,
+      default: (() => 'For Review'),
+    },
+    totalPaid: {
+      type: Number,
+      required: false,
+      default: (() => 0),
+    },
     payments: {
       type: Array,
       required: true,
       default: (() => []),
     },
   },
-  setup(props, { emit }) {
-    const paymentsData = toRef(props, 'payments')
-    const headers = ref([
-      {
-        text: 'Date',
-        align: 'start',
-        sortable: false,
-        value: 'payment_date',
-      },
-      { text: 'Payment Type', value: 'payment_type' },
-      { text: 'Bank of Check', value: 'payment.bank' },
-      { text: 'Check Number', value: 'payment.check_number' },
-      { text: 'Reference #', value: 'reference_number' },
-      { text: 'Amount', value: 'amount' },
-      { text: 'Actions', value: 'actions', sortable: false },
-    ])
-
-    const salesDrs = ref([])
-
-    const removePayment = (item, index) => {
-      emit('removePayment', item, index)
-    }
-
-    const toggleModal = () => {
-      emit('toggleModal')
-    }
-
+  data(){
     return {
-      removePayment,
-      paymentsData,
-      toggleModal,
-      dateFormat1,
-      mdiAccountEdit,
-      mdiDeleteCircle,
-      headers,
-      salesDrs,
-      icons: {
-        mdiAccountEdit,
-        mdiDeleteCircle,
-      },
+      totalPaidAmount: 0,
+      salesDrs: [],
+      icons: {}
     }
   },
+  computed: {
+    headers() {
+      return [
+        {
+          text: 'Date',
+          align: 'start',
+          sortable: false,
+          value: 'payment_date',
+        },
+        { text: 'Payment Type', value: 'payment_type' },
+        { text: 'Bank of Check', value: 'bank' },
+        { text: 'Check Number', value: 'check_number' },
+        { text: 'Reference #', value: 'reference_number' },
+        { text: 'Amount', value: 'amount' },
+        { text: 'Actions', value: 'actions', sortable: false },
+      ]
+    },
+    paymentData() {
+      return this.payments
+    }
+  },
+  methods: {
+    initialize() {
+      this.paymentData
+      console.log(this.paymentData)
+      this.totalPaidAmount = this.totalPaid
+    },
+    removePayment(item, index){
+      this.$emit('removePayment', item, index)
+    },
+
+    editPayment(item, index){
+      if (item.payment_type === 'Cash Payment') {
+        item.type = 'cash_payment'
+      }
+
+      if (item.payment_type === 'Check Payment') {
+        item.type = 'check_payment'
+      }
+
+      if (item.payment_type === 'Online Payment') {
+        item.type = 'online_payment'
+      }
+      this.$emit('editPayment', item, index)
+    },
+
+    toggleModal(){
+      this.$emit('toggleModal', 'Create')
+    }
+  },
+
+  updated () {
+    this.initialize()
+  },
+  mounted() {
+    this.initialize()
+    this.icons = {
+      mdiAccountEdit,
+      mdiNotebookEdit,
+      mdiDeleteCircle,
+    }
+  }
 }
 </script>
 <style>

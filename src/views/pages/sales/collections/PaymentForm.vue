@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-2">
     <v-card-text>
-      <v-row v-if="totalAmountToPay <= 0">
+      <v-row v-if="totalAmountToPay <= 0 && mode != 'Edit'">
         <v-col
           cols="12"
         >
@@ -23,7 +23,7 @@
           </v-alert>
         </v-col>
       </v-row>
-      <v-row v-if="totalAmountToPay > 0">
+      <v-row v-if="mode == 'Edit' || totalAmountToPay > 0">
         <v-col
           cols="12"
         >
@@ -38,14 +38,14 @@
               </v-icon>
               <div class="ms-3">
                 <p class="text-base font-weight-medium mb-1">
-                  Add Payment
+                  {{ mode != 'Edit' ? 'Add': 'Update'}} Payment
                 </p>
               </div>
             </div>
           </v-alert>
         </v-col>
       </v-row>
-      <v-row class="mt-2" v-if="totalAmountToPay > 0">
+      <v-row class="mt-2" v-if="mode == 'Edit' || totalAmountToPay > 0">
         <v-col
           cols="3"
         >
@@ -141,10 +141,19 @@
         </v-col>
         <v-col cols="3">
           <v-currency-field
+            v-if="mode != 'Edit'"
             v-model="formData.amount"
             :max="totalAmountToPay"
             prefix="PHP"
             :error-messages="errors.amount"
+            class="text-green mt-n8"
+          >
+          </v-currency-field>
+
+          <v-currency-field
+            v-else
+            v-model="formData.amount"
+            prefix="PHP"
             class="text-green mt-n8"
           >
           </v-currency-field>
@@ -436,7 +445,7 @@
           class="mt-6"
         >
           <v-btn
-            v-if="totalAmountToPay > 0"
+            v-if="mode == 'Edit' || totalAmountToPay > 0"
             color="primary"
             @click="submit"
           >
@@ -458,13 +467,24 @@
 </template>
 
 <script>
-import { computed, ref, toRef } from '@vue/composition-api'
+import { computed, ref, toRef, watch, onMounted } from '@vue/composition-api'
 import { mdiCurrencySign, mdiDatabaseArrowLeft } from '@mdi/js'
 import store from '@/store'
+import data from '@/views/dashboard/datatable-data'
 
 export default {
   name: 'PaymentForm',
   props: {
+    data: {
+      type: Object,
+      required: false,
+      default: null,
+    },
+    mode: {
+      type: String,
+      required: true,
+      default: (() => 'Create'),
+    },
     totalAmount: {
       type: Number,
       required: false,
@@ -473,11 +493,17 @@ export default {
   },
   setup(props, { emit }) {
     store.dispatch('AccountStore/list')
+    const CASH_PAYMENT = 'cash_payment'
+    const ONLINE_PAYMENT = 'online_payment'
+    const CHECK_PAYMENT = 'check_payment'
+
     const totalAmountToPay = toRef(props, 'totalAmount')
+    const modeData = toRef(props, 'mode')
+    const dataProp = toRef(props, 'data')
     const types = [
-      { value: 'cash_payment', title: 'Cash Payment' },
-      { value: 'online_payment', title: 'Online Payment' },
-      { value: 'check_payment', title: 'Check Payment' },
+      { value: CASH_PAYMENT, title: 'Cash Payment' },
+      { value: ONLINE_PAYMENT, title: 'Online Payment' },
+      { value: CHECK_PAYMENT, title: 'Check Payment' },
     ]
     const datePosted = ref(new Date().toISOString().substr(0, 10))
     const formData = ref({
@@ -507,7 +533,38 @@ export default {
 
     const accounts = computed(() => store.state.AccountStore.accounts.filter(account => account.type === 'Bank'))
 
+    const toggleFormValues = () => {
+      if (modeData.value === 'Edit') {
+        formData.value = dataProp.value
+        formData.value.type = formData.value.type ? formData.value.type : formData.value.payment.payment_type
+        formData.value.payment_type = paymentTypesMapping[formData.value.type]
+        
+        if (formData.value.type === CASH_PAYMENT || formData.value.type === ONLINE_PAYMENT) {
+          formData.value.bank = '';
+          formData.value.bank_account_number = '';
+          formData.value.check_number = '';
+          formData.value.check_type = '';
+          formData.value.reference_number = '';
+        }
+
+        if (formData.value.type === ONLINE_PAYMENT) {
+          formData.value.reference_number = dataProp.value.reference_number;
+
+        }
+      } else {
+        formData.value = {
+          amount: 0,
+          type: null,
+        }
+      }
+    }
     const hasError = ref(0)
+    watch(modeData, () => {
+      toggleFormValues()
+    })
+    onMounted(() => {
+      toggleFormValues();
+    });
 
     const submit = () => {
       const payment = {
@@ -523,6 +580,8 @@ export default {
         bank: formData.value.bank,
         bank_account_number: formData.value.bank_account_number,
         check_type: formData.value.check_type,
+        index: formData.value.index,
+        mode: formData.value.mode,
       }
 
       if (payment.type === 'online_payment') {
@@ -593,9 +652,7 @@ export default {
       if (payment.account_id && hasError.value <= 0) {
         emit('addedPayment', payment)
 
-        formData.value = {
-          amount: 0,
-        }
+        toggleFormValues()
       }
     }
 
@@ -606,7 +663,7 @@ export default {
     }
 
     const cancel = () => {
-      emit('toggleModal')
+      emit('toggleModal', 'Create')
     }
 
     return {
@@ -621,6 +678,8 @@ export default {
       formData,
       types,
       totalAmountToPay,
+      dataProp,
+      toggleFormValues,
       icons: {
         mdiCurrencySign,
         mdiDatabaseArrowLeft,
