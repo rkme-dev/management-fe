@@ -65,15 +65,14 @@
                   color="success"
                   dark
                   class="mb-2"
-                  v-bind="attrs"
-                  v-on="on"
+                  @click="createItem"
                 >
                   Add Item
                 </v-btn>
               </template>
               <v-card>
                 <v-card-title>
-                  <span class="headline">{{ formTitle }}</span>
+                  <span class="headline">{{ formTitle }} Item</span>
                 </v-card-title>
                 <v-card-text>
                   <v-form>
@@ -198,6 +197,7 @@
                         </v-currency-field>
                       </v-col>
                       <v-col
+                        v-if="formTitle != 'Edit'"
                         cols="12"
                         class="d-flex mt-n8"
                       >
@@ -226,6 +226,28 @@
                           Cancel
                         </v-btn>
                       </v-col>
+                      <v-col
+                        v-else
+                        cols="12"
+                        class="d-flex mt-n8"
+                      >
+                        <v-btn
+                          v-if="currentItem.quantity && currentItem.price && currentItem.product_id"
+                          color="primary"
+                          class="me-3 mt-4"
+                          @click="updateItem"
+                        >
+                          Update
+                        </v-btn>
+                        <v-btn
+                          outlined
+                          class="me-3 mt-4"
+                          type="reset"
+                          @click.prevent="cancel"
+                        >
+                          Cancel
+                        </v-btn>
+                      </v-col>
                     </v-row>
                   </v-form>
                 </v-card-text>
@@ -239,6 +261,14 @@
           </div>
         </template>
         <template v-slot:item.actions="{ item }">
+          <v-icon
+            v-if="isDisabled === false"
+            class="mr-2"
+            small
+            @click="editItem(item)"
+          >
+            {{ icons.mdiAccountEdit }}
+          </v-icon>
           <v-icon
             v-if="isDisabled === false"
             small
@@ -278,7 +308,7 @@ import {
   mdiTextBoxPlus,
 } from '@mdi/js'
 import {
-  computed, ref, toRef, watch,
+  computed, isRef, ref, toRef, toRefs, watch,
 } from '@vue/composition-api'
 import store from '@/store'
 
@@ -307,11 +337,12 @@ export default {
     const modeData = toRef(props, 'mode')
     const itemFormModal = ref(false)
     const formData = ref({})
-    const formTitle = ref('Add Item')
+    const formTitle = ref('Add')
     const orderItems = ref([])
     const products = computed(() => store.state.FinishProductStore.list)
     const units = computed(() => store.state.UnitPackingStore.list)
     const filteredUnits = ref([])
+    
     const currentItem = ref({
       product_id: null,
       quantity: null,
@@ -428,6 +459,19 @@ export default {
       currentItem.value.sku = product.value.sku
     })
 
+    const createItem = () => {
+      formTitle.value = 'Add'
+      currentItem.value.product_id =  null
+      currentItem.value.quantity = null
+      currentItem.value.price = null
+      currentItem.value.total_amount = 0
+      currentItem.value.unit = null
+      currentItem.value.name = null
+      currentItem.value.sku = null
+      currentItem.value.slug = null
+      itemFormModal.value = true
+    }
+
     const addItem = addAgain => {
       orderItems.value.push({
         product_id: currentItem.value.product_id,
@@ -464,6 +508,22 @@ export default {
         }, 500)
       }
     }
+
+    const editItem = item => {
+      formTitle.value = 'Edit'
+      const itemRefs = toRefs(item)
+      currentItem.value.product_id = itemRefs.product_id
+      currentItem.value.quantity = itemRefs.quantity
+      currentItem.value.price = itemRefs.price
+      currentItem.value.total_amount = itemRefs.total_amount
+      currentItem.value.unit = itemRefs.unit
+      currentItem.value.name = itemRefs.name
+      currentItem.value.sku = itemRefs.sku
+      currentItem.value.slug = itemRefs.slug
+      itemFormModal.value = true
+    }
+
+    const updateItem = () => itemFormModal.value = false
 
     const deleteItem = item => {
       const index = orderItems.value.findIndex(orderItem => (orderItem.product_id === item.product_id && orderItem.total_amount === item.total_amount))
@@ -554,6 +614,9 @@ export default {
         mdiInformation,
         mdiTextBoxPlus,
       },
+      createItem,
+      editItem,
+      updateItem,
     }
   },
 }
