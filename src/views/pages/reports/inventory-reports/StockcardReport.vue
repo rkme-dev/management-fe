@@ -48,9 +48,10 @@
             :items="stockcard"
             :headers="headers"
           >
-            <template v-slot:top>
+            <template v-slot:footer>
               <v-toolbar
                 flat
+                class="mt-16"
                 color=""
               >
                 <v-card-text>
@@ -69,7 +70,7 @@
                         disabled
                         dense
                         hide-details="auto"
-                        label="Stockcard Total Amount"
+                        label="Stockcard Total Balance"
                       ></v-currency-field>
                     </v-col>
                     <v-col
@@ -101,26 +102,31 @@ export default {
     const reportLoading = computed(() => store.state.ReportStore.loading)
     const stockcard = computed(() => store.state.ReportStore.stockcardReport)
     const stockCardTotalAmount = computed(() => {
-      return store.state.ReportStore.stockcardReport.reduce((sum, item) => sum + parseFloat(item.balance), 0)
+      if (store.state.ReportStore.stockcardReport.length>0) {
+        return store.state.ReportStore.stockcardReport[store.state.ReportStore.stockcardReport.length - 1].balance
+      } else {
+        return 0
+      }
     })
     const headers = [
       {
+        width: "130px",
         text: 'Date',
         align: 'start',
         sortable: false,
         value: 'date',
       },
       { text: 'Event', value: 'event' },
-      { text: 'Document', value: 'document' },
-      { text: 'Doc #', value: 'doc_number' },
-      { text: 'Remarks', value: 'remarks' },
-      { text: 'Quantity', value: 'quantity' },
-      { text: 'Unit', value: 'unit' },
-      { text: 'Price', value: 'price' },
-      { text: 'Status', value: 'status' },
-      { text: 'Qty In', value: 'quantity_in' },
-      { text: 'Qty Out', value: 'quantity_out' },
-      { text: 'Balance', value: 'balance' },
+      { text: 'Document', value: 'document', width: "160px" },
+      { text: 'Doc #', value: 'document_number', width: "160px",},
+      { text: 'Remarks', value: 'remarks', width: "160px" },
+      { text: 'Quantity', value: 'quantity', width: "170px", },
+      { text: 'Unit', value: 'unit',  width: "130px",  },
+      { text: 'Price', value: 'price', width: "170px", },
+      { text: 'Status', value: 'status',  width: "100px",  },
+      { text: 'Qty In', value: 'quantity_in',  width: "170px",  },
+      { text: 'Qty Out', value: 'quantity_out',  width: "170px",  },
+      { text: 'Balance', value: 'balance',  width: "170px",  },
     ]
 
     onMounted(async () => {
