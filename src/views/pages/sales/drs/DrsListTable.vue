@@ -100,6 +100,7 @@
           {{ icons.mdiDeleteCircle }}
         </v-icon>
         <v-icon
+            v-if="item.status === 'Posted'"
           color="info"
           style="margin-left: 10px"
           medium

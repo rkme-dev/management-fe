@@ -459,7 +459,7 @@
 <script>
 import { dateFormat1 } from '@/utils/time'
 import store from '@/store'
-import {computed, onMounted} from '@vue/composition-api'
+import {computed, onMounted, toRef} from '@vue/composition-api'
 import {mdiInformation} from "@mdi/js";
 import {ref, watch} from "@vue/composition-api/dist/vue-composition-api";
 import SalesDrService from "@/service/SalesDrService";
@@ -476,7 +476,7 @@ export default {
   props: {
     mode: {
       type: String,
-      required: true,
+      required: false,
       default: (() => 'Create'),
     },
   },

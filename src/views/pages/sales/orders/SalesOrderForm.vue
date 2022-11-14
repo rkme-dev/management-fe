@@ -135,7 +135,7 @@
                 :href="`/customer-aging?cId=${formData.customer_id}`"
                 target="_blank"
               >
-                A/R 
+                A/R
                 <v-icon>
                   {{ icons.mdiNotebook }}
                 </v-icon>
@@ -485,6 +485,10 @@ export default {
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
       documentItem.title = `${documentItem.document_name}`
       if (documentItem.module === 'Orders') {
+
+        if (documentItem.document_name === 'Sales Order') {
+          formData.value.document_id = documentItem.id
+        }
 
         if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
           return documentItem

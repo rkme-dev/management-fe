@@ -389,6 +389,8 @@ const routes = [
     path: '/stockcard-report',
     name: 'stockcard-report',
     component: () => import('@/views/pages/reports/inventory-reports/StockcardReport.vue'),
+  },
+  {
     path: '/customer-report',
     name: 'customer-report',
     component: () => import('@/views/pages/reports/customers/Index.vue'),

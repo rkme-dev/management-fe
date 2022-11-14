@@ -842,12 +842,12 @@ export default {
           },
         )
       }
-      
+
     }
 
     watch(payments, value => {
       totalPaymentAmount.value = totalAmount.value ?? 0
-      
+
       value.forEach(payment => {
         totalPaymentAmount.value = parseFloat(totalPaymentAmount.value) - parseFloat(payment.amount)
       })
@@ -963,6 +963,10 @@ export default {
         documentItem.title = `${documentItem.document_name}`
 
         if (documentItem.module === 'Collection') {
+          if (documentItem.document_name === 'Collection') {
+            formData.value.document_id = documentItem.id
+          }
+
           if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
             return documentItem
           }
