@@ -8,6 +8,11 @@
       :search="search"
       :loading="loading"
     >
+      <template #item.status="{ item }">
+        <span v-if="item.status === 'posted'">Posted</span>
+        <span v-else-if="item.status === 'cancelled'">Cancelled</span>
+        <span v-else>For Review</span>
+      </template>
       <template #item.created_at="{ item }">
         {{ dateFormat1(item.created_at) }}
       </template>
@@ -127,6 +132,7 @@ export default {
       { text: 'Document', value: 'document.document_name' },
       { text: 'Location', value: 'location.location_code' },
       { text: 'Count By', value: 'count_by' },
+      { text: 'Status', value: 'status' },
       { text: 'Actions', value: 'actions', sortable: false },
     ])
 
