@@ -677,7 +677,7 @@ export default {
       terms: computed(() => store.state.TermStore.terms),
       vats: computed(() => store.state.VatStore.vats),
       documents: computed(() => store.state.DocumentStore.documents.filter(documentItem => {
-        if (documentItem.module === 'Collection') {
+        if (documentItem.module === 'Collections') {
           documentItem.title = `${documentItem.document_name}`
 
           return documentItem

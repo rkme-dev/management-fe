@@ -963,7 +963,7 @@ export default {
         documentItem.title = `${documentItem.document_name}`
 
         if (documentItem.module === 'Collection') {
-          if (documentItem.document_name === 'Collection') {
+          if (documentItem.document_name === 'Collections') {
             formData.value.document_id = documentItem.id
           }
 
