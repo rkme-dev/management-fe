@@ -24,7 +24,15 @@
                 </div>
               </v-alert>
             </v-col>
+            <v-col cols="12" v-if="checksLoading">
+              <v-progress-linear
+                  color="primary"
+                  indeterminate
+              ></v-progress-linear>
+
+            </v-col>
             <v-col
+                v-if="!checksLoading"
                 cols="4"
                 class="pr-8 pl-8 mr-16"
             >
@@ -60,6 +68,7 @@
               </v-menu>
             </v-col>
             <v-col
+                v-if="!checksLoading"
                 cols="4"
                 class="mr-16 ml-16"
             >
@@ -73,6 +82,7 @@
               ></v-textarea>
             </v-col>
             <v-col
+                v-if="!checksLoading"
                 cols="4"
                 class="pr-8 pl-8 mt-n16"
             >
@@ -86,7 +96,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="8"></v-col>
-            <v-col cols="4" class="pr-8 pl-8 mt-n6">
+            <v-col v-if="!checksLoading" cols="4" class="pr-8 pl-8 mt-n6">
               <v-select
                   v-model="formData.document_id"
                   :items="documents"
@@ -100,8 +110,9 @@
                   hide-details="auto"
               ></v-select>
             </v-col>
-            <v-col cols="8"></v-col>
+            <v-col v-if="!checksLoading" cols="8"></v-col>
             <v-col
+                v-if="!checksLoading"
                 cols="4"
                 class="pr-8 pl-8 mr-16"
             >
@@ -136,7 +147,9 @@
               </v-menu>
             </v-col>
             <v-col cols="10"></v-col>
-            <v-col cols="4" class="pr-8 pl-8 mt-n14">
+            <v-col
+                v-if="!checksLoading"
+                cols="4" class="pr-8 pl-8 mt-n14">
               <v-select
                   v-model="formData.account_id"
                   :items="accounts"
@@ -197,6 +210,7 @@
             </v-col>
             <v-col cols="12">
               <v-data-table
+                  :loading="checksLoading"
                   :headers="headers"
                   :items="selectedChecks"
               >
@@ -299,6 +313,7 @@ export default {
     }))
     const deposit = computed(() => store.state.DepositStore.row)
     const checks = computed(() => store.state.DepositStore.checks)
+    const checksLoading = computed(() => store.state.DepositStore.loading)
     const selectCheckDialog = ref(false)
     const selectedChecks = ref([])
     const selectedIds = ref([])
@@ -408,6 +423,7 @@ export default {
     }
 
     return {
+      checksLoading,
       hasBouncedCheck,
       postDeposit,
       unpostDeposit,
