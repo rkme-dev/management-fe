@@ -56,9 +56,9 @@
           <v-col
             cols="2"
             class="mt-6"
-            style="color: forestgreen;"
+            style="color: red;"
           >
-            Total Payment:
+            Total Amount To Pay:
           </v-col>
           <v-col
             cols="3"

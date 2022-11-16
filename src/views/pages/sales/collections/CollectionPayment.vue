@@ -25,7 +25,12 @@
         </v-currency-field>
       </template>
       <template v-slot:item.actions="{ item, index}">
-        <v-icon small class="mr-2" @click="editPayment(item, index)" v-if="collectionStatus != 'Posted'">
+        <v-icon
+          v-if="collectionStatus != 'Posted'"
+          small
+          class="mr-2"
+          @click="editPayment(item, index)"
+        >
           {{ icons.mdiNotebookEdit }}
         </v-icon>
         <v-icon
@@ -36,29 +41,29 @@
         </v-icon>
       </template>
       <template v-slot:footer="{ item }">
-        <v-row>
+        <v-row class="mb-2 mt-2">
           <v-col
-            cols="2"
-            class="ml-auto mt-4 mb-4"
+            cols="6"
+            class="mt-10"
           >
-            <div class="pl-4"> TOTAL: <b>PHP <span>{{ totalPaid.toLocaleString() }}</span></b></div>
           </v-col>
-          <v-col cols="8"></v-col>
+          <v-col
+            cols="3"
+            class="mt-7 mr-n4"
+            style="color: lawngreen;"
+          >
+            Total Payment Amount:
+          </v-col>
           <v-col
             cols="2"
-            class="ml-auto mt-4 mb-4"
+            class="ml-n16"
           >
-            <v-btn
-              v-if="totalAmount > 0"
-              color="success"
-              class=""
-              @click="toggleModal"
+            <v-currency-field
+              v-model="totalPaid"
+              class="text-green"
+              disabled
             >
-              <v-icon>
-                {{ icons.mdiContentSave }}
-              </v-icon>
-              Add Payment
-            </v-btn>
+            </v-currency-field>
           </v-col>
         </v-row>
       </template>
@@ -96,11 +101,11 @@ export default {
       default: (() => []),
     },
   },
-  data(){
+  data() {
     return {
       totalPaidAmount: 0,
       salesDrs: [],
-      icons: {}
+      icons: {},
     }
   },
   computed: {
@@ -122,19 +127,30 @@ export default {
     },
     paymentData() {
       return this.payments
+    },
+  },
+
+  updated() {
+    this.initialize()
+  },
+  mounted() {
+    this.initialize()
+    this.icons = {
+      mdiAccountEdit,
+      mdiNotebookEdit,
+      mdiDeleteCircle,
     }
   },
   methods: {
     initialize() {
       this.paymentData
-      console.log(this.paymentData)
       this.totalPaidAmount = this.totalPaid
     },
-    removePayment(item, index){
+    removePayment(item, index) {
       this.$emit('removePayment', item, index)
     },
 
-    editPayment(item, index){
+    editPayment(item, index) {
       if (item.payment_type === 'Cash Payment') {
         item.type = 'cash_payment'
       }
@@ -149,22 +165,10 @@ export default {
       this.$emit('editPayment', item, index)
     },
 
-    toggleModal(){
+    toggleModal() {
       this.$emit('toggleModal', 'Create')
-    }
+    },
   },
-
-  updated () {
-    this.initialize()
-  },
-  mounted() {
-    this.initialize()
-    this.icons = {
-      mdiAccountEdit,
-      mdiNotebookEdit,
-      mdiDeleteCircle,
-    }
-  }
 }
 </script>
 <style>

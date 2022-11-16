@@ -603,6 +603,8 @@ export default {
       }
 
       if (payment.type === 'check_payment') {
+        payment.reference_number = formData.value.check_number
+
         if (!formData.value.check_number) {
           hasError.value += 1
           errors.value.check_number = 'This field is required.'
