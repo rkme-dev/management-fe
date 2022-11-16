@@ -5,223 +5,251 @@
     </v-card-title>
     <v-card-text>
       <v-form>
-          <v-row>
-            <v-col cols="12">
-              <v-alert
-                  color="primary"
-                  text
-                  style="margin-bottom: -10px"
-              >
-                <div class="d-flex align-start">
-                  <v-icon color="primary">
-                    {{ icons.mdiInformation }}
-                  </v-icon>
-                  <div class="ms-3">
-                    <p class="text-base font-weight-medium mb-1">
-                      Information
-                    </p>
-                  </div>
+        <v-row>
+          <v-col cols="12">
+            <v-alert
+              color="primary"
+              text
+              style="margin-bottom: -10px"
+            >
+              <div class="d-flex align-start">
+                <v-icon color="primary">
+                  {{ icons.mdiInformation }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                    Information
+                  </p>
                 </div>
-              </v-alert>
-            </v-col>
-            <v-col
-                cols="4"
-                class="pr-8 pl-8 mr-16"
+              </div>
+            </v-alert>
+          </v-col>
+          <v-col
+            v-if="checksLoading"
+            cols="12"
+          >
+            <v-progress-linear
+              color="primary"
+              indeterminate
+            ></v-progress-linear>
+          </v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="4"
+            class="pr-8 pl-8 mr-16"
+          >
+            <v-menu
+              v-model="formData.dateModal"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              :disabled="formData.status === 'posted'"
+              max-width="290px"
+              min-width="auto"
             >
-              <v-menu
-                  v-model="formData.dateModal"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="datePosted"
+                  label="Transaction Date"
+                  persistent-hint
                   :disabled="formData.status === 'posted'"
-                  max-width="290px"
-                  min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      v-model="datePosted"
-                      label="Transaction Date"
-                      persistent-hint
-                      :disabled="formData.status === 'posted'"
-                      :prepend-icon="icons.mdiCalendar"
-                      readonly
-                      outlined
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
-                </template>
-
-                <v-date-picker
-                    v-model="datePosted"
-                    no-title
-                    color="primary"
-                    @input="formData.dateModal = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col
-                cols="4"
-                class="mr-16 ml-16"
-            >
-              <v-textarea
-                  v-model="formData.remarks"
-                  rows="3"
-                  outlined
-                  dense
-                  :disabled="formData.status === 'posted'"
-                  label="Remarks"
-              ></v-textarea>
-            </v-col>
-            <v-col
-                cols="4"
-                class="pr-8 pl-8 mt-n16"
-            >
-              <v-text-field
-                  v-model="formData.deposit_number"
-                  outlined
+                  :prepend-icon="icons.mdiCalendar"
                   readonly
-                  dense
-                  hide-details="auto"
-                  label="Deposit Number"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="8"></v-col>
-            <v-col cols="4" class="pr-8 pl-8 mt-n6">
-              <v-select
-                  v-model="formData.document_id"
-                  :items="documents"
-                  item-text="title"
-                  item-value="id"
-                  label="Document"
-                  :disabled="formData.status === 'posted'"
-                  :error-messages="errors.document_id"
                   outlined
-                  dense
-                  hide-details="auto"
-              ></v-select>
-            </v-col>
-            <v-col cols="8"></v-col>
-            <v-col
-                cols="4"
-                class="pr-8 pl-8 mr-16"
-            >
-              <v-menu
-                  v-model="formData.clearingDate"
-                  :close-on-content-click="false"
-                  transition="scale-transition"
-                  offset-y
-                  max-width="290px"
-                  min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                      v-model="clearingDate"
-                      label="Clearing Date"
-                      persistent-hint
-                      :disabled="formData.status === 'posted'"
-                      :prepend-icon="icons.mdiCalendar"
-                      readonly
-                      outlined
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-text-field>
-                </template>
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
 
-                <v-date-picker
-                    v-model="clearingDate"
-                    no-title
-                    color="primary"
-                    @input="formData.clearingDate = false"
-                ></v-date-picker>
-              </v-menu>
-            </v-col>
-            <v-col cols="10"></v-col>
-            <v-col cols="4" class="pr-8 pl-8 mt-n14">
-              <v-select
-                  v-model="formData.account_id"
-                  :items="accounts"
-                  item-text="account_title"
-                  item-value="id"
-                  label="Account"
+              <v-date-picker
+                v-model="datePosted"
+                no-title
+                color="primary"
+                @input="formData.dateModal = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="4"
+            class="mr-16 ml-16"
+          >
+            <v-textarea
+              v-model="formData.remarks"
+              rows="3"
+              outlined
+              dense
+              :disabled="formData.status === 'posted'"
+              label="Remarks"
+            ></v-textarea>
+          </v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="4"
+            class="pr-8 pl-8 mt-n16"
+          >
+            <v-text-field
+              v-model="formData.deposit_number"
+              outlined
+              readonly
+              dense
+              hide-details="auto"
+              label="Deposit Number"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="8"></v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="4"
+            class="pr-8 pl-8 mt-n6"
+          >
+            <v-select
+              v-model="formData.document_id"
+              :items="documents"
+              item-text="title"
+              item-value="id"
+              label="Document"
+              :disabled="formData.status === 'posted'"
+              :error-messages="errors.document_id"
+              outlined
+              dense
+              hide-details="auto"
+            ></v-select>
+          </v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="8"
+          ></v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="4"
+            class="pr-8 pl-8 mr-16"
+          >
+            <v-menu
+              v-model="formData.clearingDate"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="clearingDate"
+                  label="Clearing Date"
+                  persistent-hint
                   :disabled="formData.status === 'posted'"
-                  :error-messages="errors.account_id"
+                  :prepend-icon="icons.mdiCalendar"
+                  readonly
                   outlined
-                  dense
-                  hide-details="auto"
-              >
-              </v-select>
-            </v-col>
-            <v-col cols="12">
-              <v-alert
-                  color="success"
-                  text
-                  style="margin-bottom: -10px"
-              >
-                <div class="d-flex align-start">
-                  <v-icon color="success">
-                    {{ icons.mdiCurrencyPhp }}
-                  </v-icon>
-                  <div class="ms-3">
-                    <p class="text-base font-weight-medium mb-1">
-                      Checks
-                    </p>
-                  </div>
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+
+              <v-date-picker
+                v-model="clearingDate"
+                no-title
+                color="primary"
+                @input="formData.clearingDate = false"
+              ></v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col cols="10"></v-col>
+          <v-col
+            v-if="!checksLoading"
+            cols="4"
+            class="pr-8 pl-8 mt-n14"
+          >
+            <v-select
+              v-model="formData.account_id"
+              :items="accounts"
+              item-text="account_title"
+              item-value="id"
+              label="Account"
+              :disabled="formData.status === 'posted'"
+              :error-messages="errors.account_id"
+              outlined
+              dense
+              hide-details="auto"
+            >
+            </v-select>
+          </v-col>
+          <v-col cols="12">
+            <v-alert
+              color="success"
+              text
+              style="margin-bottom: -10px"
+            >
+              <div class="d-flex align-start">
+                <v-icon color="success">
+                  {{ icons.mdiCurrencyPhp }}
+                </v-icon>
+                <div class="ms-3">
+                  <p class="text-base font-weight-medium mb-1">
+                    Checks
+                  </p>
                 </div>
-              </v-alert>
-            </v-col>
-            <v-col cols="9"></v-col>
-            <v-col cols="1" class="ml-n10">
-              <v-dialog
-                  v-model="selectCheckDialog"
-                  width="1000"
-                  height="1000"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                      color="success"
-                      dark
-                      :disabled="formData.status === 'posted'"
-                      v-bind="attrs"
-                      v-on="on"
-                  >
-                    Get Collected Checks
-                  </v-btn>
-                </template>
-                <check-selection-component
-                    :ids="selectedIds"
-                    :deposit-id="formData.id"
-                    @onSubmit="onSubmit"
-                    @onCancel="onCancel"
-                ></check-selection-component>
-              </v-dialog>
-            </v-col>
-            <v-col cols="12">
-              <v-data-table
-                  :headers="headers"
-                  :items="selectedChecks"
-              >
-                <template #item.collection_payment.amount="{ item }">
-                  <v-currency-field
-                      v-model="item.collection_payment.amount"
-                      prefix="PHP"
-                      class="text-green"
-                      disabled
-                  >
-                  </v-currency-field>
-                </template>
-              </v-data-table>
-            </v-col>
-          </v-row>
+              </div>
+            </v-alert>
+          </v-col>
+          <v-col cols="9"></v-col>
+          <v-col
+            cols="1"
+            class="ml-n10"
+          >
+            <v-dialog
+              v-model="selectCheckDialog"
+              width="1000"
+              height="1000"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="success"
+                  dark
+                  :disabled="formData.status === 'posted'"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Get Collected Checks
+                </v-btn>
+              </template>
+              <check-selection-component
+                :ids="selectedIds"
+                :deposit-id="formData.id"
+                @onSubmit="onSubmit"
+                @onCancel="onCancel"
+              ></check-selection-component>
+            </v-dialog>
+          </v-col>
+          <v-col cols="12">
+            <v-data-table
+              :loading="checksLoading"
+              :headers="headers"
+              :items="selectedChecks"
+            >
+              <template #item.collection_payment.amount="{ item }">
+                <v-currency-field
+                  v-model="item.collection_payment.amount"
+                  prefix="PHP"
+                  class="text-green"
+                  disabled
+                >
+                </v-currency-field>
+              </template>
+            </v-data-table>
+          </v-col>
+        </v-row>
         <v-row>
           <v-col
-              cols="auto"
-              class="d-flex"
+            cols="auto"
+            class="d-flex"
           >
             <v-btn
-                v-if="formData.status === 'for_review'"
-                color="success"
-                class="me-3 mt-4"
-                @click="postDeposit"
+              v-if="formData.status === 'for_review'"
+              color="success"
+              class="me-3 mt-4"
+              @click="postDeposit"
             >
               <v-icon>
                 {{ icons.mdiFinance }}
@@ -229,10 +257,10 @@
               Post
             </v-btn>
             <v-btn
-                v-if="formData.status === 'posted' && !hasBouncedCheck"
-                color="error"
-                class="me-3 mt-4"
-                @click="unpostDeposit"
+              v-if="formData.status === 'posted' && !hasBouncedCheck"
+              color="error"
+              class="me-3 mt-4"
+              @click="unpostDeposit"
             >
               <v-icon>
                 {{ icons.mdiFinance }}
@@ -240,10 +268,10 @@
               Unpost
             </v-btn>
             <v-btn
-                v-if="formData.status !== 'posted'"
-                color="primary"
-                class="me-3 mt-4"
-                @click="update"
+              v-if="formData.status !== 'posted'"
+              color="primary"
+              class="me-3 mt-4"
+              @click="update"
             >
               <v-icon>
                 {{ icons.mdiContentSave }}
@@ -251,11 +279,11 @@
               Update
             </v-btn>
             <v-btn
-                outlined
-                class="me-3 mt-4"
-                type="reset"
-                color="error"
-                @click.prevent="close"
+              outlined
+              class="me-3 mt-4"
+              type="reset"
+              color="error"
+              @click.prevent="close"
             >
               <v-icon>
                 {{ icons.mdiProgressClose }}
@@ -270,21 +298,23 @@
 </template>
 
 <script>
-import {computed, ref, watch} from "@vue/composition-api";
-import store from "@/store";
-import {mdiAccountPlusOutline, mdiCardOff, mdiCurrencyPhp, mdiCurrencySign, mdiInformation} from "@mdi/js";
+import {
+  computed, ref, watch, onMounted,
+} from '@vue/composition-api'
+import store from '@/store'
+import {
+  mdiAccountPlusOutline, mdiCardOff, mdiCurrencyPhp, mdiCurrencySign, mdiInformation,
+} from '@mdi/js'
 import CheckSelectionComponent from '@/views/pages/sales/deposits/CheckSelectionComponent.vue'
-import {onMounted} from "@vue/composition-api/dist/vue-composition-api";
-import context from "vue-apexcharts/.eslintrc";
-import router from "@/router";
+import router from '@/router'
 
 export default {
-  name: "EditDepositForm.vue",
+  name: 'EditDepositFormVue',
   components: {
     CheckSelectionComponent,
   },
-  setup(props,context) {
-    const id = context.root.$route.params.id
+  setup(props, context) {
+    const { id } = context.root.$route.params
     const datePosted = ref(new Date().toISOString().substr(0, 10))
     const clearingDate = ref(new Date().toISOString().substr(0, 10))
     const formData = ref({})
@@ -299,6 +329,8 @@ export default {
     }))
     const deposit = computed(() => store.state.DepositStore.row)
     const checks = computed(() => store.state.DepositStore.checks)
+    console.log(checks.value)
+    const checksLoading = computed(() => store.state.DepositStore.loading)
     const selectCheckDialog = ref(false)
     const selectedChecks = ref([])
     const selectedIds = ref([])
@@ -315,7 +347,6 @@ export default {
       { text: 'Amount', value: 'collection_payment.amount' },
     ]
     const amount = ref(0)
-
 
     const hasBouncedCheck = computed(() => store.state.DepositStore.row.checks.find(check => check.status === 'bounced'))
 
@@ -342,7 +373,7 @@ export default {
       setData()
     })
 
-    const onSubmit = (checks) => {
+    const onSubmit = checks => {
       selectedChecks.value = checks
       selectedChecks.value.forEach(check => {
         amount.value += parseFloat(check.collection_payment.amount)
@@ -369,13 +400,13 @@ export default {
       payload.id = id
 
       store.dispatch('DepositStore/update', payload).then(
-          response => {
-            if (response.status === undefined) {
-              selectedIds.value = []
-              selectedChecks.value = []
-              router.push('/deposits')
-            }
-          },
+        response => {
+          if (response.status === undefined) {
+            selectedIds.value = []
+            selectedChecks.value = []
+            router.push('/deposits')
+          }
+        },
       )
     }
 
@@ -387,27 +418,30 @@ export default {
 
     const postDeposit = () => {
       store.dispatch('DepositStore/postOrder', id).then(
-          response => {
-            if (response.status === undefined) {
-              selectedIds.value = []
-              selectedChecks.value = []
-              router.push('/deposits')
-            }
-          })
+        response => {
+          if (response.status === undefined) {
+            selectedIds.value = []
+            selectedChecks.value = []
+            router.push('/deposits')
+          }
+        },
+      )
     }
 
     const unpostDeposit = () => {
       store.dispatch('DepositStore/unpostOrder', id).then(
-          response => {
-            if (response.status === undefined) {
-              selectedIds.value = []
-              selectedChecks.value = []
-              router.push('/deposits')
-            }
-          })
+        response => {
+          if (response.status === undefined) {
+            selectedIds.value = []
+            selectedChecks.value = []
+            router.push('/deposits')
+          }
+        },
+      )
     }
 
     return {
+      checksLoading,
       hasBouncedCheck,
       postDeposit,
       unpostDeposit,

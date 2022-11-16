@@ -291,7 +291,7 @@
           cols="3"
           class="mt-4"
         >
-          <label for="firstnameHorizontalIcons">Date</label>
+          <label for="firstnameHorizontalIcons">Check Date</label>
         </v-col>
         <v-col
           cols="4"
@@ -538,7 +538,7 @@ export default {
         formData.value = dataProp.value
         formData.value.type = formData.value.type ? formData.value.type : formData.value.payment.payment_type
         formData.value.payment_type = paymentTypesMapping[formData.value.type]
-        
+
         if (formData.value.type === CASH_PAYMENT || formData.value.type === ONLINE_PAYMENT) {
           formData.value.bank = '';
           formData.value.bank_account_number = '';
@@ -613,6 +613,8 @@ export default {
       }
 
       if (payment.type === 'check_payment') {
+        payment.reference_number = formData.value.check_number
+
         if (!formData.value.check_number) {
           hasError.value += 1
           errors.value.check_number = 'This field is required.'

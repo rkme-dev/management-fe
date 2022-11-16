@@ -167,9 +167,10 @@
                       <v-col cols="12"></v-col>
 
                       <v-col cols="4"></v-col>
-                      <v-col cols="4" class="pr-16 pl-16 mt-n2">Actual Balance: </v-col>
-                      <v-col cols="4" class="pr-16 pl-16 mt-n4">
+                      <v-col cols="4" v-if="currentItem.unit" class="pr-16 pl-12 mt-n2">Total Item Inventory (per {{currentItem.unit}}): </v-col>
+                      <v-col cols="4" class="pr-16 pl-12 mt-n4">
                         <v-currency-field
+                            v-if="currentItem.unit"
                           class="shrink text-green"
                           v-model="currentItem.actual_balance"
                           single-line
@@ -182,12 +183,29 @@
                         </v-currency-field>
                       </v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4" class="pr-16 pl-16 mt-n8">Reserved Balance: </v-col>
-                      <v-col cols="4" class="pr-16 pl-16 mt-n10">
+                      <v-col cols="4" v-if="currentItem.unit" class="pr-16 pl-12 mt-n4">Total Available Item Inventory (per {{currentItem.unit}}): </v-col>
+                      <v-col cols="4" class="pr-16 pl-12 mt-n4">
                         <v-currency-field
+                            v-if="currentItem.unit"
                             class="shrink text-green"
                             single-line
                             v-model="currentItem.reserved_balance"
+                            readonly
+                            :decimal-length="0"
+                            outlined
+                            dense
+                            label="Reserved Balance"
+                        >
+                        </v-currency-field>
+                      </v-col>
+                      <v-col cols="4"></v-col>
+                      <v-col cols="4" v-if="currentItem.unit" class="pr-16 pl-12 mt-n2">Total Reserved Items (per {{currentItem.unit}}): </v-col>
+                      <v-col cols="4" class="pr-16 pl-12 mt-n2">
+                        <v-currency-field
+                            v-if="currentItem.unit"
+                            class="shrink text-green"
+                            single-line
+                            v-model="currentItem.reserved"
                             readonly
                             :decimal-length="0"
                             outlined
@@ -342,7 +360,7 @@ export default {
     const products = computed(() => store.state.FinishProductStore.list)
     const units = computed(() => store.state.UnitPackingStore.list)
     const filteredUnits = ref([])
-    
+
     const currentItem = ref({
       product_id: null,
       quantity: null,
@@ -539,6 +557,7 @@ export default {
 
       currentItem.value.actual_balance = productUnit.pivot.actual_balance
       currentItem.value.reserved_balance = productUnit.pivot.reserved_balance
+      currentItem.value.reserved = parseFloat(productUnit.pivot.actual_balance) - parseFloat(productUnit.pivot.reserved_balance)
     }
 
     const cancel = () => {

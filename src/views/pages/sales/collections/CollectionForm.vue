@@ -62,13 +62,13 @@
             class="pr-8 pl-8"
           >
             <v-text-field
-                v-if="formData.id !== undefined"
-                v-model="formData.collection_order_number"
-                outlined
-                readonly
-                dense
-                hide-details="auto"
-                label="Collection Number"
+              v-if="formData.id !== undefined"
+              v-model="formData.collection_order_number"
+              outlined
+              readonly
+              dense
+              hide-details="auto"
+              label="Collection Number"
             ></v-text-field>
           </v-col>
           <v-col
@@ -526,7 +526,7 @@ export default {
     const drListModal = ref(false)
     const paymentModal = ref(false)
     const paymentData = ref({})
-    const paymentModeData = ref("Create")
+    const paymentModeData = ref('Create')
     const showScanner = ref(false)
     const salesDrList = ref([])
     const formData = ref({
@@ -558,6 +558,7 @@ export default {
 
           if (payment.payment_type.includes('CheckPayment') === true) {
             // eslint-disable-next-line no-param-reassign
+            payment.reference_number = payment.payment.check_number
             payment.payment_type = 'Check Payment'
           }
 
@@ -569,6 +570,8 @@ export default {
           return payment
         })
       }
+
+      // eslint-disable-next-line no-use-before-define
       calculateTotalPaid()
     }
     const totalPaid = ref(0)
@@ -578,7 +581,7 @@ export default {
 
       payments.value.forEach((item, index) => {
         total += parseFloat(item.amount)
-      });
+      })
       totalPaid.value = total
     }
 
@@ -698,7 +701,6 @@ export default {
 
     const cancel = () => {
       emit('submit')
-      window.location.reload()
     }
 
     const totalPaymentAmount = ref(0)
@@ -736,15 +738,16 @@ export default {
       online_payment: 'Online Payment',
     }
 
-    const togglePaymentModal = (mode) => {
+    const togglePaymentModal = mode => {
       paymentModal.value = !paymentModal.value
       paymentModeData.value = mode
     }
     const editPayment = (data, index) => {
       paymentData.value = data
       paymentData.value.index = index
-      paymentModeData.value = "Edit";
+      paymentModeData.value = 'Edit'
       paymentData.value.mode = paymentModeData.value
+
       /**
        * Identify payment type in passed data
        */
@@ -819,8 +822,9 @@ export default {
           payments.value[index].type = 'online_payment'
         }
       })
+      console.log(totalPaymentAmount.value)
 
-      if (modeData.value === 'Create' && totalPaymentAmount.value > 0) {
+      if (totalPaymentAmount.value > 0) {
         paymentWarning.value = true
 
         return
@@ -828,6 +832,7 @@ export default {
 
       if (totalPaid.value > totalAmount.value) {
         totalPaidWarning.value = true
+
         return
       }
       paymentWarning.value = false
@@ -862,15 +867,15 @@ export default {
           },
         )
       }
-      
     }
 
     watch(payments, value => {
       totalPaymentAmount.value = totalAmount.value ?? 0
-      
+
       value.forEach(payment => {
         totalPaymentAmount.value = parseFloat(totalPaymentAmount.value) - parseFloat(payment.amount)
       })
+
       return payments
     })
 
@@ -896,7 +901,7 @@ export default {
 
     const addedPayment = payment => {
       togglePaymentModal('Create')
-      if (payment.mode != "Edit") {
+      if (payment.mode != 'Edit') {
         payments.value.push(payment)
       } else {
         payments.value[payment.index] = payment
@@ -984,7 +989,11 @@ export default {
         documentItem.title = `${documentItem.document_name}`
 
         if (documentItem.module === 'Collection') {
-          if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
+          if (documentItem.document_name === 'Collections') {
+            formData.value.document_id = documentItem.id
+          }
+
+          if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === 'Active')) {
             return documentItem
           }
 
