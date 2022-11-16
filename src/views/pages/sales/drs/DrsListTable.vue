@@ -13,18 +13,18 @@
       </template>
       <template #item.amount="{ item }">
         <v-currency-field
+          v-model="item.amount"
           prefix="PHP"
           class="text-green"
-          v-model="item.amount"
           disabled
         >
         </v-currency-field>
       </template>
       <template #item.remaining_balance="{ item }">
         <v-currency-field
+          v-model="item.remaining_balance"
           prefix="PHP"
           class="text-green"
-          v-model="item.remaining_balance"
           disabled
         >
         </v-currency-field>
@@ -50,14 +50,14 @@
             class="mr-4"
           ></v-text-field>
           <v-switch
-              v-model="showPosted"
-              label="Display Posted"
-              class="mb-n4 mr-16"
+            v-model="showPosted"
+            label="Display Posted"
+            class="mb-n4 mr-16"
           ></v-switch>
           <v-switch
-              v-model="todayPosted"
-              label="Today Only"
-              class="mb-n4 mr-16"
+            v-model="todayPosted"
+            label="Today Only"
+            class="mb-n4 mr-16"
           ></v-switch>
           <v-btn
             color="primary"
@@ -100,7 +100,7 @@
           {{ icons.mdiDeleteCircle }}
         </v-icon>
         <v-icon
-            v-if="item.status === 'Posted'"
+          v-if="item.status === 'Posted'"
           color="info"
           style="margin-left: 10px"
           medium
@@ -187,18 +187,18 @@ export default {
         return order
       }
 
-      if (showPosted.value === true) {
+      if (showPosted.value === true && order.status === 'Posted') {
         return order
       }
     }))
     const errors = computed(() => store.getters.errors)
     const loading = computed(() => store.state.SalesDrStore.loading)
 
-    watch (todayPosted, value => {
+    watch(todayPosted, value => {
       store.dispatch('SalesDrStore/list', value)
     })
 
-    watch (showPosted, value => {
+    watch(showPosted, () => {
       store.dispatch('SalesDrStore/list', todayPosted.value)
     })
 

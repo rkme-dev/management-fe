@@ -30,7 +30,7 @@
           >
             <v-menu
               v-model="formData.dateModal"
-              :disabled="formData.status === 'Posted'"
+              :disabled="formData.status === 'posted'"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -40,7 +40,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="datePosted"
-                  :disabled="formData.status === 'Posted'"
+                  :disabled="formData.status === 'posted'"
                   label="Date"
                   persistent-hint
                   :prepend-icon="icons.mdiCalendar"
@@ -53,7 +53,7 @@
               <v-date-picker
                 v-model="datePosted"
                 no-title
-                :disabled="formData.status === 'Posted'"
+                :disabled="formData.status === 'posted'"
                 color="primary"
                 @input="formData.dateModal = false"
               ></v-date-picker>
@@ -66,6 +66,7 @@
             <v-text-field
               v-model="formData.count_by"
               outlined
+              :disabled="formData.status === 'posted'"
               :error-messages="errors.count_by"
               dense
               hide-details="auto"
@@ -78,7 +79,7 @@
           >
             <v-menu
               v-model="formData.countDateModal"
-              :disabled="formData.status === 'Posted'"
+              :disabled="formData.status === 'posted'"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
@@ -88,7 +89,7 @@
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
                   v-model="countDate"
-                  :disabled="formData.status === 'Posted'"
+                  :disabled="formData.status === 'posted'"
                   label="Count Date"
                   persistent-hint
                   :prepend-icon="icons.mdiCalendar"
@@ -101,7 +102,7 @@
               <v-date-picker
                 v-model="countDate"
                 no-title
-                :disabled="formData.status === 'Posted'"
+                :disabled="formData.status === 'posted'"
                 color="primary"
                 @input="formData.countDateModal = false"
               ></v-date-picker>
@@ -116,7 +117,7 @@
               :items="documents"
               item-text="title"
               item-value="id"
-              :disabled="formData.status === 'Posted'"
+              :disabled="formData.status === 'posted'"
               label="Document"
               :error-messages="errors.document_id"
               outlined
@@ -134,7 +135,7 @@
               :items="accounts"
               item-text="title"
               item-value="id"
-              :disabled="formData.status === 'Posted'"
+              :disabled="formData.status === 'posted'"
               label="Account"
               :error-messages="errors.account_id"
               outlined
@@ -150,6 +151,7 @@
             <v-text-field
               v-model="formData.group_1"
               outlined
+              :disabled="formData.status === 'posted'"
               :error-messages="errors.group_1"
               dense
               hide-details="auto"
@@ -165,7 +167,7 @@
               :items="locations"
               item-text="title"
               item-value="id"
-              :disabled="formData.status === 'Posted'"
+              :disabled="formData.status === 'posted'"
               label="Location"
               :error-messages="errors.location_id"
               outlined
@@ -183,7 +185,7 @@
               outlined
               rows="2"
               dense
-              :disabled="formData.status === 'Posted'"
+              :disabled="formData.status === 'posted'"
               :error-messages="errors.remarks"
               hide-details="auto"
               label="Remarks"
@@ -196,6 +198,7 @@
             <v-text-field
               v-model="formData.group_2"
               outlined
+              :disabled="formData.status === 'posted'"
               :error-messages="errors.group_2"
               dense
               hide-details="auto"
@@ -207,7 +210,7 @@
           class="mt-6"
           :mode="modeData"
           :items="countItems"
-          :disabled="formData.status === 'Posted'"
+          :disabled="formData.status === 'posted'"
           @addItem="fetchCountItems"
           @totalAmount="fetchTotalAmount"
         />
@@ -217,7 +220,7 @@
             class="d-flex"
           >
             <v-btn
-              v-if="formData.status !== 'Posted'"
+              v-if="formData.status !== 'posted'"
               color="primary"
               class="me-3 mt-4"
               @click="submit"
@@ -306,10 +309,6 @@ export default {
     },
   },
   setup(props, { emit }) {
-    store.dispatch('AccountStore/list')
-    store.dispatch('DocumentStore/list')
-    store.dispatch('LocationStore/list')
-    store.dispatch('PhysicalCountStore/list')
     const modeData = toRef(props, 'mode')
     const dataProp = toRef(props, 'data')
     const formData = ref({
@@ -336,6 +335,7 @@ export default {
         return accountItem
       }
     }))
+
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
       if (documentItem.module === 'Physical') {
         documentItem.title = `${documentItem.document_name}`
@@ -374,6 +374,7 @@ export default {
     watch(dataProp, () => {
       if (modeData.value === 'Edit') {
         formData.value = dataProp.value
+        console.log(dataProp.value)
         fetchCountItems(dataProp.value.count_items)
       } else {
         formData.value = {
