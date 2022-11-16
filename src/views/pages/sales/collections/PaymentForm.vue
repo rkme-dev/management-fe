@@ -549,6 +549,10 @@ export default {
 
         if (formData.value.type === ONLINE_PAYMENT) {
           formData.value.reference_number = dataProp.value.reference_number;
+          formData.value.bank = '';
+          formData.value.bank_account_number = '';
+          formData.value.check_number = '';
+          formData.value.check_type = '';
 
         }
       } else {
@@ -582,6 +586,12 @@ export default {
         check_type: formData.value.check_type,
         index: formData.value.index,
         mode: formData.value.mode,
+      }
+      if (modeData.value === 'Edit' && payment.type !== 'check_payment') {
+        payment.bank = ''
+        payment.bank_account_number = ''
+        payment.check_type = ''
+        payment.check_number = ''
       }
 
       if (payment.type === 'online_payment') {
@@ -648,7 +658,6 @@ export default {
         hasError.value -= 1
         errors.value.amount = null
       }
-
       if (payment.account_id && hasError.value <= 0) {
         emit('addedPayment', payment)
 

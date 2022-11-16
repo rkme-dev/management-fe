@@ -6,12 +6,6 @@
       sort-by="name"
       class="elevation-1"
     >
-      <template #item.bank="{ item }">
-        {{ (item.payment && item.payment.bank) ? item.payment.bank : item.bank }}
-      </template>
-      <template #item.check_number="{ item }">
-        {{ (item.payment && item.payment.check_number) ? item.payment.check_number : item.check_number }}
-      </template>
       <template #item.created_at="{ item }">
         {{ dateFormat1(item.created_at) }}
       </template>
@@ -121,13 +115,29 @@ export default {
       ]
     },
     paymentData() {
-      return this.payments
+      let response = [];
+      this.payments.forEach(function(data){
+        let passedData = data;
+        passedData.payment_date = data.payment_date
+        passedData.payment_type = data.payment_type
+        passedData.check_number = '';
+        passedData.reference_number = (data.payment && (data.payment.reference_number != data.reference_number)) ? data.payment.reference_number : data.reference_number
+        passedData.amount = data.amount
+        
+        if (data.payment_type === 'Check Payment') {
+          passedData.bank = (data.id > 0 && (data.payment.bank != data.bank)) ? data.payment.bank : data.bank
+          console.log((data.id > 0 && (data.payment.check_number != data.check_number)))
+          passedData.check_number = (data.id > 0 && (data.payment.check_number != data.check_number)) ? data.payment.check_number : data.check_number
+        }
+
+        response.push(passedData)
+      });
+      return response
     }
   },
   methods: {
     initialize() {
       this.paymentData
-      console.log(this.paymentData)
       this.totalPaidAmount = this.totalPaid
     },
     removePayment(item, index){
@@ -159,6 +169,7 @@ export default {
   },
   mounted() {
     this.initialize()
+    console.log(this.paymentData)
     this.icons = {
       mdiAccountEdit,
       mdiNotebookEdit,

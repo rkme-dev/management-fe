@@ -490,6 +490,7 @@ import DrListSelection from '@/views/pages/sales/collections/DrListSelection.vue
 import SalesDrTable from './SalesDrTable.vue'
 import CollectionPayment from './CollectionPayment.vue'
 import PaymentForm from './PaymentForm.vue'
+import { consoleError } from 'vuetify/lib/util/console'
 
 export default {
   name: 'CollectionForm',
@@ -750,6 +751,25 @@ export default {
       data.payment_type = paymentTypesMapping[data.type]
       paymentData.value.index = index
 
+      if (paymentData.value.type === 'check_payment') {
+        paymentData.value.bank = paymentData.value.bank ? paymentData.value.bank : paymentData.value.payment.bank
+
+        paymentData.value.bank_account_number = paymentData.value.bank_account_number 
+                  ? paymentData.value.bank_account_number 
+                  : paymentData.value.payment.bank_account_number
+        paymentData.value.check_type = paymentData.value.check_type
+                  ? paymentData.value.check_type
+                  : paymentData.value.payment.check_type
+        paymentData.value.check_number = paymentData.value.check_number
+                  ? paymentData.value.check_number
+                  : paymentData.value.payment.check_number
+      } else {
+        paymentData.value.bank_account_number = ''
+        paymentData.value.check_type = ''
+        paymentData.value.check_number = ''
+      }
+      
+
       togglePaymentModal(paymentModeData.value)
     }
 
@@ -881,6 +901,7 @@ export default {
       } else {
         payments.value[payment.index] = payment
       }
+      console.log(payments.value)
       paymentsReinitialize()
     }
 
