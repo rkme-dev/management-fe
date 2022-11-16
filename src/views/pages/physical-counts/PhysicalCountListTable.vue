@@ -35,7 +35,7 @@
             class="mx-4"
             inset
             vertical
-          ></v-divider>    
+          ></v-divider>
           <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
@@ -173,6 +173,9 @@ export default {
 
     const initialize = () => {
       physicalCountDialog.value = false
+      store.dispatch('AccountStore/list')
+      store.dispatch('DocumentStore/list')
+      store.dispatch('LocationStore/list')
       store.dispatch('PhysicalCountStore/list')
     }
 
@@ -225,7 +228,7 @@ export default {
       icons: {
         mdiAccountEdit,
         mdiDeleteCircle,
-      }, 
+      },
     }
   },
 }
