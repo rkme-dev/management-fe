@@ -65,6 +65,22 @@
             >
             </v-currency-field>
           </v-col>
+          <v-col
+            cols="4"
+            class=""
+          >
+            <v-btn
+              v-if="totalAmount>0"
+              color="success"
+              class=""
+              @click="toggleModal"
+            >
+              <v-icon>
+                {{ icons.mdiContentSave }}
+              </v-icon>
+              Add Payment
+            </v-btn>
+          </v-col>
         </v-row>
       </template>
     </v-data-table>
