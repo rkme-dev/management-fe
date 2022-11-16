@@ -553,7 +553,6 @@ export default {
           formData.value.bank_account_number = '';
           formData.value.check_number = '';
           formData.value.check_type = '';
-
         }
       } else {
         formData.value = {

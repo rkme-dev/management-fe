@@ -822,7 +822,6 @@ export default {
           payments.value[index].type = 'online_payment'
         }
       })
-      console.log(totalPaymentAmount.value)
 
       if (totalPaymentAmount.value > 0) {
         paymentWarning.value = true
@@ -906,7 +905,6 @@ export default {
       } else {
         payments.value[payment.index] = payment
       }
-      console.log(payments.value)
       paymentsReinitialize()
     }
 
@@ -924,7 +922,6 @@ export default {
 
     const onDecode = id => {
       store.dispatch('SalesDrStore/get', id)
-      console.log(id)
     }
 
     const scannerOptions = (detectedCodes, ctx) => {

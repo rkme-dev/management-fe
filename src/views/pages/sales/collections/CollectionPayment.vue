@@ -141,14 +141,20 @@ export default {
         let passedData = data;
         passedData.payment_date = data.payment_date
         passedData.payment_type = data.payment_type
-        passedData.check_number = '';
-        passedData.reference_number = (data.payment && (data.payment.reference_number != data.reference_number)) ? data.payment.reference_number : data.reference_number
         passedData.amount = data.amount
-        
         if (data.payment_type === 'Check Payment') {
-          passedData.bank = (data.id > 0 && (data.payment.bank != data.bank)) ? data.payment.bank : data.bank
-          console.log((data.id > 0 && (data.payment.check_number != data.check_number)))
-          passedData.check_number = (data.id > 0 && (data.payment.check_number != data.check_number)) ? data.payment.check_number : data.check_number
+          passedData.bank = (data.id > 0 && data.payment.bank && (data.payment.bank != data.bank)) 
+                    ? data.payment.bank 
+                    : data.bank
+          passedData.check_number = (data.id > 0 && data.payment.check_number && (data.payment.check_number != data.check_number))
+                    ? data.payment.check_number
+                    : data.check_number
+          passedData.reference_number = passedData.check_number
+          console.log(passedData.reference_number)
+        } else {
+          passedData.reference_number = (data.payment && data.payment.reference_number && (data.payment.reference_number != data.reference_number)) 
+                  ? data.payment.reference_number
+                  : data.reference_number
         }
 
         response.push(passedData)
@@ -190,7 +196,6 @@ export default {
   },
   mounted() {
     this.initialize()
-    console.log(this.paymentData)
     this.icons = {
       mdiAccountEdit,
       mdiNotebookEdit,
