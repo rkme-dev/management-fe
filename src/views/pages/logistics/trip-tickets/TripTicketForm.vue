@@ -24,6 +24,20 @@
               </div>
             </v-alert>
           </v-col>
+        </v-row>
+        <v-row v-if="loading">
+          <v-col cols="12">
+            <div class="text-center">
+              <v-progress-circular
+                :size="190"
+                :width="7"
+                color="primary"
+                indeterminate
+              ></v-progress-circular>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row v-if="!loading">
           <v-col
             cols="6"
             class="pr-8 pl-8"
@@ -328,9 +342,12 @@ export default {
       if (documentItem.module === 'Trip-ticket') {
         documentItem.title = `${documentItem.document_name}`
 
+        formData.value.document_id = documentItem.id
+
         return documentItem
       }
     }))
+    const loading = computed(() => store.state.DocumentStore.loading)
     const drListDialog = ref(false)
     const formData = ref({
       area: null,
@@ -372,9 +389,6 @@ export default {
     }
 
     const initialize = () => {
-      store.dispatch('SalesDrStore/getAreas')
-      store.dispatch('DocumentStore/list')
-
       formData.value = dataProp.value ?? formData.value
 
       formData.value.area = formData.value.area ?? ''
@@ -465,6 +479,7 @@ export default {
     })
 
     return {
+      loading,
       modeData,
       areaChanged,
       addOrUpdateItems,
