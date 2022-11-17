@@ -381,6 +381,11 @@ const routes = [
     component: () => import('@/views/pages/reports/accounts-receivable/SubsidiaryLedger.vue'),
   },
   {
+    path: '/customer-aging',
+    name: 'customer-aging',
+    component: () => import('@/views/pages/reports/accounts-receivable/CustomerAging.vue'),
+  },
+  {
     path: '/inventory-reports',
     name: 'inventory-reports',
     component: () => import('@/views/pages/reports/inventory-reports/Index.vue'),
@@ -389,16 +394,6 @@ const routes = [
     path: '/stockcard-report',
     name: 'stockcard-report',
     component: () => import('@/views/pages/reports/inventory-reports/StockcardReport.vue'),
-  },
-  {
-    path: '/customer-report',
-    name: 'customer-report',
-    component: () => import('@/views/pages/reports/customers/Index.vue'),
-  },
-  {
-    path: '/customer-aging',
-    name: 'customer-aging',
-    component: () => import('@/views/pages/reports/customers/CustomerAging.vue'),
   },
   {
     path: '/physical-counts',

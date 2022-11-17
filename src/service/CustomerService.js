@@ -20,12 +20,4 @@ export default class CustomerService {
   list = () => AxiosInstance.get('/customers')
     .then(response => response.data)
     .catch(error => error.response)
-
-  aging = params => AxiosInstance.get(`/customers/aging${params}`, params)
-    .then(response => response.data)
-    .catch(error => error.response)
-
-  agingItems = customerId => AxiosInstance.get(`customers/aging-transaction/${customerId}`)
-    .then(response => response.data)
-    .catch(error => error.response)
 }
