@@ -15,32 +15,10 @@
               item-text="name"
               item-value="id"
               dense
-              outlined
-              label="Select Product"
-              clearable
-              @change="generateUnits"
+              readonly
             ></v-select>
           </v-col>
-          <v-col
-            v-if="product"
-            cols="3"
-            class="mt-n4"
-          >
-            <v-switch
-              v-model="showDateFilter"
-              label="Show Date Filter"
-            ></v-switch>
-          </v-col>
-          <v-col
-            v-if="product"
-            cols="3"
-            class="mt-n4"
-          >
-            <v-switch
-              v-model="showUnitFilter"
-              label="Show Unit"
-            ></v-switch>
-          </v-col>
+          <v-col cols="6"></v-col>
           <v-col
             v-if="showDateFilter"
             cols="4"
@@ -48,9 +26,8 @@
           >
             <v-menu
               v-model="fromDateModal"
-              :close-on-content-click="false"
-              transition="scale-transition"
               offset-y
+              disabled
               max-width="290px"
               min-width="auto"
             >
@@ -59,9 +36,9 @@
                   v-model="fromDate"
                   label="From Date"
                   persistent-hint
+                  disabled
                   :append-icon="icons.mdiCalendar"
                   readonly
-                  outlined
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
@@ -82,9 +59,8 @@
           >
             <v-menu
               v-model="toDateModal"
-              :close-on-content-click="false"
-              transition="scale-transition"
               offset-y
+              disabled
               max-width="290px"
               min-width="auto"
             >
@@ -95,7 +71,7 @@
                   persistent-hint
                   :append-icon="icons.mdiCalendar"
                   readonly
-                  outlined
+                  disabled
                   v-bind="attrs"
                   v-on="on"
                 ></v-text-field>
@@ -109,11 +85,10 @@
               ></v-date-picker>
             </v-menu>
           </v-col>
-          <v-col cols="12"></v-col>
           <v-col
             v-if="showUnitFilter"
-            class="mt-n8"
             cols="4"
+            class="mt-2"
           >
             <v-select
               v-model="unit"
@@ -121,24 +96,13 @@
               item-text="name"
               item-value="name"
               label="Inventory Unit"
-              outlined
+              readonly
+              disabled
               dense
-              clearable
             ></v-select>
           </v-col>
         </v-row>
       </v-card-text>
-      <v-card-actions v-if="product">
-        <v-btn
-          color="primary"
-          @click="generateReport"
-        >
-          <v-icon>
-            {{ icons.mdiFinance }}
-          </v-icon>
-          Generate Report
-        </v-btn>
-      </v-card-actions>
     </v-card>
     <v-card
       v-if="reportLoading"
@@ -210,25 +174,25 @@
 
 <script>
 import {
-  computed, ref, onMounted, onUnmounted,
+  computed, ref, onMounted, onUnmounted, watch,
 } from '@vue/composition-api'
 import store from '@/store'
 import { mdiCalendar, mdiFinance } from '@mdi/js'
-import router from '@/router'
 
 export default {
   name: 'Stockcard',
-  setup() {
+  setup(props, context) {
     const products = computed(() => store.state.FinishProductStore.list)
     const product = ref()
     const units = ref([])
     const productLoading = computed(() => store.state.FinishProductStore.loading)
     const reportLoading = computed(() => store.state.ReportStore.loading)
     const stockcard = computed(() => store.state.ReportStore.stockcardReport)
-    const fromDate = ref(new Date().toISOString().substr(0, 10))
+    const fromDate = ref()
     const fromDateModal = ref(false)
     const toDateModal = ref(false)
     const showUnitFilter = ref(false)
+    const showDateFilter = ref(false)
     const toDate = ref(new Date().toISOString().substr(0, 10))
     const unit = ref('')
     const stockCardTotalAmount = computed(() => {
@@ -239,7 +203,58 @@ export default {
       return 0
     })
 
-    const showDateFilter = ref(false)
+    const generateUnitFromProduct = () => {
+      if (product.value) {
+        const payload = ref({
+          productId: product.value,
+          fromDate: null,
+          toDate: null,
+          unit: null,
+        })
+
+        if (showDateFilter.value) {
+          payload.value.fromDate = fromDate.value
+          payload.value.toDate = toDate.value
+        }
+
+        if (showUnitFilter.value) {
+          payload.value.unit = unit.value
+        }
+
+        store.dispatch('ReportStore/getStockcardReport', payload.value)
+
+        return
+      }
+
+      store.dispatch('ReportStore/clearReport', 'stockcardReport')
+    }
+
+    watch(productLoading, value => {
+      if (value === false) {
+        product.value = parseInt(context.root.$route.query.product_id)
+        const productData = products.value.find(item => item.id === product.value)
+
+        units.value = productData.units
+
+        if (context.root.$route.query.fromDate) {
+          showDateFilter.value = true
+          fromDate.value = new Date(context.root.$route.query.fromDate).toISOString().substr(0, 10)
+        }
+
+        if (context.root.$route.query.toDate) {
+          showDateFilter.value = true
+          toDate.value = new Date(context.root.$route.query.toDate).toISOString().substr(0, 10)
+        }
+
+        if (context.root.$route.query.unit) {
+          showUnitFilter.value = true
+          unit.value = context.root.$route.query.unit
+        }
+
+        generateUnitFromProduct()
+      }
+    })
+
     const headers = [
       {
         width: '130px',
@@ -270,30 +285,7 @@ export default {
       await store.dispatch('ReportStore/clearReport', 'stockcardReport')
     })
 
-    const generateUnits = () => {
-      const productData = products.value.find(item => item.id === product.value)
-
-      units.value = productData.units
-    }
-
-    const generateReport = () => {
-      let urlReport = `stockcard-generated-report?product_id=${product.value}&`
-
-      if (showDateFilter.value) {
-        urlReport = `${urlReport}fromDate=${fromDate.value}&toDate=${toDate.value}&`
-      }
-
-      if (showUnitFilter.value) {
-        urlReport = `${urlReport}unit=${unit.value}&`
-      }
-
-      const route = router.resolve(urlReport)
-
-      window.open(route.href, '_blank')
-    }
-
     return {
-      generateReport,
       units,
       unit,
       showDateFilter,
@@ -310,7 +302,7 @@ export default {
       productLoading,
       products,
       headers,
-      generateUnits,
+      generateUnitFromProduct,
       reportLoading,
       stockcard,
       stockCardTotalAmount,

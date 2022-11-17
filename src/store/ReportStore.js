@@ -31,7 +31,7 @@ export const ReportStore = {
         },
       )
     },
-    getAgingReport({ commit, dispatch}) {
+    getAgingReport({ commit, dispatch }) {
       dispatch('setLoading', true)
 
       return reportService.getCustomerAging().then(
@@ -63,10 +63,10 @@ export const ReportStore = {
         },
       )
     },
-    getStockcardReport({ commit, dispatch }, id) {
+    getStockcardReport({ commit, dispatch }, payload) {
       dispatch('setLoading', true)
 
-      return reportService.getStockcard(id).then(
+      return reportService.getStockcard(payload.productId, payload.fromDate, payload.toDate, payload.unit).then(
         response => {
           commit('fetchStockcardReport', response.data)
           dispatch('setLoading', false)

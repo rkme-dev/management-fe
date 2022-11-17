@@ -97,9 +97,11 @@ const routes = [
     beforeEnter: (to, from, next) => {
       const id = Number.parseInt(to.params.id, 10)
       if (Number.isNaN(id)) return next({ name: 'error-404' })
-      else return next()
+
+      return next()
     },
   },
+
   //
   {
     path: '/suppliers',
@@ -123,7 +125,8 @@ const routes = [
     beforeEnter: (to, from, next) => {
       const id = Number.parseInt(to.params.id, 10)
       if (Number.isNaN(id)) return next({ name: 'error-404' })
-      else return next()
+
+      return next()
     },
   },
   {
@@ -166,6 +169,7 @@ const routes = [
     name: 'arrival-purchase-order',
     component: () => import('@/views/pages/purchase-orders/purchase-order/PurchaseOrderArrival.vue'),
   },
+
   //
   {
     path: '/sales/clients',
@@ -189,7 +193,8 @@ const routes = [
     beforeEnter: (to, from, next) => {
       const id = Number.parseInt(to.params.id, 10)
       if (Number.isNaN(id)) return next({ name: 'error-404' })
-      else return next()
+
+      return next()
     },
   },
   {
@@ -394,6 +399,11 @@ const routes = [
     path: '/stockcard-report',
     name: 'stockcard-report',
     component: () => import('@/views/pages/reports/inventory-reports/StockcardReport.vue'),
+  },
+  {
+    path: '/stockcard-generated-report',
+    name: 'stockcard-generated-report',
+    component: () => import('@/views/pages/reports/inventory-reports/StockcardGeneratedReport.vue'),
   },
   {
     path: '/physical-counts',
