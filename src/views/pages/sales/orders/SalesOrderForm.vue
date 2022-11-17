@@ -53,7 +53,7 @@
               <v-date-picker
                 v-model="datePosted"
                 no-title
-                :disabled="formData.has_dr === 1  && formData.status === 'Posted'"
+                :disabled="formData.has_dr === 1 && formData.status === 'Posted'"
                 color="primary"
                 @input="formData.dateModal = false"
               ></v-date-picker>
@@ -64,13 +64,13 @@
             class="pr-8 pl-8"
           >
             <v-text-field
-                v-if="formData.id !== undefined"
-                v-model="formData.sales_order_number"
-                outlined
-                :error-messages="errors.sales_order_number"
-                readonly
-                hide-details="auto"
-                label="Sales Order Number"
+              v-if="formData.id !== undefined"
+              v-model="formData.sales_order_number"
+              outlined
+              :error-messages="errors.sales_order_number"
+              readonly
+              hide-details="auto"
+              label="Sales Order Number"
             ></v-text-field>
           </v-col>
           <v-col
@@ -110,7 +110,7 @@
             class=""
           >
             <v-btn
-              v-if="modeData === 'Create'  && formData.status !== 'Posted'"
+              v-if="modeData === 'Create' && formData.status !== 'Posted'"
               class="md4"
               color="primary"
               x-small
@@ -124,22 +124,22 @@
             </v-btn>
           </v-col>
           <v-col
-            cols="2"
             v-if="formData.customer_name !== null"
+            cols="2"
           >
             <v-btn
-                class="ml-n16"
-                color="primary"
-                x-small
-                dark
-                :href="`/customer-aging?cId=${formData.customer_id}`"
-                target="_blank"
-              >
-                A/R
-                <v-icon>
-                  {{ icons.mdiNotebook }}
-                </v-icon>
-              </v-btn>
+              class="ml-n16"
+              color="primary"
+              x-small
+              dark
+              :href="`/customer-aging?cId=${formData.customer_id}`"
+              target="_blank"
+            >
+              A/R
+              <v-icon>
+                {{ icons.mdiNotebook }}
+              </v-icon>
+            </v-btn>
           </v-col>
           <v-col
             cols="2"
@@ -377,8 +377,8 @@
         <v-card>
           <v-card-text>
             <dr-list-table-form
-              @submit="drDialog=false"
               :customer-id="formData.customer_id"
+              @submit="drDialog=false"
             >
             </dr-list-table-form>
           </v-card-text>
@@ -485,12 +485,11 @@ export default {
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
       documentItem.title = `${documentItem.document_name}`
       if (documentItem.module === 'Orders') {
-
         if (documentItem.document_name === 'Sales Order') {
           formData.value.document_id = documentItem.id
         }
 
-        if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
+        if (modeData.value === 'Create' && (documentItem.is_active === 1 || documentItem.is_active === 'Active')) {
           return documentItem
         }
 
@@ -545,7 +544,6 @@ export default {
       if (customer?.id) {
         formData.value.customer_name = customer.name
         formData.value.customer_id = customer.id
-        formData.value.document_id = customer.document_id
         formData.value.address = customer.address
         formData.value.remarks = customer.remarks
         formData.value.area = customer.area
