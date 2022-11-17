@@ -7,7 +7,19 @@
       class="elevation-1"
       :search="search"
       :loading="loading"
+      loading-text="Loading data ..."
     >
+      <template #[`item.status`]="{item}">
+        <div class="d-flex justify-center">
+          <v-chip
+            medium
+            :class="`${colors[item.status]}--text`"
+            class="v-chip-light-bg text-center"
+          >
+            {{ item.status }}
+          </v-chip>
+        </div>
+      </template>
       <template #item.created_at="{ item }">
         {{ dateFormat1(item.created_at) }}
       </template>
@@ -115,6 +127,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { dateFormat1 } from '@/utils/time'
+import { salesStatusColors } from '@/constants/SalesStatusColors'
 import SalesOrderForm from './SalesOrderForm.vue'
 
 export default {
@@ -122,6 +135,7 @@ export default {
     SalesOrderForm,
   },
   setup() {
+    console.log(salesStatusColors().value.Posted)
     const showPosted = ref(false)
     const modeData = ref('Create')
     const salesOrderDialog = ref(false)
@@ -166,11 +180,11 @@ export default {
     })
 
     const salesOrders = computed(() => store.state.SalesOrderStore.list.filter(order => {
-      if (showPosted.value === false && order.status !== 'Posted') {
+      if (showPosted.value === true && order.status === 'Posted') {
         return order
       }
 
-      if (showPosted.value === true) {
+      if (showPosted.value === false && order.status === 'For Review') {
         return order
       }
     }))
@@ -223,7 +237,10 @@ export default {
       window.open(`https://management-api-v1.herokuapp.com/print-sales-order/${id}`, '_blank')
     }
 
+    const colors = salesStatusColors()
+
     return {
+      colors,
       showPosted,
       editItem,
       salesOrder,

@@ -10,7 +10,7 @@ export function customerTypes() {
     'Regular - HORECA',
     'Regular - MiniGrocery',
     'Regular - Grocery',
-    'Regular - Store'
+    'Regular - Store',
   ]
 
   return shallowRef(types)

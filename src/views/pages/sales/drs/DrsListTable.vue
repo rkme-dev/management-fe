@@ -7,7 +7,19 @@
       class="elevation-1"
       :search="search"
       :loading="loading"
+      loading-text="Loading data ..."
     >
+      <template #[`item.status`]="{item}">
+        <div class="d-flex justify-center">
+          <v-chip
+            medium
+            :class="`${colors[item.status]}--text`"
+            class="v-chip-light-bg text-center"
+          >
+            {{ item.status }}
+          </v-chip>
+        </div>
+      </template>
       <template #item.date_posted="{ item }">
         {{ dateFormat1(item.date_posted) }}
       </template>
@@ -129,6 +141,7 @@ import {
 } from '@vue/composition-api'
 import store from '@/store'
 import { dateFormat1 } from '@/utils/time'
+import { salesStatusColors } from '@/constants/SalesStatusColors'
 import SalesDrForm from './SalesDrForm.vue'
 
 export default {
@@ -246,7 +259,10 @@ export default {
       window.open(`https://management-api-v1.herokuapp.com/print-so-delivery-receipt/${id}`, '_blank')
     }
 
+    const colors = salesStatusColors()
+
     return {
+      colors,
       todayPosted,
       showPosted,
       editItem,

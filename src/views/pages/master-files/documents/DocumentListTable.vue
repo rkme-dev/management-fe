@@ -15,6 +15,7 @@
       sort-by="name"
       :loading="loading"
       fixed-header
+      loading-text="Loading data ..."
     >
       <!-- is_active -->
       <template #[`item.is_active`]="{item}">
@@ -194,7 +195,7 @@ import {
 } from '@vue/composition-api'
 import DocumentForm from '@/views/pages/master-files/documents/DocumentForm.vue'
 import store from '@/store'
-import {DocumentStore} from "@/store/DocumentStore";
+import { DocumentStore } from '@/store/DocumentStore'
 
 export default {
   components: {

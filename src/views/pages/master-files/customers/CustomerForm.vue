@@ -416,7 +416,7 @@ import {
   ref,
   toRef,
   computed,
-  watch, onUnmounted, onMounted,
+  watch,
 } from '@vue/composition-api'
 import { customerTypes } from '@/constants/CustomerTypes'
 import { mdiAlertOutline, mdiInformation } from '@mdi/js'
@@ -445,7 +445,6 @@ export default {
     if (modeData.value === 'Selecting') {
       store.dispatch('CustomerStore/list')
     }
-
 
     const dataProp = toRef(props, 'data')
     const errors = computed(() => store.state.CustomerStore.errors)

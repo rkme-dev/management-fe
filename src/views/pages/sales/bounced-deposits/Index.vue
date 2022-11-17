@@ -1,97 +1,109 @@
 <template>
   <v-card id="deposit-list">
-      <v-data-table
-          :headers="headers"
-          :items="deposits"
-          sort-by="name"
-          class="elevation-1"
-          :search="search"
-          :loading="loading"
-      >
-        <template #item.created_at="{ item }">
-          {{ dateFormat1(item.created_at) }}
-        </template>
-        <template #item.amount="{ item }">
-          <v-currency-field
-              prefix="PHP"
-              class="text-green"
-              v-model="item.amount"
-              disabled
+    <v-data-table
+      :headers="headers"
+      :items="deposits"
+      sort-by="name"
+      class="elevation-1"
+      :search="search"
+      :loading="loading"
+      loading-text="Loading data ..."
+    >
+      <template #[`item.status`]="{item}">
+        <div class="d-flex justify-center">
+          <v-chip
+            medium
+            :class="`${colors[item.status]}--text`"
+            class="v-chip-light-bg text-center"
           >
-          </v-currency-field>
-        </template>
-        <template v-slot:top>
-          <v-toolbar
-              color="teal"
-              outlined
+            {{ item.status }}
+          </v-chip>
+        </div>
+      </template>
+      <template #item.created_at="{ item }">
+        {{ dateFormat1(item.created_at) }}
+      </template>
+      <template #item.amount="{ item }">
+        <v-currency-field
+          v-model="item.amount"
+          prefix="PHP"
+          class="text-green"
+          disabled
+        >
+        </v-currency-field>
+      </template>
+      <template v-slot:top>
+        <v-toolbar
+          color="teal"
+          outlined
+        >
+          <v-toolbar-title>Bounced Checks</v-toolbar-title>
+          <v-divider
+            class="mx-4"
+            inset
+            vertical
+          ></v-divider>
+          <v-spacer></v-spacer>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            class="mr-4"
+          ></v-text-field>
+          <v-btn
+            color="primary"
+            dark
+            class="mb-2"
+            @click="toggleCreateModal"
           >
-            <v-toolbar-title>Bounced Checks</v-toolbar-title>
-            <v-divider
-                class="mx-4"
-                inset
-                vertical
-            ></v-divider>
-            <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-                class="mr-4"
-            ></v-text-field>
-            <v-btn
-                color="primary"
-                dark
-                class="mb-2"
-                @click="toggleCreateModal"
-            >
-              Create Bounced Checks
-            </v-btn>
-            <v-dialog
-                v-model="depositCreateDialog"
-                fullscreen
-                transition="dialog-bottom-transition"
-                persistent
-            >
-              <create-bounced-deposit-form @onSubmit="toggleCreateModal"></create-bounced-deposit-form>
-            </v-dialog>
-          </v-toolbar>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-icon
-              medium
-              class="mr-2"
-              @click="editItem(item)"
+            Create Bounced Checks
+          </v-btn>
+          <v-dialog
+            v-model="depositCreateDialog"
+            fullscreen
+            transition="dialog-bottom-transition"
+            persistent
           >
-            {{ icons.mdiAccountEdit }}
-          </v-icon>
-          <v-icon
-              v-if="item.is_active === 'Active'"
-              small
-              @click="deleteItem(item)"
-          >
-            {{ icons.mdiDeleteCircle }}
-          </v-icon>
-        </template>
-      </v-data-table>
+            <create-bounced-deposit-form @onSubmit="toggleCreateModal"></create-bounced-deposit-form>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          medium
+          class="mr-2"
+          @click="editItem(item)"
+        >
+          {{ icons.mdiAccountEdit }}
+        </v-icon>
+        <v-icon
+          v-if="item.is_active === 'Active'"
+          small
+          @click="deleteItem(item)"
+        >
+          {{ icons.mdiDeleteCircle }}
+        </v-icon>
+      </template>
+    </v-data-table>
   </v-card>
 </template>
 <script>
 
-import {ref} from "@vue/composition-api/dist/vue-composition-api";
-import {computed} from "@vue/composition-api";
-import store from "@/store";
+import { ref, computed } from '@vue/composition-api/dist/vue-composition-api'
+import store from '@/store'
 import {
   mdiAccountEdit,
   mdiDeleteCircle,
-} from "@mdi/js";
-import CreateBouncedDepositForm from './CreateBouncedDepositForm.vue'
+} from '@mdi/js'
 import { dateFormat1 } from '@/utils/time'
-import router from "@/router";
+import router from '@/router'
+import { salesStatusColors } from '@/constants/SalesStatusColors'
+import CreateBouncedDepositForm from './CreateBouncedDepositForm.vue'
 
 export default {
-  components : {
+  components: {
     CreateBouncedDepositForm,
   },
   setup() {
@@ -119,8 +131,8 @@ export default {
     const deleteItem = () => {
     }
 
-    const editItem = (data) => {
-        router.push('/bounced-deposits/' + data.id)
+    const editItem = data => {
+      router.push(`/bounced-deposits/${data.id}`)
     }
 
     const toggleCreateModal = () => {
@@ -128,7 +140,10 @@ export default {
       depositCreateDialog.value = !depositCreateDialog.value
     }
 
+    const colors = salesStatusColors()
+
     return {
+      colors,
       icons: {
         mdiAccountEdit,
         mdiDeleteCircle,
