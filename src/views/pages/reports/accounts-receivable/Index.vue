@@ -64,6 +64,13 @@ export default {
         cardImage: require('@/assets/images/pages/card-basic-user.jpeg'),
         icon: mdiAccountBoxMultipleOutline,
       },
+      {
+        cardBg: "info",
+        title: "Accounts Receivable Aging",
+        link: "/customer-aging",
+        cardImage: require("@/assets/images/pages/card-basic-user.jpeg"),
+        icon: mdiAccountBoxMultipleOutline,
+      },
     ]
 
     return {

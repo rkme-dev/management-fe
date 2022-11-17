@@ -8,6 +8,8 @@ export const ReportStore = {
     loading: false,
     ledgerReport: [],
     stockcardReport: [],
+    agingReport: [],
+    agingItemsReport: [],
   },
   actions: {
     clearReport({ commit }, index) {
@@ -19,6 +21,38 @@ export const ReportStore = {
       return reportService.getReleaseOrder(id).then(
         response => {
           commit('fetchLedgerReport', response.data)
+          dispatch('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => {
+          dispatch('setLoading', false)
+          Promise.reject(error)
+        },
+      )
+    },
+    getAgingReport({ commit, dispatch}) {
+      dispatch('setLoading', true)
+
+      return reportService.getCustomerAging().then(
+        response => {
+          commit('fetchAgingReport', response.data)
+          dispatch('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => {
+          dispatch('setLoading', false)
+          Promise.reject(error)
+        },
+      )
+    },
+    getAgingItemsReport({ commit, dispatch }, id) {
+      dispatch('setLoading', true)
+
+      return reportService.getCustomerAgingItems(id).then(
+        response => {
+          commit('fetchAgingItemsReport', response.data)
           dispatch('setLoading', false)
 
           return Promise.resolve(response)
@@ -52,6 +86,12 @@ export const ReportStore = {
   mutations: {
     clearReport(state, index) {
       state[index] = []
+    },
+    fetchAgingReport(state, data) {
+      state.agingReport = data
+    },
+    fetchAgingItemsReport(state, data) {
+      state.agingItemsReport = data
     },
     fetchLedgerReport(state, data) {
       state.ledgerReport = data

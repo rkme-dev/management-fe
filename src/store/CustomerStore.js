@@ -8,11 +8,8 @@ export const CustomerStore = {
     loading: false,
     errors: [],
     list: [],
-    aging: [],
     row: {},
     originalData: [],
-    items: [],
-    originalItems: [],
   },
   actions: {
     // eslint-disable-next-line no-shadow
@@ -62,33 +59,6 @@ export const CustomerStore = {
         response => {
           commit('fetchListSuccess', response.data)
           dispatch('setLoading', false)
-
-          return Promise.resolve(response)
-        },
-        error => Promise.reject(error),
-      )
-    },
-    aging({ commit, dispatch }, params) {
-      commit('fetchAgingSuccess', [])
-      dispatch('setLoading', true)
-
-      return customerService.aging(params).then(
-        response => {
-          commit('fetchAgingSuccess', response.data)
-          dispatch('setLoading', false)
-
-          return Promise.resolve(response)
-        },
-        error => Promise.reject(error),
-      )
-    },
-    agingItems({ commit }, customerId) {
-      commit('setLoading', true)
-
-      return customerService.agingItems(customerId).then(
-        response => {
-          commit('fetchAgingItemsSuccess', response.data)
-          commit('setLoading', false)
 
           return Promise.resolve(response)
         },
@@ -149,21 +119,6 @@ export const CustomerStore = {
         state.list = result
       }
     },
-    filterAgingItems(state, customerId = null) {
-      const result = []
-
-      if (customerId === null) {
-        state.items = state.originalItems
-      } else {
-        state.originalItems.forEach(item => {
-          if (item.customer.id === customerId) {
-            result.push(item)
-          }
-        })
-
-        state.items = result
-      }
-    },
     add(state, row) {
       state.list.push(row)
     },
@@ -194,14 +149,6 @@ export const CustomerStore = {
       })
 
       state.loading = false
-    },
-    fetchAgingSuccess(state, list) {
-      state.aging = list
-      state.originalItems = list
-    },
-    fetchAgingItemsSuccess(state, list) {
-      state.items = list
-      state.originalItems = list
     },
     fetchRowSuccess(state, row) {
       state.row = row

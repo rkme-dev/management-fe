@@ -262,11 +262,6 @@ export default {
             link: "accounts-receivables",
           },
           {
-            title: "Customers",
-            icon: mdiCardAccountDetailsStarOutline,
-            link: "customer-report",
-          },
-          {
             title: "Inventory Reports",
             icon: mdiArchiveOutline,
             link: "inventory-reports",
