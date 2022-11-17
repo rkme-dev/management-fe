@@ -127,7 +127,8 @@ export default {
         value: 'created_at',
       },
       { text: 'DR No', value: 'sales_dr_number' },
-      { text: 'Remaining Balance', value: 'remaining_balance' },
+
+      // { text: 'Remaining Balance', value: 'remaining_balance' },
       { text: 'To Pay', value: 'amount_to_pay' },
       { text: 'Actions', value: 'actions', sortable: false },
     ])
