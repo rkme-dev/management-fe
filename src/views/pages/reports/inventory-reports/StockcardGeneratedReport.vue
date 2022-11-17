@@ -169,6 +169,16 @@
         </div>
       </v-card-text>
     </v-card>
+    <v-card
+      v-if="stockcard.length === 0 && reportLoading === false"
+      class="mt-8"
+    >
+      <v-card-text>
+        <div class="text-center">
+          No results found.
+        </div>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
