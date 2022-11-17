@@ -283,7 +283,7 @@ export default {
         urlReport = `${urlReport}fromDate=${fromDate.value}&toDate=${toDate.value}&`
       }
 
-      if (showUnitFilter.value) {
+      if (showUnitFilter.value && unit.value) {
         urlReport = `${urlReport}unit=${unit.value}&`
       }
 
