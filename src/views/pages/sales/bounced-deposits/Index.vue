@@ -27,7 +27,7 @@
         <v-currency-field
           v-model="item.amount"
           prefix="PHP"
-          class="text-green"
+          class="text-crimson"
           disabled
         >
         </v-currency-field>
