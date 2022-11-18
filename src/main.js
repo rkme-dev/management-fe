@@ -6,13 +6,13 @@ import AxiosInterceptors from '@/service/AxiosInterceptors'
 import { VTextField } from 'vuetify/lib' // Globally import VTextField
 import Ripple from 'vuetify/lib/directives/ripple'
 import Vuetify from 'vuetify'
+import VueQrcodeReader from 'vue-qrcode-reader'
+import VueQRCodeComponent from 'vue-qrcode-component'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import store from './store'
 import './interceptors/axios'
-import VueQrcodeReader from "vue-qrcode-reader";
-import VueQRCodeComponent from 'vue-qrcode-component'
 
 Vue.component('qr-code', VueQRCodeComponent)
 
@@ -31,7 +31,7 @@ Vue.use(VCurrencyField, {
   valueAsInteger: false,
   allowNegative: true,
 })
-Vue.use(VueQrcodeReader);
+Vue.use(VueQrcodeReader)
 
 Vue.use(Vuetify, {
   directives: {

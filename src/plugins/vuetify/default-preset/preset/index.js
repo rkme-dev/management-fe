@@ -4,21 +4,21 @@ export default {
   theme: {
     themes: {
       light: {
-        primary: '#9155FD',
+        primary: '#4c65ff',
         accent: '#0d6efd',
-        secondary: '#8A8D93',
+        secondary: '#4c65ff',
         success: '#56CA00',
         info: '#16B1FF',
-        warning: '#FFB400',
-        error: '#FF4C51',
+        warning: '#ffd966',
+        error: '#ef2323',
       },
       dark: {
-        primary: '#9155FD',
+        primary: '#4c65ff',
         accent: '#0d6efd',
-        secondary: '#8A8D93',
+        secondary: '#9fc5e8',
         success: '#56CA00',
         info: '#16B1FF',
-        warning: '#FFB400',
+        warning: '#ffd966',
         error: '#FF4C51',
       },
     },

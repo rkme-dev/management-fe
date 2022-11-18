@@ -6,7 +6,7 @@ $shades: (
   'transparent': transparent,
 );
 
-$primary-shade--light: #5e5669;
+$primary-shade--light: #0059b3;
 $primary-shade--dark: #e7e3fc;
 $shadow-color--light: $primary-shade--light;
 $shadow-color--dark: #131120;
@@ -137,7 +137,7 @@ $material-light: map-deep-merge(
   $material-light,
   (
     'app-bar': map-get($shades, 'white'),
-    'background': #f4f5fa,
+    'background': #e6f2ff,
     'calendar': (
       'line-color': rgba(93, 89, 98, 0.1),
       // ! Value of `map-deep-get($material-dark, 'cards')`
