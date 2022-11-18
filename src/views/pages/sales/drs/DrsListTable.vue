@@ -14,7 +14,7 @@
           <v-chip
             medium
             :class="`${colors[item.status]}--text`"
-            class="v-chip-light-bg text-center"
+            class="v-chip--pill text-center font-weight-bold elevation-2 text-body-2"
           >
             {{ item.status }}
           </v-chip>
