@@ -136,30 +136,43 @@ export default {
       ]
     },
     paymentData() {
-      let response = [];
-      this.payments.forEach(function(data){
-        let passedData = data;
+      const response = []
+      this.payments.forEach(data => {
+        const passedData = data
         passedData.payment_date = data.payment_date
         passedData.payment_type = data.payment_type
         passedData.amount = data.amount
         if (data.payment_type === 'Check Payment') {
-          passedData.bank = (data.id > 0 && data.payment.bank && (data.payment.bank != data.bank)) 
-                    ? data.payment.bank 
-                    : data.bank
+          passedData.bank = (data.id > 0 && data.payment.bank && (data.payment.bank != data.bank))
+            ? data.payment.bank
+            : data.bank
           passedData.check_number = (data.id > 0 && data.payment.check_number && (data.payment.check_number != data.check_number))
-                    ? data.payment.check_number
-                    : data.check_number
+            ? data.payment.check_number
+            : data.check_number
           passedData.reference_number = passedData.check_number
           console.log(passedData.reference_number)
         } else {
-          passedData.reference_number = (data.payment && data.payment.reference_number && (data.payment.reference_number != data.reference_number)) 
-                  ? data.payment.reference_number
-                  : data.reference_number
+          passedData.reference_number = (data.payment && data.payment.reference_number && (data.payment.reference_number != data.reference_number))
+            ? data.payment.reference_number
+            : data.reference_number
         }
 
         response.push(passedData)
-      });
+      })
+
       return response
+    },
+  },
+
+  updated() {
+    this.initialize()
+  },
+  mounted() {
+    this.initialize()
+    this.icons = {
+      mdiAccountEdit,
+      mdiNotebookEdit,
+      mdiDeleteCircle,
     }
   },
   methods: {
@@ -190,23 +203,11 @@ export default {
       this.$emit('toggleModal', 'Create')
     },
   },
-
-  updated () {
-    this.initialize()
-  },
-  mounted() {
-    this.initialize()
-    this.icons = {
-      mdiAccountEdit,
-      mdiNotebookEdit,
-      mdiDeleteCircle,
-    }
-  }
 }
 </script>
 <style>
 .text-green input {
-  color: chartreuse !important;
+  color: #009900 !important;
 }
 
 </style>

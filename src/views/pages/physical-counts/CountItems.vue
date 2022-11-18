@@ -135,7 +135,7 @@
                           label="Brand"
                         ></v-text-field>
                       </v-col>
-                       <v-col
+                      <v-col
                         cols="4"
                       >
                         <v-text-field
@@ -147,7 +147,7 @@
                           label="Group 1"
                         ></v-text-field>
                       </v-col>
-                       <v-col
+                      <v-col
                         cols="4"
                       >
                         <v-text-field
@@ -241,9 +241,9 @@
         </template>
         <template #item.quantity="{ item }">
           <v-currency-field
-              v-model="item.quantity"
-              disabled
-              :decimal-length="0"
+            v-model="item.quantity"
+            disabled
+            :decimal-length="0"
           >
           </v-currency-field>
         </template>
@@ -578,6 +578,6 @@ export default {
 
 <style>
 .text-green input {
-  color: chartreuse !important;
+  color: #009900 !important;
 }
 </style>

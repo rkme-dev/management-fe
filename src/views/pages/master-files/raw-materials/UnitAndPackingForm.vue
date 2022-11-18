@@ -238,6 +238,6 @@ export default {
 
 <style>
 .text-green input {
-  color: chartreuse !important;
+  color: #009900 !important;
 }
 </style>

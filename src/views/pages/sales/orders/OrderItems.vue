@@ -118,9 +118,9 @@
                           label="Unit"
                           outlined
                           dense
-                          @change="test"
                           clearable
                           hide-details="auto"
+                          @change="test"
                         ></v-select>
                       </v-col>
                       <v-col
@@ -167,12 +167,21 @@
                       <v-col cols="12"></v-col>
 
                       <v-col cols="4"></v-col>
-                      <v-col cols="4" v-if="currentItem.unit" class="pr-16 pl-12 mt-n2">Total Item Inventory (per {{currentItem.unit}}): </v-col>
-                      <v-col cols="4" class="pr-16 pl-12 mt-n4">
+                      <v-col
+                        v-if="currentItem.unit"
+                        cols="4"
+                        class="pr-16 pl-12 mt-n2"
+                      >
+                        Total Item Inventory (per {{ currentItem.unit }}):
+                      </v-col>
+                      <v-col
+                        cols="4"
+                        class="pr-16 pl-12 mt-n4"
+                      >
                         <v-currency-field
-                            v-if="currentItem.unit"
-                          class="shrink text-green"
+                          v-if="currentItem.unit"
                           v-model="currentItem.actual_balance"
+                          class="shrink text-green"
                           single-line
                           readonly
                           :decimal-length="0"
@@ -183,34 +192,52 @@
                         </v-currency-field>
                       </v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4" v-if="currentItem.unit" class="pr-16 pl-12 mt-n4">Total Available Item Inventory (per {{currentItem.unit}}): </v-col>
-                      <v-col cols="4" class="pr-16 pl-12 mt-n4">
+                      <v-col
+                        v-if="currentItem.unit"
+                        cols="4"
+                        class="pr-16 pl-12 mt-n4"
+                      >
+                        Total Available Item Inventory (per {{ currentItem.unit }}):
+                      </v-col>
+                      <v-col
+                        cols="4"
+                        class="pr-16 pl-12 mt-n4"
+                      >
                         <v-currency-field
-                            v-if="currentItem.unit"
-                            class="shrink text-green"
-                            single-line
-                            v-model="currentItem.reserved_balance"
-                            readonly
-                            :decimal-length="0"
-                            outlined
-                            dense
-                            label="Reserved Balance"
+                          v-if="currentItem.unit"
+                          v-model="currentItem.reserved_balance"
+                          class="shrink text-green"
+                          single-line
+                          readonly
+                          :decimal-length="0"
+                          outlined
+                          dense
+                          label="Reserved Balance"
                         >
                         </v-currency-field>
                       </v-col>
                       <v-col cols="4"></v-col>
-                      <v-col cols="4" v-if="currentItem.unit" class="pr-16 pl-12 mt-n2">Total Reserved Items (per {{currentItem.unit}}): </v-col>
-                      <v-col cols="4" class="pr-16 pl-12 mt-n2">
+                      <v-col
+                        v-if="currentItem.unit"
+                        cols="4"
+                        class="pr-16 pl-12 mt-n2"
+                      >
+                        Total Reserved Items (per {{ currentItem.unit }}):
+                      </v-col>
+                      <v-col
+                        cols="4"
+                        class="pr-16 pl-12 mt-n2"
+                      >
                         <v-currency-field
-                            v-if="currentItem.unit"
-                            class="shrink text-green"
-                            single-line
-                            v-model="currentItem.reserved"
-                            readonly
-                            :decimal-length="0"
-                            outlined
-                            dense
-                            label="Reserved Balance"
+                          v-if="currentItem.unit"
+                          v-model="currentItem.reserved"
+                          class="shrink text-green"
+                          single-line
+                          readonly
+                          :decimal-length="0"
+                          outlined
+                          dense
+                          label="Reserved Balance"
                         >
                         </v-currency-field>
                       </v-col>
@@ -479,7 +506,7 @@ export default {
 
     const createItem = () => {
       formTitle.value = 'Add'
-      currentItem.value.product_id =  null
+      currentItem.value.product_id = null
       currentItem.value.quantity = null
       currentItem.value.price = null
       currentItem.value.total_amount = 0
@@ -643,6 +670,6 @@ export default {
 
 <style>
 .text-green input {
-  color: chartreuse !important;
+  color: #009900 !important;
 }
 </style>
