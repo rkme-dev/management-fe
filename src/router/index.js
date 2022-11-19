@@ -386,9 +386,10 @@ const routes = [
     component: () => import('@/views/pages/reports/accounts-receivable/SubsidiaryLedger.vue'),
   },
   {
-    path: '/customer-aging',
+    path: '/customer-aging/:cId?',
     name: 'customer-aging',
     component: () => import('@/views/pages/reports/accounts-receivable/CustomerAging.vue'),
+    props: { newsletterPopup: false }
   },
   {
     path: '/inventory-reports',
