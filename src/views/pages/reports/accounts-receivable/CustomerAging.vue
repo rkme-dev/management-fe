@@ -160,7 +160,7 @@
         { text: "121-150", value: "htwentyone_hfifty_total", align: "left" },
         { text: "151-180", value: "hfiftyone_heighty_total", align: "left" },
         { text: "Above 180", value: "heightyone_above_total", align: "left" },
-        { text: "Total", value: "total", align: "left" },
+        { text: "Total", value: "total_curr", align: "left" },
       ]
 
       const agingItemsHeaders = [
