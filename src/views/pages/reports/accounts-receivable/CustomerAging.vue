@@ -9,6 +9,7 @@
                 v-model="customer"
                 :loading="customerLoading"
                 :items="customers"
+                :disabled="cId"
                 item-text="name"
                 item-value="id"
                 dense
@@ -139,6 +140,7 @@
     setup() {
       const customers = computed(() => store.state.CustomerStore.list)
       const customer = ref()
+      const cId = ref(false)
       const customerLoading = computed(() => store.state.CustomerStore.loading)
       const reportLoading = computed(() => store.state.ReportStore.loading)
       const agingReport = computed(() => store.state.ReportStore.agingReport)
@@ -183,6 +185,7 @@
             await store.dispatch('CustomerStore/list')
             await store.dispatch('ReportStore/clearReport', 'agingReport')
             customer.value = parseInt(router.history.current.params.cId);
+            cId.value = true;
             await store.dispatch('ReportStore/getAgingItemsReport', customer.value)
           }
        })
@@ -231,6 +234,7 @@
         headers,
         agingItemsHeaders,
         redirectPrint,
+        cId
       };
     }
   };
