@@ -270,20 +270,40 @@ export default {
         width: '130px',
         text: 'Date',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'date',
       },
-      { text: 'Event', value: 'event' },
-      { text: 'Document', value: 'document', width: '160px' },
-      { text: 'Doc #', value: 'document_number', width: '160px' },
-      { text: 'Remarks', value: 'remarks', width: '160px' },
-      { text: 'Quantity', value: 'quantity', width: '170px' },
-      { text: 'Unit', value: 'unit', width: '130px' },
-      { text: 'Price', value: 'price', width: '170px' },
-      { text: 'Status', value: 'status', width: '100px' },
-      { text: 'Qty In', value: 'quantity_in', width: '170px' },
-      { text: 'Qty Out', value: 'quantity_out', width: '170px' },
-      { text: 'Balance', value: 'balance', width: '170px' },
+      { text: 'Event', value: 'event', sortable: true },
+      {
+        text: 'Document', value: 'document', width: '160px', sortable: true,
+      },
+      {
+        text: 'Doc #', value: 'document_number', width: '160px', sortable: true,
+      },
+      {
+        text: 'Remarks', value: 'remarks', width: '160px', sortable: true,
+      },
+      {
+        text: 'Quantity', value: 'quantity', width: '170px', sortable: true,
+      },
+      {
+        text: 'Unit', value: 'unit', width: '130px', sortable: true,
+      },
+      {
+        text: 'Price', value: 'price', width: '170px', sortable: true,
+      },
+      {
+        text: 'Status', value: 'status', width: '100px', sortable: true,
+      },
+      {
+        text: 'Qty In', value: 'quantity_in', width: '170px', sortable: true,
+      },
+      {
+        text: 'Qty Out', value: 'quantity_out', width: '170px', sortable: true,
+      },
+      {
+        text: 'Balance', value: 'balance', width: '170px', sortable: true,
+      },
     ]
 
     onMounted(async () => {
