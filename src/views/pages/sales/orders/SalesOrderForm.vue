@@ -132,7 +132,7 @@
               color="primary"
               x-small
               dark
-              :href="`/customer-aging?cId=${formData.customer_id}`"
+              :href="`/customer-aging/${formData.customer_id}`"
               target="_blank"
             >
               A/R

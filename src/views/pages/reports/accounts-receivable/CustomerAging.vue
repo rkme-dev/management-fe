@@ -131,6 +131,7 @@
   
   <script>
   import { computed, ref, onMounted, onUnmounted } from "@vue/composition-api";
+  import router from '@/router';
   import store from "@/store";
   
   export default {
@@ -175,8 +176,15 @@
       ]
 
        onMounted(async () => {
-        await store.dispatch('CustomerStore/list')
-        await store.dispatch('ReportStore/getAgingReport')
+          if(typeof  router.history.current.params.cId ==='undefined') {
+            await store.dispatch('CustomerStore/list')
+            await store.dispatch('ReportStore/getAgingReport')
+          } else {
+            await store.dispatch('CustomerStore/list')
+            await store.dispatch('ReportStore/clearReport', 'agingReport')
+            customer.value = parseInt(router.history.current.params.cId);
+            await store.dispatch('ReportStore/getAgingItemsReport', customer.value)
+          }
        })
 
        onUnmounted(async () => {
@@ -188,7 +196,6 @@
         if (customer.value) {
             store.dispatch('ReportStore/clearReport', 'agingReport')
             store.dispatch('ReportStore/getAgingItemsReport', customer.value)
-            console.log('getAgingItemsReport', agingItemsReport)
           return
         }
         
@@ -209,7 +216,7 @@
           );
         }
       };
-
+     
 
       return {
         agingTotal,
