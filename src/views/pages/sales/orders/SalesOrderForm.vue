@@ -142,24 +142,7 @@
             </v-btn>
           </v-col>
           <v-col
-            cols="2"
-          >
-            <v-btn
-              v-if="formData.customer_name !== null"
-              class="ml-n16"
-              color="primary"
-              x-small
-              dark
-              @click="drDialog=true"
-            >
-              Unpaid Orders
-              <v-icon>
-                {{ icons.mdiBookInformationVariant }}
-              </v-icon>
-            </v-btn>
-          </v-col>
-          <v-col
-            cols="2"
+            cols="3"
             class="pr-8 pl-8"
           >
             <v-select
