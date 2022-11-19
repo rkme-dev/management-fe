@@ -142,7 +142,7 @@
             </v-btn>
           </v-col>
           <v-col
-            cols="2"
+            cols="3"
             class="pr-8 pl-8"
           >
             <v-select
