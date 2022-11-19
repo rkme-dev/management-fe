@@ -487,10 +487,10 @@ import {
 import CustomerForm from '@/views/pages/master-files/customers/CustomerForm.vue'
 import store from '@/store'
 import DrListSelection from '@/views/pages/sales/collections/DrListSelection.vue'
+import { consoleError } from 'vuetify/lib/util/console'
 import SalesDrTable from './SalesDrTable.vue'
 import CollectionPayment from './CollectionPayment.vue'
 import PaymentForm from './PaymentForm.vue'
-import { consoleError } from 'vuetify/lib/util/console'
 
 export default {
   name: 'CollectionForm',
@@ -713,7 +713,6 @@ export default {
       if (customer?.id) {
         formData.value.customer_name = customer.name
         formData.value.customer_id = customer.id
-        formData.value.document_id = customer.document_id
         formData.value.address = customer.address
         formData.value.remarks = customer.remarks
         formData.value.area = customer.area
@@ -757,21 +756,20 @@ export default {
       if (paymentData.value.type === 'check_payment') {
         paymentData.value.bank = paymentData.value.bank ? paymentData.value.bank : paymentData.value.payment.bank
 
-        paymentData.value.bank_account_number = paymentData.value.bank_account_number 
-                  ? paymentData.value.bank_account_number 
-                  : paymentData.value.payment.bank_account_number
+        paymentData.value.bank_account_number = paymentData.value.bank_account_number
+          ? paymentData.value.bank_account_number
+          : paymentData.value.payment.bank_account_number
         paymentData.value.check_type = paymentData.value.check_type
-                  ? paymentData.value.check_type
-                  : paymentData.value.payment.check_type
+          ? paymentData.value.check_type
+          : paymentData.value.payment.check_type
         paymentData.value.check_number = paymentData.value.check_number
-                  ? paymentData.value.check_number
-                  : paymentData.value.payment.check_number
+          ? paymentData.value.check_number
+          : paymentData.value.payment.check_number
       } else {
         paymentData.value.bank_account_number = ''
         paymentData.value.check_type = ''
         paymentData.value.check_number = ''
       }
-      
 
       togglePaymentModal(paymentModeData.value)
     }
@@ -834,6 +832,7 @@ export default {
 
         return
       }
+
       paymentWarning.value = false
       totalPaidWarning.value = false
 
