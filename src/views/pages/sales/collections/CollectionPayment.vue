@@ -43,7 +43,7 @@
           </v-col>
           <v-col
             cols="3"
-            class="mt-7 mr-n4"
+            class="mt-7"
             style="color: lawngreen;"
           >
             Total Payment Amount:
