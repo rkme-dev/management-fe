@@ -574,12 +574,13 @@ export default {
       // eslint-disable-next-line no-use-before-define
       calculateTotalPaid()
     }
+
     const totalPaid = ref(0)
 
     const calculateTotalPaid = () => {
       let total = 0
 
-      payments.value.forEach((item, index) => {
+      payments.value.forEach(item => {
         total += parseFloat(item.amount)
       })
       totalPaid.value = total

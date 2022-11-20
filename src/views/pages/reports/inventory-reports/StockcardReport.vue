@@ -211,6 +211,7 @@
 <script>
 import {
   computed, ref, onMounted, onUnmounted,
+  watch,
 } from '@vue/composition-api'
 import store from '@/store'
 import { mdiCalendar, mdiFinance } from '@mdi/js'
@@ -245,20 +246,40 @@ export default {
         width: '130px',
         text: 'Date',
         align: 'start',
-        sortable: false,
+        sortable: true,
         value: 'date',
       },
-      { text: 'Event', value: 'event' },
-      { text: 'Document', value: 'document', width: '160px' },
-      { text: 'Doc #', value: 'document_number', width: '160px' },
-      { text: 'Remarks', value: 'remarks', width: '160px' },
-      { text: 'Quantity', value: 'quantity', width: '170px' },
-      { text: 'Unit', value: 'unit', width: '130px' },
-      { text: 'Price', value: 'price', width: '170px' },
-      { text: 'Status', value: 'status', width: '100px' },
-      { text: 'Qty In', value: 'quantity_in', width: '170px' },
-      { text: 'Qty Out', value: 'quantity_out', width: '170px' },
-      { text: 'Balance', value: 'balance', width: '170px' },
+      { text: 'Event', value: 'event', sortable: true },
+      {
+        text: 'Document', value: 'document', width: '160px', sortable: true,
+      },
+      {
+        text: 'Doc #', value: 'document_number', width: '160px', sortable: true,
+      },
+      {
+        text: 'Remarks', value: 'remarks', width: '160px', sortable: true,
+      },
+      {
+        text: 'Quantity', value: 'quantity', width: '170px', sortable: true,
+      },
+      {
+        text: 'Unit', value: 'unit', width: '130px', sortable: true,
+      },
+      {
+        text: 'Price', value: 'price', width: '170px', sortable: true,
+      },
+      {
+        text: 'Status', value: 'status', width: '100px', sortable: true,
+      },
+      {
+        text: 'Qty In', value: 'quantity_in', width: '170px', sortable: true,
+      },
+      {
+        text: 'Qty Out', value: 'quantity_out', width: '170px', sortable: true,
+      },
+      {
+        text: 'Balance', value: 'balance', width: '170px', sortable: true,
+      },
     ]
 
     onMounted(async () => {
@@ -271,25 +292,33 @@ export default {
     })
 
     const generateUnits = () => {
-      const productData = products.value.find(item => item.id === product.value)
+      if (product.value?.id) {
+        const productData = products.value.find(item => item.id === product.value)
 
-      units.value = productData.units
+        units.value = productData.units
+      } else {
+        store.dispatch('ReportStore/clearReport', 'stockcardReport')
+      }
     }
 
     const generateReport = () => {
-      let urlReport = `stockcard-generated-report?product_id=${product.value}&`
+      const payload = ref({
+        productId: product.value,
+        fromDate: null,
+        toDate: null,
+        unit: null,
+      })
 
       if (showDateFilter.value) {
-        urlReport = `${urlReport}fromDate=${fromDate.value}&toDate=${toDate.value}&`
+        payload.value.fromDate = fromDate.value
+        payload.value.toDate = toDate.value
       }
 
-      if (showUnitFilter.value && unit.value) {
-        urlReport = `${urlReport}unit=${unit.value}&`
+      if (showUnitFilter.value) {
+        payload.value.unit = unit.value
       }
 
-      const route = router.resolve(urlReport)
-
-      window.open(route.href, '_blank')
+      store.dispatch('ReportStore/getStockcardReport', payload.value)
     }
 
     return {

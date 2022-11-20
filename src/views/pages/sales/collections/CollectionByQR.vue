@@ -5,19 +5,19 @@
     </v-card-title>
     <v-card-text>
       <v-progress-circular
-          v-if="loading"
-          :size="190"
-          :width="7"
-          color="primary"
-          indeterminate
+        v-if="loading"
+        :size="190"
+        :width="7"
+        color="primary"
+        indeterminate
       ></v-progress-circular>
       <v-form>
         <v-row>
           <v-col cols="12">
             <v-alert
-                color="primary"
-                text
-                style="margin-bottom: -10px"
+              color="primary"
+              text
+              style="margin-bottom: -10px"
             >
               <div class="d-flex align-start">
                 <v-icon color="primary">
@@ -32,231 +32,232 @@
             </v-alert>
           </v-col>
           <v-col
-              cols="6"
-              class="pr-8 pl-8"
+            cols="6"
+            class="pr-8 pl-8"
           >
             <v-menu
-                v-model="formData.dateModal"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                :disabled="formData.status === 'Posted'"
-                max-width="290px"
-                min-width="auto"
+              v-model="formData.dateModal"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              :disabled="formData.status === 'Posted'"
+              max-width="290px"
+              min-width="auto"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    v-model="datePosted"
-                    label="Date"
-                    persistent-hint
-                    :prepend-icon="icons.mdiCalendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
+                  v-model="datePosted"
+                  label="Date"
+                  persistent-hint
+                  :prepend-icon="icons.mdiCalendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
                 ></v-text-field>
               </template>
 
               <v-date-picker
-                  v-model="datePosted"
-                  no-title
-                  color="primary"
-                  @input="formData.dateModal = false"
+                v-model="datePosted"
+                no-title
+                color="primary"
+                @input="formData.dateModal = false"
               ></v-date-picker>
             </v-menu>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            v-if="false"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-text-field
-                v-model="formData.collection_order_number"
-                outlined
-                :error-messages="errors.collection_order_number"
-                dense
-                hide-details="auto"
-                label="Collection Number"
+              v-model="formData.collection_order_number"
+              outlined
+              :error-messages="errors.collection_order_number"
+              dense
+              hide-details="auto"
+              label="Collection Number"
             ></v-text-field>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.document_id"
-                :items="documents"
-                item-text="title"
-                item-value="id"
-                label="Document"
-                :disabled="formData.status === 'Posted'"
-                :error-messages="errors.document_id"
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.document_id"
+              :items="documents"
+              item-text="title"
+              item-value="id"
+              label="Document"
+              :disabled="formData.status === 'Posted'"
+              :error-messages="errors.document_id"
+              outlined
+              dense
+              hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-              cols="4"
-              class="pl-8"
+            cols="4"
+            class="pl-8"
           >
             <v-text-field
-                v-model="formData.customer.name"
-                outlined
-                readonly
-                :error-messages="errors.customer_id"
-                dense
-                hide-details="auto"
-                label="Customer"
+              v-model="formData.customer.name"
+              outlined
+              readonly
+              :error-messages="errors.customer_id"
+              dense
+              hide-details="auto"
+              label="Customer"
             ></v-text-field>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.customer.type"
-                :items="types"
-                label="Customer Type"
-                disabled
-                :error-messages="errors.type"
-                readonly
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.customer.type"
+              :items="types"
+              label="Customer Type"
+              disabled
+              :error-messages="errors.type"
+              readonly
+              outlined
+              dense
+              hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-text-field
-                v-model="formData.area"
-                outlined
-                dense
-                disabled
-                :error-messages="errors.area"
-                hide-details="auto"
-                label="Area"
+              v-model="formData.area"
+              outlined
+              dense
+              disabled
+              :error-messages="errors.area"
+              hide-details="auto"
+              label="Area"
             ></v-text-field>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.term_id"
-                :items="terms"
-                disabled
-                label="Term"
-                item-text="code"
-                item-value="id"
-                :error-messages="errors.term_id"
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.term_id"
+              :items="terms"
+              disabled
+              label="Term"
+              item-text="code"
+              item-value="id"
+              :error-messages="errors.term_id"
+              outlined
+              dense
+              hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.vat_id"
-                :items="vats"
-                item-text="code"
-                item-value="id"
-                disabled
-                label="Vat"
-                :error-messages="errors.vat_id"
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.vat_id"
+              :items="vats"
+              item-text="code"
+              item-value="id"
+              disabled
+              label="Vat"
+              :error-messages="errors.vat_id"
+              outlined
+              dense
+              hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.salesman_id_1"
-                :items="salesmans"
-                item-text="salesman_name"
-                item-value="id"
-                disabled
-                label="Agent 1"
-                :error-messages="errors.salesman_id_1"
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.salesman_id_1"
+              :items="salesmans"
+              item-text="salesman_name"
+              item-value="id"
+              disabled
+              label="Agent 1"
+              :error-messages="errors.salesman_id_1"
+              outlined
+              dense
+              hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.salesman_id_2"
-                :items="salesmans"
-                item-text="salesman_name"
-                item-value="id"
-                disabled
-                label="Agent 2"
-                :error-messages="errors.salesman_id_2"
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.salesman_id_2"
+              :items="salesmans"
+              item-text="salesman_name"
+              item-value="id"
+              disabled
+              label="Agent 2"
+              :error-messages="errors.salesman_id_2"
+              outlined
+              dense
+              hide-details="auto"
             ></v-select>
           </v-col>
           <v-col
-              cols="6"
-              class="pr-8 pl-8"
+            cols="6"
+            class="pr-8 pl-8"
           >
             <v-textarea
-                v-model="formData.address"
-                outlined
-                disabled
-                rows="2"
-                dense
-                :error-messages="errors.address"
-                hide-details="auto"
-                label="Address"
+              v-model="formData.address"
+              outlined
+              disabled
+              rows="2"
+              dense
+              :error-messages="errors.address"
+              hide-details="auto"
+              label="Address"
             ></v-textarea>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-textarea
-                v-model="formData.remarks"
-                outlined
-                disabled
-                rows="2"
-                dense
-                :error-messages="errors.remarks"
-                hide-details="auto"
-                label="Remarks"
+              v-model="formData.remarks"
+              outlined
+              disabled
+              rows="2"
+              dense
+              :error-messages="errors.remarks"
+              hide-details="auto"
+              label="Remarks"
             ></v-textarea>
           </v-col>
           <v-col
-              cols="3"
-              class="pr-8 pl-8"
+            cols="3"
+            class="pr-8 pl-8"
           >
             <v-text-field
-                v-model="formData.promo_code"
-                outlined
-                disabled
-                dense
-                :error-messages="errors.promo_code"
-                hide-details="auto"
-                label="Promo Code"
+              v-model="formData.promo_code"
+              outlined
+              disabled
+              dense
+              :error-messages="errors.promo_code"
+              hide-details="auto"
+              label="Promo Code"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row class="mt-10">
           <v-col cols="12">
             <v-alert
-                color="info"
-                text
-                style="margin-bottom: -10px"
+              color="info"
+              text
+              style="margin-bottom: -10px"
             >
               <div class="d-flex align-start">
                 <v-icon color="info">
@@ -271,27 +272,27 @@
             </v-alert>
           </v-col>
           <v-col
-              v-if="formData.customer.id"
-              cols="12"
+            v-if="formData.customer.id"
+            cols="12"
           >
-          <v-data-table
-            :items="salesDrs"
-            :headers="headers"
-          >
-            <template #item.created_at="{ item }">
-              {{ dateFormat1(item.created_at) }}
-            </template>
-            <template #item.remaining_balance="{ item }">
-              <v-currency-field
+            <v-data-table
+              :items="salesDrs"
+              :headers="headers"
+            >
+              <template #item.created_at="{ item }">
+                {{ dateFormat1(item.created_at) }}
+              </template>
+              <template #item.remaining_balance="{ item }">
+                <v-currency-field
                   v-model="item.remaining_balance"
                   prefix="PHP"
                   class="text-green"
                   disabled
-              >
-              </v-currency-field>
-            </template>
-            <template #item.amount_to_pay="{ index, item }">
-              <v-currency-field
+                >
+                </v-currency-field>
+              </template>
+              <template #item.amount_to_pay="{ index, item }">
+                <v-currency-field
                   v-if="item.remaining_balance != 0.00"
                   v-model="item.amount_to_pay"
                   clearable
@@ -300,20 +301,20 @@
                   prefix="PHP"
                   class="text-green"
                   @change="calculateAmountToPay"
-              >
-              </v-currency-field>
-            </template>
-          </v-data-table>
+                >
+                </v-currency-field>
+              </template>
+            </v-data-table>
           </v-col>
         </v-row>
         <v-row class="mt-10">
           <v-col
-              cols="12"
+            cols="12"
           >
             <v-alert
-                color="success"
-                text
-                style="margin-bottom: -10px"
+              color="success"
+              text
+              style="margin-bottom: -10px"
             >
               <div class="d-flex align-start">
                 <v-icon color="success">
@@ -328,13 +329,13 @@
             </v-alert>
           </v-col>
           <v-col
-              v-if="formData.remaining_balance == 0.00"
-              cols="12"
+            v-if="formData.remaining_balance == 0.00"
+            cols="12"
           >
             <v-alert
-                color="error"
-                text
-                style="margin-bottom: -10px"
+              color="error"
+              text
+              style="margin-bottom: -10px"
             >
               <div class="d-flex align-start">
                 <v-icon color="error">
@@ -349,13 +350,13 @@
             </v-alert>
           </v-col>
           <v-col
-              v-if="paymentWarning"
-              cols="12"
+            v-if="paymentWarning"
+            cols="12"
           >
             <v-alert
-                color="error"
-                text
-                style="margin-bottom: -10px"
+              color="error"
+              text
+              style="margin-bottom: -10px"
             >
               <div class="d-flex align-start">
                 <v-icon color="error">
@@ -391,29 +392,29 @@
             </v-alert>
           </v-col>
           <v-col
-              cols="12"
-              v-if="formData.remaining_balance > 0"
+            v-if="formData.remaining_balance > 0"
+            cols="12"
           >
             <collection-payment
-                :total-amount="totalAmountToPay"
-                :payments="payments"
-                :total-paid="totalPaid"
-                @toggleModal="togglePaymentModal"
-                @editPayment="editPayment"
-                @removePayment="removePayment"
+              :total-amount="totalAmountToPay"
+              :payments="payments"
+              :total-paid="totalPaid"
+              @toggleModal="togglePaymentModal"
+              @editPayment="editPayment"
+              @removePayment="removePayment"
             ></collection-payment>
           </v-col>
         </v-row>
         <v-row>
           <v-col
-              cols="auto"
-              class="d-flex"
+            cols="auto"
+            class="d-flex"
           >
             <v-btn
-                :disabled="formData.remaining_balance == 0.00"
-                color="primary"
-                class="me-3 mt-4"
-                @click="submit"
+              :disabled="formData.remaining_balance == 0.00"
+              color="primary"
+              class="me-3 mt-4"
+              @click="submit"
             >
               <v-icon>
                 {{ icons.mdiContentSave }}
@@ -421,11 +422,11 @@
               Create
             </v-btn>
             <v-btn
-                outlined
-                class="me-3 mt-4"
-                type="reset"
-                color="info"
-                @click.prevent="cancel"
+              outlined
+              class="me-3 mt-4"
+              type="reset"
+              color="info"
+              @click.prevent="cancel"
             >
               <v-icon>
                 {{ icons.mdiProgressClose }}
@@ -436,20 +437,19 @@
         </v-row>
       </v-form>
       <v-dialog
-          v-model="paymentModal"
-          hide-overlay
-          width="1100px"
-          height="700px"
-          transition="dialog-bottom-transition"
+        v-model="paymentModal"
+        hide-overlay
+        width="1100px"
+        height="700px"
+        transition="dialog-bottom-transition"
       >
         <payment-form
-            :total-amount="totalPaymentAmount"
-            :data="paymentData"
-            :mode="paymentModeData"
-            @submit=""
-            @toggleModal="togglePaymentModal"
-            @editPayment="editPayment"
-            @addedPayment="addedPayment"
+          :total-amount="totalPaymentAmount"
+          :data="paymentData"
+          :mode="paymentModeData"
+          @toggleModal="togglePaymentModal"
+          @editPayment="editPayment"
+          @addedPayment="addedPayment"
         ></payment-form>
       </v-dialog>
     </v-card-text>
@@ -459,13 +459,14 @@
 <script>
 import { dateFormat1 } from '@/utils/time'
 import store from '@/store'
-import {computed, onMounted, toRef} from '@vue/composition-api'
-import {mdiInformation} from "@mdi/js";
-import {ref, watch} from "@vue/composition-api/dist/vue-composition-api";
-import SalesDrService from "@/service/SalesDrService";
-import CollectionPayment from "@/views/pages/sales/collections/CollectionPayment";
-import PaymentForm from "@/views/pages/sales/collections/PaymentForm";
-import router from "@/router";
+import {
+  computed, onMounted, toRef, ref, watch,
+} from '@vue/composition-api'
+import { mdiInformation } from '@mdi/js'
+import SalesDrService from '@/service/SalesDrService'
+import CollectionPayment from '@/views/pages/sales/collections/CollectionPayment.vue'
+import PaymentForm from '@/views/pages/sales/collections/PaymentForm.vue'
+import router from '@/router'
 
 export default {
   name: 'CollectionByQR',
@@ -481,8 +482,6 @@ export default {
     },
   },
   setup(props, context) {
-    const modeData = toRef(props, 'mode')
-
     const payments = ref([])
     const totalAmountToPay = ref(0)
     const salesDrService = new SalesDrService()
@@ -516,10 +515,11 @@ export default {
       { text: 'Amount To Pay', value: 'amount_to_pay' },
     ]
     const paymentWarning = ref(false)
+    const totalAmount = ref(0)
     const totalPaidWarning = ref(false)
     const paymentModal = ref(false)
     const paymentData = ref({})
-    const paymentModeData = ref("Create")
+    const paymentModeData = ref('Create')
 
     const totalPaymentAmount = ref(0)
 
@@ -539,14 +539,36 @@ export default {
       })
     }
 
+    const salesDrList = ref([])
+
+    if (formData.value.sales_dr_payments?.length > 0) {
+      salesDrList.value = []
+      salesDrList.value = formData.value.sales_dr_payments.map(item => {
+        item = item.sales_dr
+
+        if (item.remaining_balance) {
+          item.remaining_balance = parseFloat(item.remaining_balance)
+        }
+
+        return item
+      })
+    }
+
     const totalPaid = computed(() => {
       let total = 0
 
       payments.value.forEach((item, index) => {
         total += parseFloat(item.amount)
-      });
+      })
+
       return total
     })
+
+    const calculateTotalPaid = () => {
+      payments.value.forEach(item => {
+        totalPaid.value += parseFloat(item.amount)
+      })
+    }
 
     const calculateAmountToPay = () => {
       totalAmountToPay.value = salesDrs.value[0].amount_to_pay
@@ -562,7 +584,7 @@ export default {
       await initialize()
     })
 
-    const togglePaymentModal = (mode) => {
+    const togglePaymentModal = mode => {
       paymentModal.value = !paymentModal.value
       paymentModeData.value = mode
     }
@@ -570,7 +592,7 @@ export default {
     const editPayment = (data, index) => {
       paymentData.value = data
       paymentData.value.index = index
-      paymentModeData.value = "Edit";
+      paymentModeData.value = 'Edit'
       paymentData.value.mode = paymentModeData.value
       togglePaymentModal(paymentModeData.value)
     }
@@ -579,13 +601,43 @@ export default {
       payments.value.splice(index, 1)
     }
 
+    const paymentsReinitialize = () => {
+      if (formData.value.payments?.length > 0) {
+        payments.value = formData.value.payments.map(payment => {
+          if (payment.payment_type.includes('CashPayment') === true) {
+            // eslint-disable-next-line no-param-reassign
+            payment.payment_type = 'Cash Payment'
+          }
+
+          if (payment.payment_type.includes('CheckPayment') === true) {
+            // eslint-disable-next-line no-param-reassign
+            payment.reference_number = payment.payment.check_number
+            payment.payment_type = 'Check Payment'
+          }
+
+          if (payment.payment_type.includes('OnlinePayment') === true) {
+            // eslint-disable-next-line no-param-reassign
+            payment.payment_type = 'Online Payment'
+          }
+
+          return payment
+        })
+      }
+
+      // eslint-disable-next-line no-use-before-define
+      calculateTotalPaid()
+    }
+
     const addedPayment = payment => {
       togglePaymentModal('Create')
-      if (payment.mode != "Edit") {
+
+      if (payment?.mode !== 'Edit') {
         payments.value.push(payment)
       } else {
         payments.value[payment.index] = payment
       }
+
+      paymentsReinitialize()
     }
 
     const submit = () => {
@@ -601,18 +653,17 @@ export default {
         if (payment.payment_type === 'Online Payment') {
           payments.value[index].type = 'online_payment'
         }
-
-        totalPaymentAmount.value = parseFloat(totalPaymentAmount.value) - parseFloat(payment.amount)
       })
 
-      if (modeData.value === 'Create' && totalPaymentAmount.value > 0) {
+      if (totalPaymentAmount.value > 0) {
         paymentWarning.value = true
 
         return
       }
 
-      if (totalPaid.value > totalAmount.value) {
+      if (totalPaid.value > totalAmountToPay.value) {
         totalPaidWarning.value = true
+
         return
       }
 
@@ -626,11 +677,11 @@ export default {
       payload.dr_items = salesDrs.value
 
       store.dispatch('CollectionStore/create', payload).then(
-          response => {
-            if (response.status === undefined) {
-              router.replace('/collections')
-            }
-          },
+        response => {
+          if (response.status === undefined) {
+            router.replace('/collections')
+          }
+        },
       )
     }
 
@@ -692,7 +743,7 @@ export default {
         'Distributor',
       ]),
     }
-  }
+  },
 }
 </script>
 
