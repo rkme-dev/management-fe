@@ -250,12 +250,11 @@ export default {
             icon: mdiCurrencySign,
             link: 'deposits',
           },
-
-          // {
-          //   title: 'Bounced Checks',
-          //   icon: mdiCurrencySign,
-          //   link: 'bounced-deposits',
-          // },
+          {
+            title: 'Bounced Checks',
+            icon: mdiCurrencySign,
+            link: 'bounced-deposits',
+          },
         ],
       },
       {
