@@ -71,6 +71,7 @@
           </v-col>
           <v-col cols="4">
             <v-btn
+              v-if="!fromRedirect"
               color="success"
               @click="showOrderItems=true"
             >
@@ -98,63 +99,66 @@
             </v-alert>
           </v-col>
           <v-col
-              cols="4"
-              class="pl-8 pr-8"
+            cols="4"
+            class="pl-8 pr-8"
           >
             <v-menu
-                v-model="formData.dateModal"
-                :close-on-content-click="false"
-                transition="scale-transition"
-                offset-y
-                :disabled="formData.status === 'Posted'"
+              v-model="formData.dateModal"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              :disabled="formData.status === 'Posted'"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                    v-model="datePosted"
-                    label="Date"
-                    persistent-hint
-                    :prepend-icon="icons.mdiCalendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
+                  v-model="datePosted"
+                  label="Date"
+                  persistent-hint
+                  :prepend-icon="icons.mdiCalendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
                 ></v-text-field>
               </template>
 
               <v-date-picker
-                  v-model="datePosted"
-                  no-title
-                  color="primary"
-                  @input="formData.dateModal = false"
+                v-model="datePosted"
+                no-title
+                color="primary"
+                @input="formData.dateModal = false"
               ></v-date-picker>
             </v-menu>
           </v-col>
           <v-col
-              cols="4"
-              class="pr-8 pl-8"
+            cols="4"
+            class="pr-8 pl-8"
           >
             <v-select
-                v-model="formData.document_id"
-                :items="documents"
-                item-text="title"
-                item-value="id"
-                label="Document"
-                :disabled="formData.status === 'Posted'"
-                :error-messages="errors.document_id"
-                @change="checkDocument"
-                outlined
-                dense
-                hide-details="auto"
+              v-model="formData.document_id"
+              :items="documents"
+              item-text="title"
+              item-value="id"
+              label="Document"
+              :disabled="formData.status === 'Posted'"
+              :error-messages="errors.document_id"
+              outlined
+              dense
+              hide-details="auto"
+              @change="checkDocument"
             ></v-select>
           </v-col>
-          <v-col cols="4" class="pr-8 pl-8">
+          <v-col
+            cols="4"
+            class="pr-8 pl-8"
+          >
             <v-text-field
-                v-show="invoiceNumberRequired"
-                v-model="formData.sales_invoice_number"
-                outlined
-                :error-messages="errors.sales_invoice_number"
-                dense
-                hide-details="auto"
-                label="Sales Invoice Number"
+              v-show="invoiceNumberRequired"
+              v-model="formData.sales_invoice_number"
+              outlined
+              :error-messages="errors.sales_invoice_number"
+              dense
+              hide-details="auto"
+              label="Sales Invoice Number"
             ></v-text-field>
           </v-col>
           <v-col
@@ -403,12 +407,14 @@ export default {
     const terms = computed(() => store.state.TermStore.terms)
     const vats = computed(() => store.state.VatStore.vats)
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
-      if (documentItem.module === 'Sales'  && (documentItem.is_active === 1 || documentItem.is_active === "Active")) {
+      if (documentItem.module === 'Sales' && (documentItem.is_active === 1 || documentItem.is_active === 'Active')) {
         documentItem.title = `${documentItem.document_name}`
 
         return documentItem
       }
     }))
+    const fromRedirect = ref(false)
+    const orderItemsFromRedirect = computed(() => store.state.SalesDrStore.orderItemsForCreation)
     const salesmans = computed(() => store.state.SalesmanStore.salesmans)
     const datePosted = ref(new Date().toISOString().substr(0, 10))
     const formData = ref({
@@ -427,6 +433,8 @@ export default {
       vat_id: null,
       sales_dr_items: [],
     })
+
+    const invoiceNumberRequired = ref(false)
 
     const submit = () => {
       if (invoiceNumberRequired.value === true && !formData.value.sales_invoice_number) {
@@ -454,8 +462,6 @@ export default {
     const fetchTotalAmount = amount => {
       totalAmount.value = amount
     }
-
-    const invoiceNumberRequired = ref(false)
 
     const checkDocument = () => {
       const document = documents.value.find(document => document.id === formData.value.document_id)
@@ -492,15 +498,24 @@ export default {
       formData.value.type = customer.value.type
     }
 
+    if (Object.keys(orderItemsFromRedirect.value).length > 0) {
+      fromRedirect.value = true
+      setCustomer(orderItemsFromRedirect.value.customer)
+      fetchOrderItems(orderItemsFromRedirect.value.orderItems)
+      fetchTotalAmount(orderItemsFromRedirect.value.totalAmount)
+    }
+
     const close = () => {
       showOrderItems.value = false
     }
 
     const cancel = () => {
+      store.dispatch('SalesDrStore/setOrderItemsForCreation', {})
       router.push('/sales-drs')
     }
 
     return {
+      fromRedirect,
       invoiceNumberRequired,
       checkDocument,
       close,

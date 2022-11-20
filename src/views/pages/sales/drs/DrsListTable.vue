@@ -75,7 +75,7 @@
             color="primary"
             dark
             class="mb-2"
-            @click="$router.push('/sales-drs/create')"
+            @click="redirectToCreatePage"
           >
             Create Sales DR
           </v-btn>
@@ -142,6 +142,7 @@ import {
 import store from '@/store'
 import { dateFormat1 } from '@/utils/time'
 import { salesStatusColors } from '@/constants/SalesStatusColors'
+import router from '@/router'
 import SalesDrForm from './SalesDrForm.vue'
 
 export default {
@@ -226,6 +227,11 @@ export default {
       store.dispatch('SalesDrStore/list', todayPosted.value)
     }
 
+    const redirectToCreatePage = () => {
+      store.dispatch('SalesDrStore/setOrderItemsForCreation', {})
+      router.push('sales-drs/create')
+    }
+
     const createSalesOrder = () => {
       modeData.value = 'Create'
       salesOrderDialog.value = true
@@ -263,6 +269,7 @@ export default {
     const colors = salesStatusColors()
 
     return {
+      redirectToCreatePage,
       colors,
       todayPosted,
       showPosted,
