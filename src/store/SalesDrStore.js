@@ -12,11 +12,15 @@ export const SalesDrStore = {
     originalData: [],
     items: [],
     areas: [],
+    orderItemsForCreation: null,
   },
   actions: {
+    setOrderItemsForCreation({ commit }, data) {
+      commit('setOrderItemsForCreation', data)
+    },
     // eslint-disable-next-line no-shadow
     addError({ commit }, error) {
-        commit('addError', error)
+      commit('addError', error)
     },
     setLoading({ commit }, state) {
       commit('setLoading', state)
@@ -222,9 +226,9 @@ export const SalesDrStore = {
     //   }
     // },
     addError(state) {
-        state.errors = {
-            sales_invoice_number: "Sales Invoice Number required."
-        }
+      state.errors = {
+        sales_invoice_number: 'Sales Invoice Number required.',
+      }
     },
     add(state, row) {
       state.list.push(row)
@@ -269,6 +273,9 @@ export const SalesDrStore = {
     },
     setLoading(state, loading) {
       state.loading = loading
+    },
+    setOrderItemsForCreation(state, data) {
+      state.orderItemsForCreation = data
     },
   },
 }
