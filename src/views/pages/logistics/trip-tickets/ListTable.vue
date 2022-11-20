@@ -60,7 +60,7 @@
             <trip-ticket-form
               :mode="modeData"
               :data="tripTicketData"
-              @submit="initialize"
+              @submit="reload"
             >
             </trip-ticket-form>
           </v-dialog>
@@ -175,12 +175,14 @@ export default {
     const errors = computed(() => store.getters.errors)
     const loading = computed(() => store.state.TripTicketStore.loading)
 
+    const reload = () => {
+      window.location.reload()
+    }
+
     const initialize = () => {
       store.dispatch('SalesDrStore/getAreas')
       store.dispatch('DocumentStore/list')
       store.dispatch('TripTicketStore/list')
-
-      tripTicketDialog.value = false
     }
 
     const createCollection = () => {
@@ -221,6 +223,7 @@ export default {
     }
 
     return {
+      reload,
       statusColor,
       editItem,
       tripTicketData,

@@ -107,7 +107,7 @@ export default {
 
     onMounted(async () => {
       if (selectedItemsProp.value.length > 0) {
-        selectedDrItems.value =  selectedItemsProp.value
+        selectedDrItems.value = selectedItemsProp.value
       }
 
       initialize(data.value)
