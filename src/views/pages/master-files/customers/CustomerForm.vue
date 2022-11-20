@@ -68,6 +68,7 @@
           >
           </v-col>
           <v-col
+            v-if="modeData !== 'Create'"
             cols="6"
             class="pr-8 pl-8"
           >
@@ -75,7 +76,7 @@
               id="email"
               v-model="formData.code"
               :error-messages="errors.code"
-              :readonly="modeData === 'Selecting'"
+              readonly
               outlined
               dense
               hide-details="auto"
