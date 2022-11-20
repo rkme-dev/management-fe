@@ -398,17 +398,6 @@ export default {
         })
     })
 
-    // store.dispatch('SalesOrderStore/resetOrderItems')
-    //
-    // watch(customerIdData, () => {
-    //   salesOrderTotalAmount.value = 0
-    //   selectedOrderItems.value = []
-    //
-    //   if (customerIdData.value === null) {
-    //     store.dispatch('SalesOrderStore/resetOrderItems')
-    //   }
-    // })
-
     watch(orderItems, () => {
       selectedSalesOrderTotalAmount.value = 0
 
@@ -468,9 +457,19 @@ export default {
     })
 
     const submit = () => {
+      const orderItemsPayload = []
+      let totalAmountSelected = 0
+
+      selectedOrderItems.value.forEach(item => {
+        if (item.customer.id === customer.value.id) {
+          orderItemsPayload.push(item)
+          totalAmountSelected = parseFloat(totalAmountSelected) + parseFloat(item?.total_amount)
+        }
+      })
+
       store.dispatch('SalesDrStore/setOrderItemsForCreation', {
-        totalAmount: selectedSalesOrderTotalAmount.value,
-        orderItems: selectedOrderItems.value,
+        totalAmount: totalAmountSelected,
+        orderItems: orderItemsPayload,
         customer: customer.value,
       })
 
