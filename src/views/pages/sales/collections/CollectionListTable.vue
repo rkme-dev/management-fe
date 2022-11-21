@@ -52,6 +52,11 @@
             hide-details
             class="mr-4"
           ></v-text-field>
+          <v-switch
+            v-model="showPosted"
+            label="Display Posted"
+            class="mb-n4 mr-16"
+          ></v-switch>
           <v-btn
             color="success"
             dark
@@ -165,6 +170,7 @@ export default {
     QrcodeStream,
   },
   setup() {
+    const showPosted = ref(false)
     store.dispatch('ProductStore/list')
     const modeData = ref('Create')
     const collectionOrderDialog = ref(false)
@@ -208,7 +214,16 @@ export default {
       vat_id: null,
     })
 
-    const collectionOrders = computed(() => store.state.CollectionStore.list)
+    const collectionOrders = computed(() => store.state.CollectionStore.list.filter(order => {
+      if (showPosted.value === false && order.status !== 'Posted') {
+        return order
+      }
+
+      if (showPosted.value === true && order.status === 'Posted') {
+        return order
+      }
+    }))
+
     const errors = computed(() => store.getters.errors)
     const loading = computed(() => store.state.CollectionStore.loading)
 
@@ -288,6 +303,7 @@ export default {
     const colors = salesStatusColors()
 
     return {
+      showPosted,
       colors,
       onInit,
       onDecode,

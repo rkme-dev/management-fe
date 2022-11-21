@@ -25,7 +25,11 @@ export default class SalesDrService {
     .then(response => response.data)
     .catch(error => error.response)
 
-  list = (todayOnly = false) => AxiosInstance.get('/sales-drs?today_only=' + todayOnly)
+  getUnpaidDrs = () => AxiosInstance.get('/sales-drs/unpaid')
+    .then(response => response.data)
+    .catch(error => error.response)
+
+  list = (todayOnly = false) => AxiosInstance.get(`/sales-drs?today_only=${todayOnly}`)
     .then(response => response.data)
     .catch(error => error.response)
 

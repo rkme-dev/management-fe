@@ -12,9 +12,23 @@ export const SalesDrStore = {
     originalData: [],
     items: [],
     areas: [],
+    unpaidDrItems: [],
     orderItemsForCreation: null,
   },
   actions: {
+    getUnpaidDrItems({ commit, dispatch }) {
+      dispatch('setLoading', true)
+
+      return salesDrService.getUnpaidDrs().then(
+        response => {
+          commit('setUnpaidDrItems', response.data)
+          dispatch('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => Promise.reject(error),
+      )
+    },
     setOrderItemsForCreation({ commit }, data) {
       commit('setOrderItemsForCreation', data)
     },
@@ -205,26 +219,8 @@ export const SalesDrStore = {
           error => Promise.reject(error),
         )
     },
-
-    // filter({ commit, dispatch }, statuses) {
-    //   commit('filter', statuses)
-    // },
   },
   mutations: {
-    // filter(state, statuses) {
-    //   const result = []
-    //   if (statuses.length === 0) {
-    //     state.list = state.originalData
-    //   } else {
-    //     state.originalData.forEach(row => {
-    //       if (statuses.includes(row.is_active)) {
-    //         result.push(row)
-    //       }
-    //     })
-    //
-    //     state.list = result
-    //   }
-    // },
     addError(state) {
       state.errors = {
         sales_invoice_number: 'Sales Invoice Number required.',
@@ -276,6 +272,16 @@ export const SalesDrStore = {
     },
     setOrderItemsForCreation(state, data) {
       state.orderItemsForCreation = data
+    },
+    setUnpaidDrItems(state, data) {
+      state.unpaidDrItems = data.map(item => {
+        // eslint-disable-next-line no-param-reassign
+        item.status = item.status.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ` ${d.toUpperCase()}`))
+
+        return item
+      })
+
+      state.loading = false
     },
   },
 }
