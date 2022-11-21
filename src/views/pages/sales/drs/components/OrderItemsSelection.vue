@@ -88,6 +88,7 @@
                     disabled
                     dense
                     hide-details="auto"
+                    prefix="PHP"
                     label="Sales Order Total Amount"
                   ></v-currency-field>
                 </v-col>
@@ -196,6 +197,7 @@
                     disabled
                     dense
                     hide-details="auto"
+                    prefix="PHP"
                     label="Sales Order Total Amount"
                   ></v-currency-field>
                 </v-col>

@@ -293,6 +293,7 @@
               outlined
               class="text-green"
               disabled
+              prefix="PHP"
               dense
               hide-details="auto"
               label="Total Amount For Collection"
