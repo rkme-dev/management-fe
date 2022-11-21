@@ -50,6 +50,15 @@
               >
               </v-currency-field>
             </template>
+            <template #item.amount="{ item }">
+              <v-currency-field
+                v-model="item.amount"
+                disabled
+                prefix="PHP"
+                class="text-green"
+              >
+              </v-currency-field>
+            </template>
             <template #footer>
               <v-row class="mb-2 mt-2">
                 <v-col
@@ -184,6 +193,7 @@ export default {
         },
         { text: 'DR No', value: 'sales_dr_number' },
         { text: 'Remaining Balance', value: 'remaining_balance' },
+        { text: 'Total Amount', value: 'amount' },
       ],
     }
   },
