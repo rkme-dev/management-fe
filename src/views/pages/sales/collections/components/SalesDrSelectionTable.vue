@@ -128,6 +128,15 @@
           >
           </v-currency-field>
         </template>
+        <template #item.remaining_balance="{ item }">
+          <v-currency-field
+            v-model="item.remaining_balance"
+            prefix="PHP"
+            class="text-green"
+            disabled
+          >
+          </v-currency-field>
+        </template>
         <template #item.total_amount="{ item }">
           <v-currency-field
             v-model="item.total_amount"
@@ -530,6 +539,9 @@ export default {
         },
         {
           text: 'Price', value: 'price', sortable: true, width: '160px',
+        },
+        {
+          text: 'Remaining Balance', value: 'remaining_balance', sortable: true, width: '210px',
         },
         {
           text: 'Amount', value: 'total_amount', sortable: true, width: '210px',
