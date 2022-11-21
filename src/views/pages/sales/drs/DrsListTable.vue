@@ -32,15 +32,15 @@
         >
         </v-currency-field>
       </template>
-      <!--      <template #item.remaining_balance="{ item }">-->
-      <!--        <v-currency-field-->
-      <!--          v-model="item.remaining_balance"-->
-      <!--          prefix="PHP"-->
-      <!--          class="text-green"-->
-      <!--          disabled-->
-      <!--        >-->
-      <!--        </v-currency-field>-->
-      <!--      </template>-->
+      <template #item.remaining_balance="{ item }">
+        <v-currency-field
+          v-model="item.remaining_balance"
+          prefix="PHP"
+          class="text-green"
+          disabled
+        >
+        </v-currency-field>
+      </template>
       <template v-slot:top>
         <v-toolbar
           color="teal"
@@ -167,7 +167,7 @@ export default {
       { text: 'Customer', value: 'customer.name' },
       { text: 'Total Amount', value: 'amount' },
 
-      // { text: 'Remaining Balance', value: 'remaining_balance' },
+      { text: 'Remaining Balance', value: 'remaining_balance' },
       { text: 'Status', value: 'status' },
       { text: 'Actions', value: 'actions', sortable: false },
     ])
