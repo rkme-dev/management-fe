@@ -295,7 +295,7 @@
               disabled
               dense
               hide-details="auto"
-              label="Sales Order Total Amount"
+              label="Total Amount For Collection"
             ></v-currency-field>
           </v-col>
           <v-col
