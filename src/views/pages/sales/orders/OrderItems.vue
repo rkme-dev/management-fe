@@ -104,6 +104,8 @@
                           item-text="name"
                           item-value="id"
                           label="Item"
+                          clearable
+                          @change="test"
                         >
                         </v-select>
                       </v-col>
@@ -578,13 +580,15 @@ export default {
     }
 
     const test = () => {
-      const product = products.value.find(item => item.id === currentItem.value.product_id)
+      if (currentItem.value.unit) {
+        const productRaw = products.value.find(item => item.id === currentItem.value.product_id)
 
-      const productUnit = product.units.find(unit => unit.name === currentItem.value.unit)
+        const productUnit = productRaw.units.find(unit => unit.name === currentItem.value.unit)
 
-      currentItem.value.actual_balance = productUnit.pivot.actual_balance
-      currentItem.value.reserved_balance = productUnit.pivot.reserved_balance
-      currentItem.value.reserved = parseFloat(productUnit.pivot.actual_balance) - parseFloat(productUnit.pivot.reserved_balance)
+        currentItem.value.actual_balance = productUnit.pivot.actual_balance
+        currentItem.value.reserved_balance = productUnit.pivot.reserved_balance
+        currentItem.value.reserved = parseFloat(productUnit.pivot.actual_balance) - parseFloat(productUnit.pivot.reserved_balance)
+      }
     }
 
     const cancel = () => {
