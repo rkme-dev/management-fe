@@ -2,6 +2,7 @@
   <v-form>
     <v-row>
       <v-col
+        v-if="modeData === 'edit'"
         cols="4"
         md="3"
       >
@@ -9,6 +10,7 @@
       </v-col>
 
       <v-col
+        v-if="modeData === 'edit'"
         cols="7"
         md="7"
       >
@@ -17,6 +19,7 @@
           v-model="salesmanData.salesman_code"
           outlined
           dense
+          readonly
           :error-messages="errors.salesman_code"
           placeholder="Salesman Code"
           hide-details="auto"
@@ -134,16 +137,16 @@ import store from '@/store'
 
 export default {
   props: {
-      mode: {
-        type: String,
-        required: true,
-        default: null,
-      },
-      salesman: {
-        type: Object,
-        required: false,
-        default: null,
-      },
+    mode: {
+      type: String,
+      required: true,
+      default: null,
+    },
+    salesman: {
+      type: Object,
+      required: false,
+      default: null,
+    },
   },
   setup(props, { emit }) {
     const formatPrice = value => parseFloat(value)
@@ -170,6 +173,8 @@ export default {
       notes: null,
       is_active: false,
     })
+
+    const modeData = toRef(props, 'mode')
 
     const moneyFormat = debounce(() => {
       salesmanData.value.quota = formatPrice(salesmanData.value.quota)
@@ -241,6 +246,7 @@ export default {
     }
 
     return {
+      modeData,
       cancel,
       moneyFormat,
       errors,
