@@ -21,7 +21,7 @@
           </v-icon>
           <div class="ms-3">
             <p class="text-base font-weight-medium mb-1">
-              Sales DR Items
+              Sales DR
             </p>
           </div>
         </div>
@@ -536,18 +536,6 @@ export default {
         },
         {
           text: 'DR No', value: 'sales_dr_number', sortable: true, width: '220px',
-        },
-        {
-          text: 'Product Name', value: 'product_name', sortable: true, width: '220px',
-        },
-        {
-          text: 'Quantity', value: 'quantity', sortable: true, width: '160px',
-        },
-        {
-          text: 'Unit', value: 'unit', sortable: true, width: '160px',
-        },
-        {
-          text: 'Price', value: 'price', sortable: true, width: '160px',
         },
         {
           text: 'Remaining Balance', value: 'remaining_balance', sortable: true, width: '210px',
