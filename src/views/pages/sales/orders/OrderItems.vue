@@ -585,9 +585,9 @@ export default {
 
         const productUnit = productRaw.units.find(unit => unit.name === currentItem.value.unit)
 
-        currentItem.value.actual_balance = productUnit.pivot.actual_balance
-        currentItem.value.reserved_balance = productUnit.pivot.reserved_balance
-        currentItem.value.reserved = parseFloat(productUnit.pivot.actual_balance) - parseFloat(productUnit.pivot.reserved_balance)
+        currentItem.value.actual_balance = productUnit.pivot.actual_balance ?? 0
+        currentItem.value.reserved_balance = productUnit.pivot.reserved_balance ?? 0
+        currentItem.value.reserved = parseFloat(productUnit.pivot.actual_balance ?? 0) - parseFloat(productUnit.pivot.reserved_balance ?? 0)
       }
     }
 
