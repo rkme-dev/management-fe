@@ -276,7 +276,7 @@ export const SalesDrStore = {
     setUnpaidDrItems(state, data) {
       state.unpaidDrItems = data.map(item => {
         // eslint-disable-next-line no-param-reassign
-        item.status = item.status.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ` ${d.toUpperCase()}`))
+        item.status = item.status?.replace(/^_*(.)|_+(.)/g, (s, c, d) => (c ? c.toUpperCase() : ` ${d.toUpperCase()}`))
 
         return item
       })

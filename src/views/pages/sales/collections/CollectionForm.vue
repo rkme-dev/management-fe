@@ -701,6 +701,7 @@ export default {
     })
 
     const cancel = () => {
+      store.dispatch('SalesDrStore/getUnpaidDrItems')
       emit('submit')
     }
 
@@ -847,6 +848,7 @@ export default {
         store.dispatch('CollectionStore/create', payload).then(
           response => {
             if (response.status === undefined) {
+              store.dispatch('SalesDrStore/getUnpaidDrItems')
               emit('submit', response.data)
             }
           },
@@ -861,6 +863,7 @@ export default {
         store.dispatch('CollectionStore/update', payload).then(
           response => {
             if (response.status === undefined) {
+              store.dispatch('SalesDrStore/getUnpaidDrItems')
               emit('submit', response.data)
             }
           },
@@ -882,6 +885,7 @@ export default {
       store.dispatch('CollectionStore/postOrder', formData.value.id).then(
         response => {
           if (response.status === undefined) {
+            store.dispatch('SalesDrStore/getUnpaidDrItems')
             emit('submit', response.data)
           }
         },
@@ -892,6 +896,7 @@ export default {
       store.dispatch('CollectionStore/unpostOrder', formData.value.id).then(
         response => {
           if (response.status === undefined) {
+            store.dispatch('SalesDrStore/getUnpaidDrItems')
             emit('submit', response.data)
           }
         },
