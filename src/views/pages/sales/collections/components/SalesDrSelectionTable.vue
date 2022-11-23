@@ -386,9 +386,10 @@ export default {
 
     const loading = ref(false)
 
-    onMounted(async () => {
+    const loadUnpaidDrs = () => {
       loading.value = true
-      await salesDrService.getUnpaidDrs()
+
+      salesDrService.getUnpaidDrs()
         .then(response => {
           const items = response.data.map(item => {
             item.customer_name = item.customer.name
@@ -400,7 +401,12 @@ export default {
           originalOrderItems.value = items
           loading.value = false
         })
+    }
+
+    onMounted(async () => {
+      await loadUnpaidDrs()
     })
+
     const modeData = ref('Create')
     const collectionOrderDialog = ref(false)
 
@@ -421,6 +427,10 @@ export default {
     })
 
     const createCollection = () => {
+      if (collectionOrderDialog.value === true) {
+        loadUnpaidDrs()
+      }
+
       collectionOrderDialog.value = !collectionOrderDialog.value
     }
 
