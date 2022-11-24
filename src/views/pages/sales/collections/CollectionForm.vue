@@ -404,7 +404,7 @@
             </div>
             <div v-else>
               <v-btn
-                v-if="formData.has_deposit === 0"
+                v-if="!formData.has_deposit"
                 color="error"
                 class="me-3 mt-4"
                 @click="unpostOrder"
