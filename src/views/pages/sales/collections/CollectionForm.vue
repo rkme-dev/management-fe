@@ -390,28 +390,31 @@
               </v-icon>
               {{ mode == 'Create' ? 'Create' : 'Update' }}
             </v-btn>
-            <v-btn
-              v-if="formData.status === 'For Review'"
-              color="success"
-              class="me-3 mt-4"
-              @click="postOrder"
-            >
-              <v-icon>
-                {{ icons.mdiFinance }}
-              </v-icon>
-              Post
-            </v-btn>
-            <v-btn
-              v-if="formData.status === 'Posted' && formData.has_deposit === 1"
-              color="error"
-              class="me-3 mt-4"
-              @click="unpostOrder"
-            >
-              <v-icon>
-                {{ icons.mdiFinance }}
-              </v-icon>
-              Unpost
-            </v-btn>
+            <div v-if="formData.status === 'For Review'">
+              <v-btn
+                color="success"
+                class="me-3 mt-4"
+                @click="postOrder"
+              >
+                <v-icon>
+                  {{ icons.mdiFinance }}
+                </v-icon>
+                Post
+              </v-btn>
+            </div>
+            <div v-else>
+              <v-btn
+                v-if="!formData.has_deposit"
+                color="error"
+                class="me-3 mt-4"
+                @click="unpostOrder"
+              >
+                <v-icon>
+                  {{ icons.mdiFinance }}
+                </v-icon>
+                Unpost
+              </v-btn>
+            </div>
             <v-btn
               outlined
               class="me-3 mt-4"
