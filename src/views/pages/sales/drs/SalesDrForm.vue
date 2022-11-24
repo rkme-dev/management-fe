@@ -58,12 +58,13 @@
             </v-menu>
           </v-col>
           <v-col
-              cols="4"
-              class="pr-8 pl-8 mt-10"
+            cols="4"
+            class="pr-8 pl-8 mt-10"
           >
-            <qr-code :text="formData.qr_code"
-                     :size=150
-                     error-level="L"
+            <qr-code
+              :text="formData.qr_code"
+              :size="150"
+              error-level="L"
             ></qr-code>
           </v-col>
 
@@ -94,9 +95,9 @@
               :disabled="formData.status === 'Posted'"
               :error-messages="errors.document_id"
               outlined
-              @change="checkDocument"
               dense
               hide-details="auto"
+              @change="checkDocument"
             ></v-select>
           </v-col>
           <v-col
@@ -113,15 +114,18 @@
               label="Customer"
             ></v-text-field>
           </v-col>
-          <v-col cols="3" class="pr-8 pl-8">
+          <v-col
+            cols="3"
+            class="pr-8 pl-8"
+          >
             <v-text-field
-                v-if="invoiceNumberRequired"
-                v-model="formData.sales_invoice_number"
-                outlined
-                :error-messages="errors.sales_invoice_number"
-                dense
-                hide-details="auto"
-                label="Sales Invoice Number"
+              v-if="invoiceNumberRequired"
+              v-model="formData.sales_invoice_number"
+              outlined
+              :error-messages="errors.sales_invoice_number"
+              dense
+              hide-details="auto"
+              label="Sales Invoice Number"
             ></v-text-field>
           </v-col>
           <v-col
@@ -470,7 +474,6 @@ export default {
         formData.value.sales_dr_items = JSON.parse(JSON.stringify(dataProp.value.sales_dr_items))
         store.dispatch('SalesOrderStore/orderItems', dataProp.value.customer.id)
         console.log(formData.value.sales_dr_items)
-
       } else {
         formData.value = {
           dateModal: false,

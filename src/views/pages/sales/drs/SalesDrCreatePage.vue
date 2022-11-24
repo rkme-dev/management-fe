@@ -18,7 +18,7 @@
                 </v-icon>
                 <div class="ms-3">
                   <p class="text-base font-weight-medium mb-1">
-                    Sales Order Items
+                    Sales Order
                   </p>
                 </div>
               </div>
@@ -75,7 +75,7 @@
               color="success"
               @click="showOrderItems=true"
             >
-              Get Sales Order Items
+              Get Sales Order
             </v-btn>
           </v-col>
           <v-col cols="8"></v-col>
@@ -396,7 +396,6 @@ export default {
     const headers = [
       { text: 'Date', sortable: true, value: 'date_posted' },
       { text: 'SO No', value: 'sales_order_number', sortable: true },
-      { text: 'Product Name', value: 'product_name', sortable: true },
       { text: 'Amount', value: 'total_amount', sortable: true },
     ]
     const customer = ref({})

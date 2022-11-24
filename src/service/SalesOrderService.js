@@ -33,7 +33,7 @@ export default class SalesOrderService {
     .then(response => response.data)
     .catch(error => error.response)
 
-  allOrderItems = () => AxiosInstance.get('sales-orders-items')
+  allOrderItems = () => AxiosInstance.get('sales-orders/for-dr')
     .then(response => response.data)
     .catch(error => error.response)
 }

@@ -514,18 +514,6 @@ export default {
           text: 'SO No', value: 'sales_order_number', sortable: true, width: '220px',
         },
         {
-          text: 'Product Name', value: 'product_name', sortable: true, width: '220px',
-        },
-        {
-          text: 'Quantity', value: 'quantity', sortable: true, width: '160px',
-        },
-        {
-          text: 'Unit', value: 'unit', sortable: true, width: '160px',
-        },
-        {
-          text: 'Price', value: 'price', sortable: true, width: '160px',
-        },
-        {
           text: 'Amount', value: 'total_amount', sortable: true, width: '210px',
         },
       ],
