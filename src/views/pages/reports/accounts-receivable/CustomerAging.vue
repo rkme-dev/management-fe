@@ -162,6 +162,7 @@ export default {
       },
       { text: 'Name', value: 'name' },
       { text: 'Type', value: 'type', align: 'left' },
+      { text: 'Current', value: 'current', align: 'left' },
       { text: 'Current', value: 'one_thirty_total', align: 'left' },
       { text: '31-60', value: 'thirtyone_sixty_total', align: 'left' },
       { text: '61-90', value: 'sixtyone_ninety_total', align: 'left' },
