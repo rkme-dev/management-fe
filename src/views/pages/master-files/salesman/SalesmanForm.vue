@@ -50,7 +50,7 @@
         cols="4"
         md="3"
       >
-        <label for="firstnameHorizontalIcons">Quota</label>
+        <label for="firstnameHorizontalIcons">Case Quota</label>
       </v-col>
 
       <v-col
@@ -58,7 +58,7 @@
       >
         <v-currency-field
           v-model="salesmanData.quota"
-          label="Quota"
+          label="Case Quota"
           :error-messages="errors.quota"
           filled
         />

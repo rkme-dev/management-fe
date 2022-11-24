@@ -245,7 +245,7 @@ export default {
         value: 'salesman_code',
       },
       { text: 'Salesman Name', value: 'salesman_name' },
-      { text: 'Quota', value: 'quota' },
+      { text: 'Case Quota', value: 'quota' },
       { text: 'Notes', value: 'notes', align: 'center' },
       {
         text: 'Status', value: 'is_active', align: 'center', sortable: true,
