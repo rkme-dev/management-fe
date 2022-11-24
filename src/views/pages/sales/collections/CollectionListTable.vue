@@ -86,7 +86,7 @@
             <collection-form
               :mode="modeData"
               :data="collectionOrder"
-              @submit="initialize"
+              @submit="submit"
             >
             </collection-form>
           </v-dialog>
@@ -232,6 +232,10 @@ export default {
       store.dispatch('CollectionStore/list')
     }
 
+    const submit = () => {
+      window.location.reload()
+    }
+
     const createCollection = () => {
       modeData.value = 'Create'
       collectionOrderDialog.value = true
@@ -303,6 +307,7 @@ export default {
     const colors = salesStatusColors()
 
     return {
+      submit,
       showPosted,
       colors,
       onInit,

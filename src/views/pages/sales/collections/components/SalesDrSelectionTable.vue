@@ -428,7 +428,7 @@ export default {
 
     const createCollection = () => {
       if (collectionOrderDialog.value === true) {
-        loadUnpaidDrs()
+        window.location.reload()
       }
 
       collectionOrderDialog.value = !collectionOrderDialog.value
