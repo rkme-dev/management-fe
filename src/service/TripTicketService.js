@@ -34,4 +34,8 @@ export default class TripTicketService {
     .catch(error => error.response)
 
   drItemsUnlinked = () => AxiosInstance.get('/sales-drs/unlink-items')
+
+  drItems = (id, area) => AxiosInstance.get(`/trip-tickets/${id}/sales-dr-items?area=${area}`)
+    .then(response => response.data)
+    .catch(error => error.response)
 }

@@ -169,6 +169,8 @@ export default {
       address: null,
       remarks: null,
       area: null,
+      departed_date: null,
+      departed_time: null,
     })
 
     const tripTicketDatas = computed(() => store.state.TripTicketStore.list)
@@ -202,6 +204,8 @@ export default {
         salesman_id_2: null,
         term_id: null,
         vat_id: null,
+        departed_date: null,
+        departed_time: null,
       }
     }
 

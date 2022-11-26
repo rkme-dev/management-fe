@@ -131,7 +131,39 @@
               label="Driver"
             ></v-text-field>
           </v-col>
-          <v-col cols="6"></v-col>
+          <v-col cols="1"></v-col>
+          <v-col cols="6">
+            <v-menu
+              v-model="departedDateModal"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="auto"
+            >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="formData.departed_date"
+                label="Departure Date"
+                persistent-hint
+                :append-icon="icons.mdiCalendar"
+                readonly
+                outlined
+                v-bind="attrs"
+                v-on="on"
+                :error-messages="errors.departed_date"
+              ></v-text-field>
+            </template>
+
+            <v-date-picker
+              v-model="formData.departed_date"
+              no-title
+              color="primary"
+              @input="departedDateModal = false"
+              :disabled="formData.status === 'In Transit'"
+            ></v-date-picker>
+          </v-menu>
+          </v-col>
           <v-col cols="4">
             <v-text-field
               v-model="formData.assistant"
@@ -143,7 +175,40 @@
               label="Assistant"
             ></v-text-field>
           </v-col>
-          <v-col cols="6"></v-col>
+          <v-col cols="1"></v-col>
+          <v-col cols="6">
+            <v-menu
+              v-model="departedTimeModal"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              max-width="290px"
+              min-width="auto"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  v-model="formData.departed_time"
+                  label="Departure Time"
+                  persistent-hint
+                  :append-icon="icons.mdiCalendarClock"
+                  readonly
+                  outlined
+                  :error-messages="errors.departed_time"
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+
+              <v-time-picker
+                v-model="formData.departed_time"
+                no-title
+                format="ampm"
+                color="primary"
+                :disabled="formData.status === 'In Transit'"
+                @input="departedTimeModal = false"
+              ></v-time-picker>
+            </v-menu>
+          </v-col>
           <v-col cols="4">
             <v-text-field
               v-model="formData.truck"
@@ -158,7 +223,6 @@
           <v-col cols="1"></v-col>
           <v-col
             cols="6"
-            class="mt-n16"
           >
             <v-textarea
               v-model="formData.remarks"
@@ -224,6 +288,15 @@
               :headers="headers"
               :items="selectedDrItems"
             >
+            <template #item.date_posted="{ item }">
+              {{ new Date(item.date_posted).toDateString() }} {{ new Date(item.date_posted).toLocaleTimeString() }}
+            </template>
+            <template #item.amount="{ item }">
+              P{{ formatPrice(item.amount) }}
+            </template>
+            <template #item.remaining_balance="{ item }">
+              P{{ formatPrice(item.remaining_balance) }}
+            </template>
             </v-data-table>
           </v-col>
         </v-row>
@@ -311,6 +384,8 @@ import {
 import {
   mdiAccountPlusOutline, mdiCardOff, mdiCurrencySign,
   mdiInformation,
+  mdiCalendar,
+  mdiCalendarClock
 } from '@mdi/js'
 import store from '@/store'
 import SalesDrItemSelection from './SalesDrItemSelection.vue'
@@ -338,6 +413,9 @@ export default {
     const areas = computed(() => store.state.SalesDrStore.areas)
     const errors = computed(() => store.state.TripTicketStore.errors)
     const dataProp = toRef(props, 'data')
+    const departedDateModal = ref(false)
+    const departedTimeModal = ref(false)
+
     const documents = computed(() => store.state.DocumentStore.documents.filter(documentItem => {
       if (documentItem.module === 'Trip-ticket') {
         documentItem.title = `${documentItem.document_name}`
@@ -353,39 +431,49 @@ export default {
       area: null,
     })
     const selectedDrItems = ref([])
-    const drItemsSelection = computed(() => store.state.SalesDrStore.items)
+    const drItemsSelection = computed(() => store.state.TripTicketStore.items)
     const datePosted = ref(new Date().toISOString().substr(0, 10))
     const modeData = toRef(props, 'mode')
+
+    const formatPrice = value => parseFloat(value)
+      .toFixed(2)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
     const headers = [
       {
         text: 'Date',
         align: 'start',
         sortable: false,
-        value: 'sales_dr_item.sales_dr.date_posted',
+        value: 'date_posted',
       },
-      { text: 'DR Number', value: 'sales_dr_item.sales_dr.sales_dr_number' },
-      { text: 'Customer', value: 'sales_dr_item.sales_dr.customer.name' },
-      { text: 'Area', value: 'sales_dr_item.sales_dr.area' },
-      { text: 'Item Name', value: 'product.name' },
-      { text: 'Quantity', value: 'quantity' },
-      { text: 'Unit', value: 'unit' },
+      { text: 'DR Number', value: 'sales_dr_number' },
+      { text: 'Customer', value: 'customer.name' },
+      { text: 'Area', value: 'area' },
+      { text: 'Total Amount', value: 'amount' },
+      { text: 'Remaining Balance', value: 'remaining_balance' },
     ]
 
     const reInitializeSelectedItem = () => {
       selectedDrItems.value = []
-
+      console.log(drItemsSelection.value)
       // eslint-disable-next-line no-unused-expressions
-      dataProp.value.order_items?.forEach(orderItem => {
+      dataProp.value.sales_dr_items?.forEach(salesDr => {
         if (drItemsSelection.value.length === 0) {
           return
         }
 
-        const exist = drItemsSelection.value?.find(itemSelection => itemSelection.id === orderItem.id)
+        const exist = drItemsSelection.value?.find(itemSelection => itemSelection.id === salesDr.sales_dr_id)
 
         if (exist) {
           selectedDrItems.value.push(exist)
         }
       })
+      selectedDrItems.value = getUnique(selectedDrItems.value, 'id')
+    }
+
+    const getUnique = (arr, key) => {
+      return [...new Map(arr.map(item => [item[key], item])).values()]
     }
 
     const initialize = () => {
@@ -395,11 +483,12 @@ export default {
 
       if (dataProp.value.area && dataProp.value.id) {
         const data = {
-          area: dataProp.value.area,
           id: dataProp.value.id,
+          area: dataProp.value.area,
         }
 
-        store.dispatch('SalesDrStore/getUnlinkItems', data)
+        store.dispatch('TripTicketStore/drItems', data)
+        reInitializeSelectedItem()
       }
     }
 
@@ -408,7 +497,8 @@ export default {
     })
 
     const cancel = () => {
-      emit('submit')
+      window.location.reload()
+      // emit('submit')
     }
 
     const addOrUpdateItems = items => {
@@ -442,11 +532,11 @@ export default {
 
     const areaChanged = () => {
       const data = {
+        id: formData.value.id ?? 0,
         area: formData.value.area,
-        id: formData.value.id,
       }
 
-      store.dispatch('SalesDrStore/getUnlinkItems', data)
+      store.dispatch('TripTicketStore/drItems', data)
       selectedDrItems.value = []
     }
 
@@ -493,11 +583,16 @@ export default {
       errors,
       formData,
       headers,
+      departedDateModal,
+      departedTimeModal,
+      formatPrice,
       icons: {
         mdiInformation,
         mdiAccountPlusOutline,
         mdiCardOff,
         mdiCurrencySign,
+        mdiCalendar,
+        mdiCalendarClock
       },
       selectedDrItems,
       submit,
