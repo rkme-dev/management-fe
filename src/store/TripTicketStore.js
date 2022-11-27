@@ -10,6 +10,7 @@ export const TripTicketStore = {
     list: [],
     row: {},
     originalData: [],
+    items: []
   },
   actions: {
     // eslint-disable-next-line no-shadow
@@ -140,6 +141,19 @@ export const TripTicketStore = {
     filter({ commit }, statuses) {
       commit('filter', statuses)
     },
+    drItems({ commit, dispatch }, data) {
+      dispatch('setLoading', true)
+
+      return tripTicketService.drItems(data.id, data.area).then(
+        response => {
+          commit('fetchOrderItemsSuccess', response.data)
+          dispatch('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => Promise.reject(error),
+      )
+    },
   },
   mutations: {
     filter(state, statuses) {
@@ -179,6 +193,21 @@ export const TripTicketStore = {
     },
     setLoading(state, loading) {
       state.loading = loading
+    },
+    fetchOrderItemsSuccess(state, list) {
+      const uniqueIds = []
+
+      state.items = list.filter(element => {
+        const isDuplicate = uniqueIds.includes(element.id)
+
+        if (!isDuplicate) {
+          uniqueIds.push(element.id)
+
+          return true
+        }
+
+        return false
+      })
     },
   },
 }
