@@ -469,10 +469,6 @@ export default {
         { text: 'Date', sortable: true, value: 'date_posted' },
         { text: 'Customer', sortable: true, value: 'customer_name' },
         { text: 'SO No', value: 'sales_order_number', sortable: true },
-        { text: 'Product Name', value: 'product_name', sortable: true },
-        { text: 'Quantity', value: 'quantity', sortable: true },
-        { text: 'Unit', value: 'unit', sortable: true },
-        { text: 'Price', value: 'price', sortable: true },
         { text: 'Amount', value: 'total_amount', sortable: true },
       ],
       icons: {

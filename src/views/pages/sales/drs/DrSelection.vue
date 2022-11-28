@@ -401,7 +401,6 @@ export default {
     const headers = [
       { text: 'Date', sortable: true, value: 'date_posted' },
       { text: 'SO No', value: 'sales_order_number', sortable: true },
-      { text: 'Product Name', value: 'product_name', sortable: true },
       { text: 'Amount', value: 'total_amount', sortable: true },
     ]
     const customer = ref({})

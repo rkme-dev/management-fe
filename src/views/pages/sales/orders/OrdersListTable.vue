@@ -135,7 +135,6 @@ export default {
     SalesOrderForm,
   },
   setup() {
-    console.log(salesStatusColors().value.Posted)
     const showPosted = ref(false)
     const modeData = ref('Create')
     const salesOrderDialog = ref(false)

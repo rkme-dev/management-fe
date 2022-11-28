@@ -9,6 +9,15 @@
           :items="salesDrItems"
           :headers="headers"
         >
+        <template #item.date_posted="{ item }">
+          {{ new Date(item.date_posted).toDateString() }} {{ new Date(item.date_posted).toLocaleTimeString() }}
+        </template>
+        <template #item.amount="{ item }">
+          P{{ formatPrice(item.amount) }}
+        </template>
+        <template #item.remaining_balance="{ item }">
+          P{{ formatPrice(item.remaining_balance) }}
+        </template>
         </v-data-table>
       </v-col>
       <v-col
@@ -54,6 +63,7 @@ import {
   ref,
 } from '@vue/composition-api/dist/vue-composition-api'
 import { mdiProgressClose, mdiTimelineCheck } from '@mdi/js'
+import { consoleError } from 'vuetify/lib/util/console'
 
 export default {
   name: 'SalesDrItemSelectionVue',
@@ -79,30 +89,31 @@ export default {
     const areaData = toRef(props, 'area')
     const selectedItemsProp = toRef(props, 'selectedItems')
     const selectedDrItems = ref([])
-    const loading = computed(() => store.state.SalesDrStore.loading)
-    const salesDrItems = computed(() => store.state.SalesDrStore.items)
+    const loading = computed(() => store.state.TripTicketStore.loading)
+    const salesDrItems = computed(() => store.state.TripTicketStore.items)
+
     const headers = [
       {
         text: 'Date',
         align: 'start',
         sortable: false,
-        value: 'sales_dr_item.sales_dr.date_posted',
+        value: 'date_posted',
       },
-      { text: 'DR Number', value: 'sales_dr_item.sales_dr.sales_dr_number' },
-      { text: 'Customer', value: 'sales_dr_item.sales_dr.customer.name' },
-      { text: 'Area', value: 'sales_dr_item.sales_dr.area' },
-      { text: 'Item Name', value: 'product.name' },
-      { text: 'Quantity', value: 'quantity' },
-      { text: 'Unit', value: 'unit' },
+      { text: 'DR Number', value: 'sales_dr_number' },
+      { text: 'Customer', value: 'customer.name' },
+      { text: 'Area', value: 'area' },
+      { text: 'Total Amount', value: 'amount' },
+      { text: 'Remaining Balance', value: 'remaining_balance' },
     ]
 
     const data = ref({
+      id: tripTicketId.value ?? 0,
       area: areaData.value,
-      id: tripTicketId.value,
     })
 
     const initialize = () => {
-      store.dispatch('SalesDrStore/getUnlinkItems', data.value)
+      store.dispatch('TripTicketStore/drItems', data.value)
+      // store.dispatch('SalesDrStore/getUnlinkItems', data.value)
     }
 
     onMounted(async () => {
@@ -124,6 +135,10 @@ export default {
     const addOrUpdateItems = () => {
       emit('addOrUpdateItems', selectedDrItems.value)
     }
+    const formatPrice = value => parseFloat(value)
+      .toFixed(2)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
     return {
       loading,
@@ -136,6 +151,7 @@ export default {
       selectedDrItems,
       salesDrItems,
       headers,
+      formatPrice
     }
   },
 }

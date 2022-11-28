@@ -12,7 +12,7 @@
           </v-icon>
           <div class="ms-3">
             <p class="text-base font-weight-medium mb-1">
-              Sales Order Items
+              Sales Order
             </p>
           </div>
         </div>

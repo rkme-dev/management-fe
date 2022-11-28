@@ -208,13 +208,23 @@
                         class="d-flex"
                       >
                         <v-btn
-                          v-if="currentItem.quantity && currentItem.product_id"
+                          v-if="currentItem.quantity && currentItem.product_id && formTitle === 'Add Item'"
                           color="primary"
                           class="me-3 mt-4"
                           @click="addItem(false)"
                         >
                           Submit
                         </v-btn>
+
+                        <v-btn
+                          v-if="currentItem.quantity && currentItem.product_id && formTitle === 'Edit Item'"
+                          color="primary"
+                          class="me-3 mt-4"
+                          @click="updateItem(false)"
+                        >
+                          Update
+                        </v-btn>
+
                         <v-btn
                           v-if="currentItem.quantity && currentItem.product_id"
                           color="info"
@@ -252,13 +262,21 @@
             <span class="text-green">{{ item.total_amount }}</span>
           </div>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:item.actions="{ item, index}">
           <v-icon
             v-if="isDisabled === false"
             small
             @click="deleteItem(item)"
           >
             {{ icons.mdiDeleteCircle }}
+          </v-icon>
+          <v-icon
+            v-if="isDisabled === false"
+            class="ml-4"
+            small
+            @click="editItem(item, index);"
+          >
+            {{ icons.mdiAccountEdit }}
           </v-icon>
         </template>
         <template #item.cost="{ item }">
@@ -327,6 +345,7 @@ export default {
     const units = computed(() => store.state.UnitPackingStore.list)
     const filteredUnits = ref([])
     const currentItem = ref({
+      index: null,
       product_id: null,
       quantity: null,
       cost: null,
@@ -374,6 +393,7 @@ export default {
     watch(physicalCountTotalAmount, value => {
       emit('totalAmount', value)
     })
+
     watch(itemsProp, () => {
       if (modeData.value === 'Edit') {
         physicalCountTotalAmount.value = 0
@@ -397,6 +417,11 @@ export default {
       }
     })
 
+    watch(() => [...countItems.value], (currentValue, oldValue) => {
+      console.log(currentValue)
+      console.log(oldValue)
+    })
+
     watch(countItems, () => {
       physicalCountTotalAmount.value = 0
 
@@ -407,6 +432,9 @@ export default {
       if (countItems.value.length === 0) {
         physicalCountTotalAmount.value = 0
       }
+    }, {
+      deep: true,
+      immediate: true,
     })
 
     watch(currentItem.value, () => {
@@ -477,6 +505,7 @@ export default {
         currentItem.value.brand = null
         currentItem.value.group_1 = null
         currentItem.value.group_2 = null
+        currentItem.value.index = null
         product.value.name = null
         product.value.sku = null
         product.value.slug = null
@@ -496,6 +525,55 @@ export default {
       emit('totalAmount', physicalCountTotalAmount.value)
     }
 
+    const editItem = (item, index) => {
+      currentItem.value = item
+      currentItem.value.index = index
+      itemFormModal.value = true
+      formTitle.value = 'Edit Item'
+    }
+
+    const updateItem = addAgain => {
+      countItems.value[currentItem.value.index] = {
+        product_id: currentItem.value.product_id,
+        quantity: currentItem.value.quantity,
+        cost: currentItem.value.cost,
+        total_amount: currentItem.value.total_amount,
+        unit: currentItem.value.unit,
+        brand: currentItem.value.brand,
+        group_1: currentItem.value.group_1,
+        group_2: currentItem.value.group_2,
+        name: currentItem.value.name,
+        sku: currentItem.value.sku,
+        slug: currentItem.value.slug,
+      }
+
+      emit('totalAmount', physicalCountTotalAmount.value)
+      emit('addItem', countItems.value)
+
+      itemFormModal.value = false
+
+      // Manually set each property to null and don't assign a completely new object it will ruin the watch component
+      setTimeout(() => {
+        filteredUnits.value = []
+        currentItem.value.product_id = null
+        currentItem.value.quantity = null
+        currentItem.value.cost = null
+        currentItem.value.total_amount = 0
+        currentItem.value.unit = null
+        currentItem.value.brand = null
+        currentItem.value.group_1 = null
+        currentItem.value.group_2 = null
+        product.value.name = null
+        product.value.sku = null
+        product.value.slug = null
+      }, 500)
+
+      if (addAgain === true) {
+        setTimeout(() => {
+          itemFormModal.value = true
+        }, 500)
+      }
+    }
     const cancel = () => {
       itemFormModal.value = false
       currentItem.value.product_id = null
@@ -512,6 +590,8 @@ export default {
     }
 
     return {
+      updateItem,
+      editItem,
       filteredUnits,
       isDisabled,
       physicalCountTotalAmount,
