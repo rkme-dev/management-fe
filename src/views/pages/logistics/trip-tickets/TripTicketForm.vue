@@ -180,10 +180,11 @@
             <v-menu
               v-model="departedTimeModal"
               :close-on-content-click="false"
+              :nudge-right="40"
               transition="scale-transition"
               offset-y
               max-width="290px"
-              min-width="auto"
+              min-width="290px"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
@@ -200,11 +201,13 @@
               </template>
 
               <v-time-picker
+                v-if="departedTimeModal"
                 v-model="formData.departed_time"
                 no-title
                 format="ampm"
                 color="primary"
                 :disabled="formData.status === 'In Transit'"
+                full-width
                 @input="departedTimeModal = false"
               ></v-time-picker>
             </v-menu>
