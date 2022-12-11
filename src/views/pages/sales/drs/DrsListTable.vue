@@ -36,7 +36,7 @@
         <v-currency-field
           v-model="item.remaining_balance"
           prefix="PHP"
-          class="text-green"
+          class="text-crimson"
           disabled
         >
         </v-currency-field>

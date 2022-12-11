@@ -307,12 +307,12 @@
             <span class="text-green">{{ item.total_amount }}</span>
           </div>
         </template>
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:item.actions="{ item, index }">
           <v-icon
             v-if="isDisabled === false"
             class="mr-2"
             small
-            @click="editItem(item)"
+            @click="editItem(item, index)"
           >
             {{ icons.mdiAccountEdit }}
           </v-icon>
@@ -342,6 +342,34 @@
           >
           </v-currency-field>
         </template>
+        <template v-slot:footer="{ item }">
+          <v-row class="mb-2 mt-2">
+            <v-col
+              cols="6"
+              class="mt-10"
+            >
+            </v-col>
+            <v-col
+              cols="3"
+              class="mt-7"
+              style="color: forestgreen;"
+            >
+              Total Amount:
+            </v-col>
+            <v-col
+              cols="2"
+              class="ml-n16"
+            >
+              <v-currency-field
+                v-model="salesOrderTotalAmount"
+                class="text-green"
+                prefix="PHP"
+                disabled
+              >
+              </v-currency-field>
+            </v-col>
+          </v-row>
+        </template>
       </v-data-table>
     </v-col>
   </v-row>
@@ -355,7 +383,7 @@ import {
   mdiTextBoxPlus,
 } from '@mdi/js'
 import {
-  computed, isRef, ref, toRef, toRefs, watch,
+  computed, ref, toRef, toRefs, watch,
 } from '@vue/composition-api'
 import store from '@/store'
 
@@ -435,26 +463,22 @@ export default {
       emit('totalAmount', value)
     })
     watch(itemsProp, () => {
-      if (modeData.value === 'Edit') {
-        salesOrderTotalAmount.value = 0
+      salesOrderTotalAmount.value = 0
 
-        orderItems.value = itemsProp.value.map(orderItem => {
-          const productRaw = products.value.find(item => item.id === orderItem.product_id)
+      orderItems.value = itemsProp.value.map(orderItem => {
+        const productRaw = products.value.find(item => item.id === orderItem.product_id)
 
-          salesOrderTotalAmount.value = parseFloat(salesOrderTotalAmount.value) + parseFloat(orderItem.total_amount)
+        salesOrderTotalAmount.value = parseFloat(salesOrderTotalAmount.value) + parseFloat(orderItem.total_amount)
 
-          // eslint-disable-next-line no-param-reassign
-          orderItem.name = productRaw?.name
-          // eslint-disable-next-line no-param-reassign
-          orderItem.slug = productRaw?.slug
-          // eslint-disable-next-line no-param-reassign
-          orderItem.sku = productRaw?.sku
+        // eslint-disable-next-line no-param-reassign
+        orderItem.name = productRaw?.name
+        // eslint-disable-next-line no-param-reassign
+        orderItem.slug = productRaw?.slug
+        // eslint-disable-next-line no-param-reassign
+        orderItem.sku = productRaw?.sku
 
-          return orderItem
-        })
-      } else if (modeData.value === 'Create' && itemsProp.value.length === 0) {
-        orderItems.value = []
-      }
+        return orderItem
+      })
     })
 
     watch(orderItems, () => {
@@ -556,9 +580,10 @@ export default {
       }
     }
 
-    const editItem = item => {
+    const editItem = (item, index) => {
       formTitle.value = 'Edit'
       const itemRefs = toRefs(item)
+      currentItem.value.index = index
       currentItem.value.product_id = itemRefs.product_id
       currentItem.value.quantity = itemRefs.quantity
       currentItem.value.price = itemRefs.price
@@ -570,7 +595,23 @@ export default {
       itemFormModal.value = true
     }
 
-    const updateItem = () => itemFormModal.value = false
+    const updateItem = () => {
+      orderItems.value[currentItem.value.index] = {
+        product_id: currentItem.value.product_id,
+        quantity: currentItem.value.quantity,
+        price: currentItem.value.price,
+        total_amount: currentItem.value.total_amount,
+        unit: currentItem.value.unit,
+        name: currentItem.value.name,
+        sku: currentItem.value.sku,
+        slug: currentItem.value.slug,
+      }
+
+      emit('totalAmount', salesOrderTotalAmount.value)
+      emit('addItem', orderItems.value)
+
+      itemFormModal.value = false
+    }
 
     const deleteItem = item => {
       const index = orderItems.value.findIndex(orderItem => (orderItem.product_id === item.product_id && orderItem.total_amount === item.total_amount))
