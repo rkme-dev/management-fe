@@ -8,6 +8,7 @@ import Ripple from 'vuetify/lib/directives/ripple'
 import Vuetify from 'vuetify'
 import VueQrcodeReader from 'vue-qrcode-reader'
 import VueQRCodeComponent from 'vue-qrcode-component'
+import VueMeta from 'vue-meta'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
@@ -19,7 +20,7 @@ Vue.component('qr-code', VueQRCodeComponent)
 AxiosInterceptors(store)
 
 Vue.config.productionTip = false
-
+Vue.use(VueMeta)
 Vue.component('v-text-field', VTextField)
 Vue.use(VCurrencyField, {
   locale: 'en',

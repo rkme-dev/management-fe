@@ -15,6 +15,12 @@ export default {
     LayoutBlank,
     LayoutContent,
   },
+  metaInfo: {
+    meta: [
+      { charset: 'utf-8' },
+      { httpEquiv: 'Content-Security-Policy', content: 'upgrade-insecure-requests' },
+    ],
+  },
   setup() {
     const { route } = useRouter()
 
