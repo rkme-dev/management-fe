@@ -154,6 +154,30 @@
         ></v-select>
       </v-col>
       <v-col
+        v-if="formData.type === 'preform'"
+        cols="2"
+      >
+        <label for="rawMaterialType">Blown Bottles</label>
+      </v-col>
+      <v-col
+        v-if="formData.type === 'preform'"
+        cols="4"
+        class="mr-12"
+      >
+        <v-select
+          v-model="formData.raw_material_id"
+          :items="blownBottles"
+          item-text="name"
+          item-value="id"
+          label="Blown Bottles"
+          :error-messages="errors.raw_material_id"
+          outlined
+          dense
+          clearable
+          hide-details="auto"
+        ></v-select>
+      </v-col>
+      <v-col
         cols="4"
         md="3"
       >
@@ -190,55 +214,78 @@
     </v-row>
   </v-form>
 </template>
-  
+
 <script>
-  import {
-    toRef,
-    computed,
-    ref, watch,
-  } from '@vue/composition-api/dist/vue-composition-api'
-  import store from '@/store'
-  import UnitAndPackingForm from '@/views/pages/master-files/raw-materials/UnitAndPackingForm.vue'
-  import RawMaterialsMixin from '@/components/mixins/RawMaterialsMixin'
-  
-  export default {
-    mixins: [
-      RawMaterialsMixin,
-    ],
-    components: {
-      UnitAndPackingForm,
+import {
+  toRef,
+  computed,
+  ref, watch,
+} from '@vue/composition-api/dist/vue-composition-api'
+import store from '@/store'
+import UnitAndPackingForm from '@/views/pages/master-files/raw-materials/UnitAndPackingForm.vue'
+import RawMaterialsMixin from '@/components/mixins/RawMaterialsMixin'
+
+export default {
+  components: {
+    UnitAndPackingForm,
+  },
+  mixins: [
+    RawMaterialsMixin,
+  ],
+  props: {
+    mode: {
+      type: String,
+      required: true,
+      default: null,
     },
-    props: {
-      mode: {
-        type: String,
-        required: true,
-        default: null,
-      },
-      row: {
-        type: Object,
-        required: false,
-        default: null,
-      },
+    row: {
+      type: Object,
+      required: false,
+      default: null,
     },
-    setup(props, { emit }) {
-      store.dispatch('UnitPackingStore/list')
-  
-      const rowProp = toRef(props, 'row')
-      const units = computed(() => store.state.UnitPackingStore.list)
-      const formData = ref({})
-      /**
+  },
+  setup(props, { emit }) {
+    store.dispatch('UnitPackingStore/list')
+
+    const rowProp = toRef(props, 'row')
+    const units = computed(() => store.state.UnitPackingStore.list)
+    const blownBottles = computed(() => store.state.RawMaterialStore.list.filter(rawMaterial => rawMaterial.type === 'blown_bottle'))
+    const formData = ref({})
+
+    /**
        * Not the proper way to call mixin computed
        * will find a way soon.
        */
-      const rawTypes = RawMaterialsMixin.computed.rawMaterialsType()
-  
+    const rawTypes = RawMaterialsMixin.computed.rawMaterialsType()
+
+    formData.value = JSON.parse(JSON.stringify(rowProp.value))
+
+    if (props.mode === 'edit') {
+      if (formData.value.active === 'Inactive') {
+        formData.value.active = false
+      } else {
+        formData.value.active = true
+      }
+    } else {
+      formData.value = {
+        code: null,
+        name: null,
+        percentage: 0,
+        notes: null,
+        active: false,
+        units: [],
+        type: null,
+      }
+    }
+
+    watch(rowProp, () => {
       formData.value = JSON.parse(JSON.stringify(rowProp.value))
-  
+
       if (props.mode === 'edit') {
         if (formData.value.active === 'Inactive') {
-          formData.value.active = false
+          formData.value.active = 0
         } else {
-          formData.value.active = true
+          formData.value.active = 1
         }
       } else {
         formData.value = {
@@ -251,86 +298,65 @@
           type: null,
         }
       }
-  
-      watch(rowProp, () => {
-        formData.value = JSON.parse(JSON.stringify(rowProp.value))
-  
-        if (props.mode === 'edit') {
-          if (formData.value.active === 'Inactive') {
-            formData.value.active = 0
-          } else {
-            formData.value.active = 1
-          }
-        } else {
-          formData.value = {
-            code: null,
-            name: null,
-            percentage: 0,
-            notes: null,
-            active: false,
-            units: [],
-            type: null,
-          }
-        }
-      })
-  
-      const errors = computed(() => store.state.RawMaterialStore.errors)
-  
-      const addUnitPacking = unitAndPacking => {
-        formData.value.units.push(unitAndPacking)
+    })
+
+    const errors = computed(() => store.state.RawMaterialStore.errors)
+
+    const addUnitPacking = unitAndPacking => {
+      formData.value.units.push(unitAndPacking)
+    }
+
+    const cancel = () => {
+      store.dispatch('RawMaterialStore/removeErrors')
+      emit('submit', false)
+    }
+
+    const submit = () => {
+      if (formData.value.id === undefined) {
+        store.dispatch('RawMaterialStore/create', formData.value).then(
+          response => {
+            if (response.status === undefined) {
+              emit('submit', false)
+
+              emit('clicked', {
+                alertType: 'success',
+                alertMessage: 'Successfully Added.',
+              })
+              store.dispatch('RawMaterialStore/list')
+            }
+          },
+        )
+      } else {
+        store.dispatch('RawMaterialStore/update', formData.value).then(
+          response => {
+            if (response.status === undefined) {
+              emit('submit', false)
+
+              emit('clicked', {
+                alertType: 'success',
+                alertMessage: 'Successful Update.',
+              })
+              store.dispatch('RawMaterialStore/list')
+            }
+          },
+        )
       }
-  
-      const cancel = () => {
-        store.dispatch('RawMaterialStore/removeErrors')
-        emit('submit', false)
-      }
-  
-      const submit = () => {
-        if (formData.value.id === undefined) {
-          store.dispatch('RawMaterialStore/create', formData.value).then(
-            response => {
-              if (response.status === undefined) {
-                emit('submit', false)
-  
-                emit('clicked', {
-                  alertType: 'success',
-                  alertMessage: 'Successfully Added.',
-                })
-                store.dispatch('RawMaterialStore/list')
-              }
-            },
-          )
-        } else {
-          store.dispatch('RawMaterialStore/update', formData.value).then(
-            response => {
-              if (response.status === undefined) {
-                emit('submit', false)
-  
-                emit('clicked', {
-                  alertType: 'success',
-                  alertMessage: 'Successful Update.',
-                })
-                store.dispatch('RawMaterialStore/list')
-              }
-            },
-          )
-        }
-      }
-  
-      return {
-        addUnitPacking,
-        units,
-        rawTypes,
-        cancel,
-        errors,
-        formData,
-        submit,
-      }
-    },
-    computed: {
-    },
-    methods: {
-    },
-  }
+    }
+
+    return {
+      addUnitPacking,
+      blownBottles,
+      units,
+      rawTypes,
+      cancel,
+      errors,
+      formData,
+      submit,
+    }
+  },
+  computed: {
+  },
+  methods: {
+  },
+}
 </script>
-  
