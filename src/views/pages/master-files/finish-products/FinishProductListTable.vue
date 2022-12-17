@@ -290,6 +290,7 @@ export default {
     },
   },
   created() {
+    this.$store.dispatch('RawMaterialStore/list')
     this.$store.dispatch('FinishProductStore/list')
     this.$store.dispatch('FinishProductStore/removeErrors')
   },

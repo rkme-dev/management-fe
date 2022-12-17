@@ -139,12 +139,40 @@
       <v-col
         cols="12"
       >
-        <unit-and-packing-form
-          class="mt-6"
-          :existing-units="formData.units"
-          @addedUnitPacking="addUnitPacking"
+        <v-expansion-panels
+          inset
         >
-        </unit-and-packing-form>
+          <v-expansion-panel>
+            <v-expansion-panel-header>Unit and Packing</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <unit-and-packing-form
+                class="mt-6"
+                :existing-units="formData.units"
+                @addedUnitPacking="addUnitPacking"
+              >
+              </unit-and-packing-form>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-col>
+      <v-col
+        cols="12"
+      >
+        <v-expansion-panels
+          inset
+        >
+          <v-expansion-panel>
+            <v-expansion-panel-header>Raw Materials</v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <raw-material
+                class="mt-6"
+                :existing-items="formData.raw_materials"
+                @addedRawMaterial="addRawMaterials"
+              >
+              </raw-material>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
       </v-col>
       <v-col
         offset-md="5"
@@ -177,10 +205,12 @@ import {
 } from '@vue/composition-api/dist/vue-composition-api'
 import store from '@/store'
 import UnitAndPackingForm from '@/views/pages/master-files/finish-products/UnitAndPackingForm.vue'
+import RawMaterial from '@/views/pages/master-files/finish-products/RawMaterial.vue'
 
 export default {
   components: {
     UnitAndPackingForm,
+    RawMaterial,
   },
   props: {
     mode: {
@@ -217,6 +247,7 @@ export default {
         notes: null,
         active: false,
         units: [],
+        raw_materials: [],
       }
     }
 
@@ -237,6 +268,7 @@ export default {
           notes: null,
           active: false,
           units: [],
+          raw_materials: [],
         }
       }
     })
@@ -247,14 +279,22 @@ export default {
       formData.value.units.push(unitAndPacking)
     }
 
+    const addRawMaterials = rawMaterials => {
+      formData.value.raw_materials = rawMaterials
+    }
+
     const cancel = () => {
       store.dispatch('FinishProductStore/removeErrors')
       emit('submit', false)
     }
 
     const submit = () => {
+      const payload = formData.value
+
+      payload.raw_materials = payload.raw_materials.map(rawMaterial => rawMaterial.id)
+
       if (formData.value.id === undefined) {
-        store.dispatch('FinishProductStore/create', formData.value).then(
+        store.dispatch('FinishProductStore/create', payload).then(
           response => {
             if (response.status === undefined) {
               emit('submit', false)
@@ -268,7 +308,7 @@ export default {
           },
         )
       } else {
-        store.dispatch('FinishProductStore/update', formData.value).then(
+        store.dispatch('FinishProductStore/update', payload).then(
           response => {
             if (response.status === undefined) {
               emit('submit', false)
@@ -285,6 +325,7 @@ export default {
     }
 
     return {
+      addRawMaterials,
       addUnitPacking,
       units,
       cancel,
