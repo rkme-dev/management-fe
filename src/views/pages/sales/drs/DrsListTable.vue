@@ -34,9 +34,18 @@
       </template>
       <template #item.remaining_balance="{ item }">
         <v-currency-field
+          v-if="item.remaining_balance > 0"
           v-model="item.remaining_balance"
           prefix="PHP"
           class="text-crimson"
+          disabled
+        >
+        </v-currency-field>
+        <v-currency-field
+          v-else
+          v-model="item.remaining_balance"
+          prefix="PHP"
+          class="text-green"
           disabled
         >
         </v-currency-field>
