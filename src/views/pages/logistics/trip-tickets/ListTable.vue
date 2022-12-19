@@ -221,7 +221,7 @@ export default {
 
     const redirectPrint = id => {
       window.open(
-        `https://management-api-v1.herokuapp.com/print-trip-ticket/${id}`,
+        `http://165.22.106.91/print-trip-ticket/${id}`,
         '_blank',
       )
     }

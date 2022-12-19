@@ -270,7 +270,7 @@ export default {
 
     const redirectPrint = id => {
       window.open(
-        `https://management-api-v1.herokuapp.com/posted-collection-receipt/${id}`,
+        `http://165.22.106.91/posted-collection-receipt/${id}`,
         '_blank',
       )
     }

@@ -233,7 +233,7 @@ export default {
     })
 
     const redirectPrint = id => {
-      window.open(`https://management-api-v1.herokuapp.com/print-sales-order/${id}`, '_blank')
+      window.open(`http://165.22.106.91/print-sales-order/${id}`, '_blank')
     }
 
     const colors = salesStatusColors()

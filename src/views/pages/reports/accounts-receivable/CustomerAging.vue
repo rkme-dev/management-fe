@@ -220,12 +220,12 @@ export default {
     const redirectPrint = customer => {
       if (customer) {
         window.open(
-          `https://management-api-v1.herokuapp.com/print-customer-aging/${customer}`,
+          `http://165.22.106.91/print-customer-aging/${customer}`,
           '_blank',
         )
       } else {
         window.open(
-          'https://management-api-v1.herokuapp.com/print-customer-aging',
+          'http://165.22.106.91/print-customer-aging',
           '_blank',
         )
       }
