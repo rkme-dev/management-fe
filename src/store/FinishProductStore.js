@@ -116,6 +116,24 @@ export const FinishProductStore = {
         },
       )
     },
+    listAll({ commit, dispatch }) {
+      commit('fetchListSuccess', [])
+      dispatch('setLoading', true)
+
+      return finishProductService.listAll().then(
+        response => {
+          commit('setErrors', {})
+          commit('fetchListSuccess', response.data)
+          dispatch('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => {
+          dispatch('setLoading', false)
+          Promise.reject(error)
+        },
+      )
+    },
     get({ commit, dispatch }, id) {
       dispatch('setLoading', true)
 

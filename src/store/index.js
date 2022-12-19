@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import { AccountStore } from '@/store/AccountStore'
 import { AuthStore } from '@/store/AuthStore'
 import { CollectionStore } from '@/store/CollectionStore'
-import { DepositStore } from "@/store/DepositStore";
+import { DepositStore } from '@/store/DepositStore'
 import { DocumentStore } from '@/store/DocumentStore'
 import { LocationStore } from '@/store/LocationStore'
 import { UserAccessManagementStore } from '@/store/UserAccessManagementStore'
@@ -22,11 +22,12 @@ import { FinishProductStore } from '@/store/FinishProductStore'
 import { RawMaterialStore } from '@/store/RawMaterialStore'
 import { TripTicketStore } from '@/store/TripTicketStore'
 import { ReportStore } from '@/store/ReportStore'
+import { BouncedDepositStore } from '@/store/BouncedDepositStore'
+import { StockRequestStore } from '@/store/StockRequestStore'
 import customers from './customers.module'
 import products from './products.module'
 import suppliers from './suppliers.module'
 import purchaseOrders from './purchase-orders-module'
-import {BouncedDepositStore} from "@/store/BouncedDepositStore";
 
 Vue.use(Vuex)
 
@@ -55,6 +56,7 @@ export default new Vuex.Store({
     ReportStore,
     SalesOrderStore,
     SalesDrStore,
+    StockRequestStore,
     UnitPackingStore,
     FinishProductStore,
     RawMaterialStore,
