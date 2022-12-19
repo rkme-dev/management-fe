@@ -290,6 +290,12 @@ const routes = [
     name: 'update-warehouse',
     component: () => import('@/views/pages/warehouse/branches-page/EditWarehouse.vue'),
   },
+
+  {
+    path: '/stock-requests',
+    name: 'stock-requests',
+    component: () => import('@/views/pages/warehouse/stock-request/Index.vue'),
+  },
   {
     path: '/master-files',
     name: 'master-files',

@@ -32,4 +32,13 @@ export default class StockRequestService {
     list = (todayOnly = false) => AxiosInstance.get(`/stock-requests?today_only=${todayOnly}`)
       .then(response => response.data)
       .catch(error => error.response)
+
+    // BOTTLE BLOWING
+    getStockRequestDetails = id => AxiosInstance.get(`/stock-requests/${id}`)
+      .then(response => response.data)
+      .catch(error => error.response)
+
+    updateBottleBlowing = formData => AxiosInstance.put(`/stock-requests/bottle-blowing/${formData.id}`, formData)
+      .then(response => response.data)
+      .catch(error => error.response)
 }

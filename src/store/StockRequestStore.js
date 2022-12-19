@@ -179,6 +179,19 @@ export const StockRequestStore = {
           error => Promise.reject(error),
         )
     },
+    getStockRequestDetails({ commit, dispatch }, id) {
+      commit('setLoading', true)
+
+        return stockRequestService.getStockRequestDetails(id).then(
+            response => {
+                commit('fetchRowSuccess', response.data)
+                commit('setLoading', false)
+    
+                return Promise.resolve(response)
+            },
+            error => Promise.reject(error),
+        )
+    },
   },
   mutations: {
     // filter(state, statuses) {
