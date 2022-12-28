@@ -7,6 +7,7 @@ export const WarehouseStore = {
   state: {
     loading: false,
     errors: [],
+    list: [],
     warehouses: [],
     warehouse: {},
 
@@ -88,8 +89,44 @@ export const WarehouseStore = {
           error => Promise.reject(error),
         )
     },
+    list({ commit, dispatch }) {
+      commit('fetchListSuccess', [])
+      commit('setLoading', true)
+
+      return warehouseService.getWarehouses().then(
+        response => {
+          commit('setErrors', {})
+          commit('fetchListSuccess', response.data)
+          commit('setLoading', true)
+
+          return Promise.resolve(response)
+        },
+        error => {
+          dispatch('setLoading', false)
+          Promise.reject(error)
+        },
+      )
+    },
+    
+    filter({ commit }, statuses) {
+      commit('filter', statuses)
+    },
   },
   mutations: {
+    filter(state, statuses) {
+      const result = []
+      if (statuses.length === 0) {
+        state.list = state.originalData
+      } else {
+        state.originalData.forEach(row => {
+          if (statuses.includes(row.is_active)) {
+            result.push(row)
+          }
+        })
+
+        state.list = result
+      }
+    },
     addWarehouse(state, warehouse) {
       state.warehouses.push(warehouse)
     },
@@ -110,6 +147,24 @@ export const WarehouseStore = {
     },
     setLoading(state, loading) {
       state.loading = loading
+    },
+
+    fetchListSuccess(state, list) {
+      state.list = list.map(rowData => {
+        // eslint-disable-next-line no-param-reassign
+        rowData.active = rowData.active === 1 || rowData.active === true || rowData.active === 'Active' ? 'Active' : 'Inactive'
+
+        return rowData
+      })
+
+      state.originalData = list.map(rowData => {
+        // eslint-disable-next-line no-param-reassign
+        rowData.active = rowData.active === 1 || rowData.active === true || rowData.active === 'Active' ? 'Active' : 'Inactive'
+
+        return rowData
+      })
+
+      state.loading = false
     },
   },
 }

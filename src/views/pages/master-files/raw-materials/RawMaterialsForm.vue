@@ -244,6 +244,11 @@ export default {
       default: null,
     },
   },
+  computed: {
+    rawTypes() {
+      return RawMaterialsMixin.computed.rawMaterialsType()
+    }
+  },
   setup(props, { emit }) {
     store.dispatch('UnitPackingStore/list')
 
@@ -251,12 +256,6 @@ export default {
     const units = computed(() => store.state.UnitPackingStore.list)
     const blownBottles = computed(() => store.state.RawMaterialStore.list.filter(rawMaterial => rawMaterial.type === 'blown_bottle'))
     const formData = ref({})
-
-    /**
-       * Not the proper way to call mixin computed
-       * will find a way soon.
-       */
-    const rawTypes = RawMaterialsMixin.computed.rawMaterialsType()
 
     formData.value = JSON.parse(JSON.stringify(rowProp.value))
 
@@ -347,14 +346,11 @@ export default {
       addUnitPacking,
       blownBottles,
       units,
-      rawTypes,
       cancel,
       errors,
       formData,
       submit,
     }
-  },
-  computed: {
   },
   methods: {
   },

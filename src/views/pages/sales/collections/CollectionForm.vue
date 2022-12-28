@@ -490,7 +490,6 @@ import {
 import CustomerForm from '@/views/pages/master-files/customers/CustomerForm.vue'
 import store from '@/store'
 import DrListSelection from '@/views/pages/sales/collections/DrListSelection.vue'
-import { consoleError } from 'vuetify/lib/util/console'
 import SalesDrTable from './SalesDrTable.vue'
 import CollectionPayment from './CollectionPayment.vue'
 import PaymentForm from './PaymentForm.vue'

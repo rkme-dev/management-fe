@@ -470,7 +470,6 @@
 import { computed, ref, toRef, watch, onMounted } from '@vue/composition-api'
 import { mdiCurrencySign, mdiDatabaseArrowLeft } from '@mdi/js'
 import store from '@/store'
-import data from '@/views/dashboard/datatable-data'
 
 export default {
   name: 'PaymentForm',

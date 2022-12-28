@@ -22,19 +22,19 @@
           </v-col>
 
           <!-- DATE -->
-          <v-col cols="6" class="pr-8 pl-8 mt-16">
+          <v-col cols="6" class="pr-8 pl-8">
             <v-menu
               v-model="form.dateModal"
               :close-on-content-click="false"
               transition="scale-transition"
               offset-y
-              :disabled="form.status === 'Posted'"
+              :disabled="disabled"
               max-width="290px"
               min-width="auto"
             >
               <template v-slot:activator="{ on, attrs }">
                 <v-text-field
-                  v-model="form.datePosted"
+                  v-model="form.date"
                   label="Date"
                   persistent-hint
                   :prepend-icon="icons.mdiCalendar"
@@ -45,7 +45,7 @@
               </template>
 
               <v-date-picker
-                v-model="form.datePosted"
+                v-model="form.date"
                 no-title
                 color="primary"
                 @input="form.dateModal = false"
@@ -54,14 +54,14 @@
           </v-col>
 
           <!-- WAREHOUSE -->
-          <v-col cols="6" class="pr-8 pl-8 mt-16">
+          <v-col cols="6" class="pr-8 pl-8">
             <v-select
-              v-model="form.warehouse_id"
+              v-model="form.location_id"
               :items="warehouses"
-              item-text="title"
-              item-value="id"
+              item-text="label"
+              item-value="value"
               label="Warehouse"
-              :disabled="form.status === 'Posted'"
+              :disabled="disabled"
               :error-messages="errors.warehouse"
               outlined
               dense
@@ -74,10 +74,10 @@
             <v-select
               v-model="form.document_id"
               :items="documents"
-              item-text="title"
-              item-value="id"
+              item-text="label"
+              item-value="value"
               label="Document"
-              :disabled="form.status === 'Posted'"
+              :disabled="disabled"
               :error-messages="errors.document_id"
               outlined
               dense
@@ -90,7 +90,7 @@
             <v-textarea
               v-model="form.remarks"
               outlined
-              :disabled="form.status === 'Posted'"
+              :disabled="disabled"
               rows="2"
               dense
               :error-messages="errors.remarks"
@@ -112,7 +112,9 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <stock-items />
+        <stock-items
+          :data="form.stock_items"
+          @addedItems="addedItems"/>
         <!-- <stock-items
             class="mt-6"
             :mode="modeData"
@@ -124,17 +126,18 @@
       </v-form>
       <v-row>
         <v-col cols="auto" class="d-flex">
-          <!-- UPDATE BTN -->
+          <!-- CREATE/UPDATE BTN -->
           <v-btn
             v-if="form.status !== 'Posted'"
             color="primary"
             class="me-3 mt-4"
             @click="submit"
+            :disabled="form.document_id === null"
           >
             <v-icon>
               {{ icons.mdiContentSave }}
             </v-icon> 
-            UPDATE
+            {{ mode.toUpperCase() }}
           </v-btn>
 
           <!-- POST BTN -->
@@ -192,14 +195,19 @@
     mdiProgressClose
   } from '@mdi/js'
   import store from '@/store'
+  import router from '@/router'
 
   import StockItems from './StockItems.vue'
+  import RawMaterialsMixin from '@/components/mixins/RawMaterialsMixin'
     
   export default {
     name: 'StockRequestForm',
     components: {
       StockItems
     },
+    mixins: [
+      RawMaterialsMixin,
+    ],
     props: {
       mode: {
         type: String,
@@ -215,21 +223,35 @@
     data() {
       return {
         form: {
+          process_type: 'Bottle Blowing',
           dateModal: false,
           status: null,
-          datePosted: new Date().toISOString().substr(0, 10),
+          date: new Date().toISOString().substr(0, 10),
           document_id: null,
-          warehouse_id: null,
-          remarks: null
+          location_id: null,
+          remarks: null,
+          stock_items: []
         },
-        warehouses: []
       }
     },
     computed: {
+      disabled() {
+        return this.form.status === 'Posted'
+      },
+      itemTypes() {
+        return RawMaterialsMixin.computed.rawMaterialsType()
+      },
+      warehouses() {
+        return this.$store.state.WarehouseStore.list.filter(warehouseItem => {
+          warehouseItem.value = warehouseItem.id
+          warehouseItem.label = warehouseItem.name
+          return warehouseItem
+        })
+      },
       documents() {
-        return store.state.DocumentStore.documents.filter(documentItem => {
-          documentItem.title = `${documentItem.document_name}`
-
+        return this.$store.state.DocumentStore.documents.filter(documentItem => {
+          documentItem.value = documentItem.id
+          documentItem.label = documentItem.document_name
           return documentItem
         })
       },
@@ -238,28 +260,29 @@
       }
     },
     methods: {
-      getWarehouses() {
-        store.dispatch('WarehouseStore/getWarehouses').then(
-          response => {
-            response.data.forEach((item) => {
-              this.warehouses[item.id] = item.name
-            })
-          })
-      },
       initializeData() {
         store.dispatch('StockRequestStore/getStockRequestDetails', this.id).then(
           response => {
             if (response.status === undefined) {
               this.form.status = response.data.status,
-              this.form.datePosted = new Date().toISOString().substr(0, 10),
+              this.form.date = new Date().toISOString().substr(0, 10),
               this.form.document_id = response.data.document_id,
               this.form.remarks = response.data.remarks
             }
           },
         )
       },
+      addedItems(items) {
+        this.form.stock_items.push(items)
+      },
       submit() {
-        // POST METHOD HERE
+        const payload = this.form
+
+        store.dispatch('StockRequestStore/createBottleBlowing', payload).then(
+          response => {
+            router.push('/stock-requests')
+          },
+        )
       },
       updateStatus(status) {
         // POST METHOD HERE
@@ -268,9 +291,9 @@
         this.form = {
           dateModal: false,
           status: null,
-          datePosted: new Date().toISOString().substr(0, 10),
+          date: new Date().toISOString().substr(0, 10),
           document_id: null,
-          warehouse_id: null,
+          location_id: null,
           remarks: null
         }
 
@@ -290,10 +313,13 @@
       }
     },
     created() {
-      this.getWarehouses()
+      this.$store.dispatch('WarehouseStore/list')
+      this.$store.dispatch('DocumentStore/list')
     },
     mounted() {
-      this.initializeData()
+      if (this.mode == 'Edit') {
+        this.initializeData()
+      }
     }
   }
 </script>

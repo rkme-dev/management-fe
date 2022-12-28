@@ -1,4 +1,4 @@
-export default {
+const RawMaterialsMixin = {
   computed: {
     rawMaterialsType() {
       return [
@@ -22,3 +22,5 @@ export default {
     }
   },
 }
+
+export default RawMaterialsMixin
