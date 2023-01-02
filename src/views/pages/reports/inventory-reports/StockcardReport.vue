@@ -292,7 +292,7 @@ export default {
     })
 
     const generateUnits = () => {
-      if (product.value?.id) {
+      if (product.value) {
         const productData = products.value.find(item => item.id === product.value)
 
         units.value = productData.units
