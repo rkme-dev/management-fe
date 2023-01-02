@@ -312,11 +312,18 @@ export default {
         icon: mdiCardAccountDetailsStarOutline,
       },
 
-      // {
-      //   title: 'Warehouse',
-      //   link: 'warehouse page',
-      //   icon: mdiWarehouse,
-      // },
+      {
+        title: 'Warehouse',
+        link: 'warehouse page',
+        icon: mdiWarehouse,
+        children: [
+          {
+            title: 'Stock Request',
+            icon: mdiArchiveOutline,
+            link: 'stock-requests',
+          },
+        ],
+      },
       {
         title: 'User Control',
         icon: mdiEyeSettings,

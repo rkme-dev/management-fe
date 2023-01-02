@@ -1,8 +1,17 @@
 <template>
   <v-card id="stock-requests">
-    <v-tabs v-model="tab" show-arrows>
-      <v-tab v-for="tab in tabs" :key="tab.icon">
-        <v-icon size="20" class="me-3">
+    <v-tabs
+      v-model="tab"
+      show-arrows
+    >
+      <v-tab
+        v-for="tab in tabs"
+        :key="tab.icon"
+      >
+        <v-icon
+          size="20"
+          class="me-3"
+        >
           {{ tab.icon }}
         </v-icon>
         <span>{{ tab.title }}</span>
@@ -17,30 +26,29 @@
 </template>
 
 <script>
-  import { ref } from '@vue/composition-api/dist/vue-composition-api'
-  import {
-    mdiBottleSodaClassicOutline,
-    mdiBottleSodaClassic,
-  } from '@mdi/js'
-  import StockRequestTable from './BlownBottles/StockRequestTable.vue'
-  
-  export default {
-    components: {
-      StockRequestTable,
-    },
-    setup() {
-      const tab = ref('')
+import { ref } from '@vue/composition-api/dist/vue-composition-api'
+import {
+  mdiBottleSodaClassicOutline,
+  mdiBottleSodaClassic,
+} from '@mdi/js'
+import StockRequestTable from './BlownBottles/StockRequestTable.vue'
 
-      const tabs = [
-        { title: 'Blown Bottles', icon: mdiBottleSodaClassicOutline },
-        { title: 'Bottle Filling', icon: mdiBottleSodaClassic },
-      ]
+export default {
+  components: {
+    StockRequestTable,
+  },
+  setup() {
+    const tab = ref('')
 
-      return {
-        tab,
-        tabs,
-      }
-    },
-  }
-  </script>
-  
+    const tabs = [
+      { title: 'Blown Bottles', icon: mdiBottleSodaClassicOutline },
+      { title: 'Bottle Filling', icon: mdiBottleSodaClassic },
+    ]
+
+    return {
+      tab,
+      tabs,
+    }
+  },
+}
+</script>
