@@ -61,6 +61,5 @@ export default new Vuex.Store({
     FinishProductStore,
     RawMaterialStore,
     TripTicketStore,
-    StockRequestStore
   },
 })

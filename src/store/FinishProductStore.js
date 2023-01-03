@@ -116,6 +116,9 @@ export const FinishProductStore = {
         },
       )
     },
+    removeProductById({ commit }, id) {
+      commit('removeProductById', id)
+    },
     listAll({ commit, dispatch }) {
       commit('fetchListSuccess', [])
       dispatch('setLoading', true)
@@ -180,6 +183,11 @@ export const FinishProductStore = {
     },
   },
   mutations: {
+    removeProductById(state, id) {
+      const index = state.list.findIndex(item => item.id === id)
+
+      state.list.splice(index, 1)
+    },
     filter(state, statuses) {
       const result = []
       if (statuses.length === 0) {

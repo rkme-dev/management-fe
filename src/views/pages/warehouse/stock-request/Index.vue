@@ -21,6 +21,10 @@
       <v-tab-item>
         <stock-request-table />
       </v-tab-item>
+
+      <v-tab-item>
+        <bottle-fillings-table />
+      </v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>
@@ -32,10 +36,12 @@ import {
   mdiBottleSodaClassic,
 } from '@mdi/js'
 import StockRequestTable from './BlownBottles/StockRequestTable.vue'
+import BottleFillingsTable from './BottleFillings/BottleFillingsTable.vue'
 
 export default {
   components: {
     StockRequestTable,
+    BottleFillingsTable,
   },
   setup() {
     const tab = ref('')
