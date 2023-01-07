@@ -101,7 +101,7 @@ export default {
       },
       { text: 'Document', value: 'document.document_name' },
       { text: 'Location', value: 'location.description' },
-      { text: 'Requested By', value: '' },
+      { text: 'Requested By', value: 'created_by.last_name' },
       { text: 'Status', value: 'status' },
       { text: 'Actions', value: 'actions', sortable: false },
     ],

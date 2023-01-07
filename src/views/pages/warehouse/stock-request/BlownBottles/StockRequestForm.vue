@@ -7,7 +7,11 @@
       <v-form>
         <v-row>
           <v-col cols="12">
-            <v-alert color="primary" text style="margin-bottom: -10px">
+            <v-alert
+              color="primary"
+              text
+              style="margin-bottom: -10px"
+            >
               <div class="d-flex align-start">
                 <v-icon color="primary">
                   {{ icons.mdiInformation }}
@@ -22,7 +26,10 @@
           </v-col>
 
           <!-- DATE -->
-          <v-col cols="6" class="pr-8 pl-8">
+          <v-col
+            cols="6"
+            class="pr-8 pl-8"
+          >
             <v-menu
               v-model="form.dateModal"
               :close-on-content-click="false"
@@ -54,15 +61,18 @@
           </v-col>
 
           <!-- WAREHOUSE -->
-          <v-col cols="6" class="pr-8 pl-8">
+          <v-col
+            cols="6"
+            class="pr-8 pl-8"
+          >
             <v-select
               v-model="form.location_id"
               :items="warehouses"
-              item-text="label"
-              item-value="value"
+              item-text="location_code"
+              item-value="id"
               label="Warehouse"
               :disabled="disabled"
-              :error-messages="errors.warehouse"
+              :error-messages="errors.location_id"
               outlined
               dense
               hide-details="auto"
@@ -70,7 +80,10 @@
           </v-col>
 
           <!-- DOCUMENT -->
-          <v-col cols="6" class="pr-8 pl-8">
+          <v-col
+            cols="6"
+            class="pr-8 pl-8"
+          >
             <v-select
               v-model="form.document_id"
               :items="documents"
@@ -86,7 +99,10 @@
           </v-col>
 
           <!-- REMARKS -->
-          <v-col cols="6" class="pr-8 pl-8">
+          <v-col
+            cols="6"
+            class="pr-8 pl-8"
+          >
             <v-textarea
               v-model="form.remarks"
               outlined
@@ -101,7 +117,10 @@
           </v-col>
 
           <!-- DOCUMENT NUMBER -->
-          <v-col cols="6" class="pr-8 pl-8 ">
+          <v-col
+            cols="6"
+            class="pr-8 pl-8 "
+          >
             <v-text-field
               v-model="form.document_number"
               outlined
@@ -114,7 +133,8 @@
         </v-row>
         <stock-items
           :data="form.stock_items"
-          @addedItems="addedItems"/>
+          @addedItems="addedItems"
+        />
         <!-- <stock-items
             class="mt-6"
             :mode="modeData"
@@ -125,18 +145,21 @@
         ></stock-items> -->
       </v-form>
       <v-row>
-        <v-col cols="auto" class="d-flex">
+        <v-col
+          cols="auto"
+          class="d-flex"
+        >
           <!-- CREATE/UPDATE BTN -->
           <v-btn
             v-if="form.status !== 'Posted'"
             color="primary"
             class="me-3 mt-4"
-            @click="submit"
             :disabled="form.document_id === null"
+            @click="submit"
           >
             <v-icon>
               {{ icons.mdiContentSave }}
-            </v-icon> 
+            </v-icon>
             {{ mode.toUpperCase() }}
           </v-btn>
 
@@ -184,143 +207,147 @@
     </v-card-text>
   </v-card>
 </template>
-  
+
 <script>
-  import {
-    mdiInformation,
-    mdiCalendar,
-    mdiContentSave,
-    mdiFinance,
-    mdiClipboardRemoveOutline,
-    mdiProgressClose
-  } from '@mdi/js'
-  import store from '@/store'
-  import router from '@/router'
+import {
+  mdiInformation,
+  mdiCalendar,
+  mdiContentSave,
+  mdiFinance,
+  mdiClipboardRemoveOutline,
+  mdiProgressClose,
+} from '@mdi/js'
+import store from '@/store'
+import router from '@/router'
 
-  import StockItems from './StockItems.vue'
-  import RawMaterialsMixin from '@/components/mixins/RawMaterialsMixin'
-    
-  export default {
-    name: 'StockRequestForm',
-    components: {
-      StockItems
-    },
-    mixins: [
-      RawMaterialsMixin,
-    ],
-    props: {
-      mode: {
-        type: String,
-        required: true,
-        default: (() => 'Create'),
-      },
-      id: {
-        type: Number,
-        required: false,
-        default: null,
-      },
-    },
-    data() {
-      return {
-        form: {
-          process_type: 'Bottle Blowing',
-          dateModal: false,
-          status: null,
-          date: new Date().toISOString().substr(0, 10),
-          document_id: null,
-          location_id: null,
-          remarks: null,
-          stock_items: []
-        },
-      }
-    },
-    computed: {
-      disabled() {
-        return this.form.status === 'Posted'
-      },
-      itemTypes() {
-        return RawMaterialsMixin.computed.rawMaterialsType()
-      },
-      warehouses() {
-        return this.$store.state.WarehouseStore.list.filter(warehouseItem => {
-          warehouseItem.value = warehouseItem.id
-          warehouseItem.label = warehouseItem.name
-          return warehouseItem
-        })
-      },
-      documents() {
-        return this.$store.state.DocumentStore.documents.filter(documentItem => {
-          documentItem.value = documentItem.id
-          documentItem.label = documentItem.document_name
-          return documentItem
-        })
-      },
-      errors() {
-        return store.state.StockRequestStore.errors
-      }
-    },
-    methods: {
-      initializeData() {
-        store.dispatch('StockRequestStore/getStockRequestDetails', this.id).then(
-          response => {
-            if (response.status === undefined) {
-              this.form.status = response.data.status,
-              this.form.date = new Date().toISOString().substr(0, 10),
-              this.form.document_id = response.data.document_id,
-              this.form.remarks = response.data.remarks
-            }
-          },
-        )
-      },
-      addedItems(items) {
-        this.form.stock_items.push(items)
-      },
-      submit() {
-        const payload = this.form
+import RawMaterialsMixin from '@/components/mixins/RawMaterialsMixin'
+import StockItems from './StockItems.vue'
 
-        store.dispatch('StockRequestStore/createBottleBlowing', payload).then(
-          response => {
-            router.push('/stock-requests')
-          },
-        )
+export default {
+  name: 'StockRequestForm',
+  components: {
+    StockItems,
+  },
+  mixins: [
+    RawMaterialsMixin,
+  ],
+  props: {
+    mode: {
+      type: String,
+      required: true,
+      default: (() => 'Create'),
+    },
+    id: {
+      type: Number,
+      required: false,
+      default: null,
+    },
+  },
+  data() {
+    return {
+      form: {
+        process_type: 'Bottle Blowing',
+        dateModal: false,
+        status: null,
+        date: new Date().toISOString().substr(0, 10),
+        document_id: null,
+        location_id: null,
+        remarks: null,
+        stock_items: [],
       },
-      updateStatus(status) {
-        // POST METHOD HERE
-      },
-      cancel() {
-        this.form = {
-          dateModal: false,
-          status: null,
-          date: new Date().toISOString().substr(0, 10),
-          document_id: null,
-          location_id: null,
-          remarks: null
-        }
-
-        this.$emit('cancel')
-      }
-    },
-    setup() {
-      return {
-        icons: {
-          mdiInformation,
-          mdiCalendar,
-          mdiContentSave,
-          mdiFinance,
-          mdiClipboardRemoveOutline,
-          mdiProgressClose
-        },
-      }
-    },
-    created() {
-      this.$store.dispatch('WarehouseStore/list')
-      this.$store.dispatch('DocumentStore/list')
-    },
-    mounted() {
-      if (this.mode == 'Edit') {
-        this.initializeData()
-      }
     }
-  }
+  },
+  computed: {
+    disabled() {
+      return this.form.status === 'Posted'
+    },
+    itemTypes() {
+      return RawMaterialsMixin.computed.rawMaterialsType()
+    },
+    warehouses() {
+      return this.$store.state.LocationStore.locations.filter(warehouseItem => {
+        if (warehouseItem.type === 'Warehouse') {
+          return warehouseItem
+        }
+      })
+    },
+    documents() {
+      return this.$store.state.DocumentStore.documents.filter(documentItem => {
+        documentItem.value = documentItem.id
+        documentItem.label = documentItem.document_name
+
+        return documentItem
+      })
+    },
+    errors() {
+      return store.state.StockRequestStore.errors
+    },
+  },
+  created() {
+    this.$store.dispatch('LocationStore/list')
+    this.$store.dispatch('DocumentStore/list')
+  },
+  mounted() {
+    if (this.mode == 'Edit') {
+      this.initializeData()
+    }
+  },
+  methods: {
+    initializeData() {
+      store.dispatch('StockRequestStore/getStockRequestDetails', this.id).then(
+        response => {
+          if (response.status === undefined) {
+            this.form.status = response.data.status,
+            this.form.date = new Date().toISOString().substr(0, 10),
+            this.form.document_id = response.data.document_id,
+            this.form.remarks = response.data.remarks
+          }
+        },
+      )
+    },
+    addedItems(items) {
+      this.form.stock_items.push(items)
+    },
+    submit() {
+      const payload = this.form
+
+      store.dispatch('StockRequestStore/createBottleBlowing', payload).then(
+        response => {
+          if (response.status === undefined) {
+            router.push('/stock-requests')
+
+            this.$emit('submit')
+          }
+        },
+      )
+    },
+    updateStatus(status) {
+      // POST METHOD HERE
+    },
+    cancel() {
+      this.form = {
+        dateModal: false,
+        status: null,
+        date: new Date().toISOString().substr(0, 10),
+        document_id: null,
+        location_id: null,
+        remarks: null,
+      }
+
+      this.$emit('cancel')
+    },
+  },
+  setup() {
+    return {
+      icons: {
+        mdiInformation,
+        mdiCalendar,
+        mdiContentSave,
+        mdiFinance,
+        mdiClipboardRemoveOutline,
+        mdiProgressClose,
+      },
+    }
+  },
+}
 </script>
-  
