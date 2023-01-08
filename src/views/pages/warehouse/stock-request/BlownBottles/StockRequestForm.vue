@@ -118,14 +118,15 @@
 
           <!-- DOCUMENT NUMBER -->
           <v-col
+            v-if="form.code"
             cols="6"
             class="pr-8 pl-8 "
           >
             <v-text-field
-              v-model="form.document_number"
+              v-model="form.code"
               outlined
               dense
-              placeholder="Doc No."
+              placeholder="Code"
               hide-details
               disabled
             ></v-text-field>
@@ -151,7 +152,7 @@
         >
           <!-- CREATE/UPDATE BTN -->
           <v-btn
-            v-if="form.status !== 'Posted'"
+            v-if="form.status !== 'posted'"
             color="primary"
             class="me-3 mt-4"
             :disabled="form.document_id === null"
@@ -165,7 +166,7 @@
 
           <!-- POST BTN -->
           <v-btn
-            v-if="form.status === 'For Review'"
+            v-if="form.status === 'for_review'"
             color="success"
             class="me-3 mt-4"
             @click="updateStatus('post')"
@@ -178,7 +179,7 @@
 
           <!-- UNPOST BTN -->
           <v-btn
-            v-if="form.status === 'Posted'"
+            v-if="form.status === 'posted'"
             color="error"
             class="me-3 mt-4"
             @click="updateStatus('unpost')"
@@ -288,7 +289,7 @@ export default {
     this.$store.dispatch('DocumentStore/list')
   },
   mounted() {
-    if (this.mode == 'Edit') {
+    if (this.mode === 'Edit') {
       this.initializeData()
     }
   },
@@ -297,10 +298,19 @@ export default {
       store.dispatch('StockRequestStore/getStockRequestDetails', this.id).then(
         response => {
           if (response.status === undefined) {
-            this.form.status = response.data.status,
-            this.form.date = new Date().toISOString().substr(0, 10),
-            this.form.document_id = response.data.document_id,
+            this.form.id = response.data.id
+            this.form.status = response.data.status
+            this.form.code = response.data.code
+            this.form.date = new Date().toISOString().substr(0, 10)
+            this.form.document_id = response.data.document_id
+            this.form.location_id = response.data.location_id
             this.form.remarks = response.data.remarks
+            this.form.stock_items = response.data.stock_request_items.map(item => ({
+              name: item.raw_material.name,
+              output_material: item.raw_material.raw_material.name,
+              raw_material_id: item.raw_material.id,
+              total_pieces: item.total_pieces,
+            }))
           }
         },
       )
@@ -311,30 +321,53 @@ export default {
     submit() {
       const payload = this.form
 
-      store.dispatch('StockRequestStore/createBottleBlowing', payload).then(
-        response => {
-          if (response.status === undefined) {
-            router.push('/stock-requests')
+      if (this.mode === 'Edit') {
+        store.dispatch('StockRequestStore/updateBottleBlowing', payload).then(
+          response => {
+            if (response.status === undefined) {
+              router.push('/stock-requests')
 
-            this.$emit('submit')
-          }
-        },
-      )
+              this.$emit('submit')
+            }
+          },
+        )
+      } else {
+        store.dispatch('StockRequestStore/createBottleBlowing', payload).then(
+          response => {
+            if (response.status === undefined) {
+              router.push('/stock-requests')
+
+              this.$emit('submit')
+            }
+          },
+        )
+      }
     },
     updateStatus(status) {
-      // POST METHOD HERE
+      if (status === 'post') {
+        store.dispatch('StockRequestStore/postOrder', this.form.id).then(
+          response => {
+            if (response.status === undefined) {
+              router.push('/stock-requests')
+
+              this.$emit('submit')
+            }
+          },
+        )
+      } else {
+        store.dispatch('StockRequestStore/unpostOrder', this.form.id).then(
+          response => {
+            if (response.status === undefined) {
+              router.push('/stock-requests')
+
+              this.$emit('submit')
+            }
+          },
+        )
+      }
     },
     cancel() {
-      this.form = {
-        dateModal: false,
-        status: null,
-        date: new Date().toISOString().substr(0, 10),
-        document_id: null,
-        location_id: null,
-        remarks: null,
-      }
-
-      this.$emit('cancel')
+      this.$emit('submit')
     },
   },
   setup() {

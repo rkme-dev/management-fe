@@ -59,6 +59,28 @@ export const StockRequestStore = {
           commit('setLoading', false)
         })
     },
+    updateBottleBlowing({ commit }, data) {
+      commit('setLoading', true)
+
+      return stockRequestService.updateBottleBlowing(data)
+        .then(
+          // eslint-disable-next-line no-shadow
+          response => {
+            if (response.data.id) {
+              commit('updateSuccess', response.data)
+              commit('setErrors', {})
+            } else {
+              commit('setErrors', response.data)
+            }
+
+            return Promise.resolve(response)
+          },
+          error => Promise.reject(error),
+        )
+        .finally(() => {
+          commit('setLoading', false)
+        })
+    },
     removeErrors({ commit }) {
       commit('setErrors', {})
     },
@@ -182,15 +204,15 @@ export const StockRequestStore = {
     getStockRequestDetails({ commit, dispatch }, id) {
       commit('setLoading', true)
 
-        return stockRequestService.getStockRequestDetails(id).then(
-            response => {
-                commit('fetchRowSuccess', response.data)
-                commit('setLoading', false)
-    
-                return Promise.resolve(response)
-            },
-            error => Promise.reject(error),
-        )
+      return stockRequestService.getStockRequestDetails(id).then(
+        response => {
+          commit('fetchRowSuccess', response.data)
+          commit('setLoading', false)
+
+          return Promise.resolve(response)
+        },
+        error => Promise.reject(error),
+      )
     },
   },
   mutations: {

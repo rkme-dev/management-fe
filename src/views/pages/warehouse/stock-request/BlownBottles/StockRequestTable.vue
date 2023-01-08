@@ -122,11 +122,11 @@ export default {
       this.stockRequestDialog = true
       this.stockRequestId = null
     },
-    editItem(id) {
+    editItem(item) {
       // TODO
       this.mode = 'Edit'
       this.stockRequestDialog = true
-      this.stockRequestId = id
+      this.stockRequestId = item.id
     },
     submit() {
       window.location.reload()

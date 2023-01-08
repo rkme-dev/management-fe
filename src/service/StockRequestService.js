@@ -9,11 +9,15 @@ export default class StockRequestService {
       .then(response => response.data)
       .catch(error => error.response)
 
-    postOrder = id => AxiosInstance.put(`/stock-requests/${id}/post`)
+    updateBottleBlowing = data => AxiosInstance.popst(`/stock-requests/bottle-blowing/${data.id}`, data)
       .then(response => response.data)
       .catch(error => error.response)
 
-    unpostOrder = id => AxiosInstance.put(`/stock-requests/${id}/unpost`)
+    postOrder = id => AxiosInstance.post(`/stock-requests/${id}/post`)
+      .then(response => response.data)
+      .catch(error => error.response)
+
+    unpostOrder = id => AxiosInstance.post(`/stock-requests/${id}/unpost`)
       .then(response => response.data)
       .catch(error => error.response)
 
@@ -35,10 +39,6 @@ export default class StockRequestService {
 
     // BOTTLE BLOWING
     getStockRequestDetails = id => AxiosInstance.get(`/stock-requests/${id}`)
-      .then(response => response.data)
-      .catch(error => error.response)
-
-    updateBottleBlowing = formData => AxiosInstance.put(`/stock-requests/bottle-blowing/${formData.id}`, formData)
       .then(response => response.data)
       .catch(error => error.response)
 }

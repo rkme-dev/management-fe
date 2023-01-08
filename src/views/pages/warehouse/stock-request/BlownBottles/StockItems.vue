@@ -23,7 +23,7 @@
     <v-col cols="12">
       <v-data-table
         :headers="headers"
-        :items="data"
+        :items="items"
       >
         <!-- TOP -->
         <template v-slot:top>
@@ -138,10 +138,10 @@
           </v-toolbar>
         </template>
         <!-- ACTIONS -->
-        <template v-slot:item.actions="{ item }">
+        <template v-slot:item.actions="{ item, index }">
           <v-icon
             small
-            @click="deleteItem(item)"
+            @click="deleteItem(item, index)"
           >
             {{ icons.mdiDeleteCircle }}
           </v-icon>
@@ -204,6 +204,9 @@ export default {
     }
   },
   computed: {
+    items() {
+      return this.data
+    },
     rawMaterials() {
       return this.$store.state.RawMaterialStore.list.filter(rawMaterialItem => {
         if (rawMaterialItem.type === 'preform') {
@@ -280,9 +283,9 @@ export default {
       this.units = []
       this.stockItemDialog = false
     },
-    deleteItem(item) {
-      this.data.splice(item, 1)
-      this.addItem()
+    deleteItem(item, index) {
+      console.log(index, item)
+      this.data.splice(index, 1)
     },
   },
 }
