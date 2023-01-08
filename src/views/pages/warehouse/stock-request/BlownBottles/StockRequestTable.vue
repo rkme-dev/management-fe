@@ -114,7 +114,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('StockRequestStore/list')
   },
   methods: {
     create() {

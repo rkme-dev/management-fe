@@ -33,7 +33,7 @@ export default class StockRequestService {
       .then(response => response.data)
       .catch(error => error.response)
 
-    list = (todayOnly = false) => AxiosInstance.get(`/stock-requests?today_only=${todayOnly}`)
+    list = (todayOnly = false, type = null) => AxiosInstance.get(`/stock-requests?today_only=${todayOnly}&type=${type}`)
       .then(response => response.data)
       .catch(error => error.response)
 

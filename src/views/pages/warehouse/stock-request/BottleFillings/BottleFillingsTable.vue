@@ -107,7 +107,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('StockRequestStore/list')
     this.$store.dispatch('LocationStore/list')
     this.$store.dispatch('DocumentStore/list')
   },

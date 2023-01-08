@@ -114,10 +114,10 @@ export const StockRequestStore = {
       )
     },
 
-    list({ commit }) {
+    list({ commit }, params) {
       commit('setLoading', true)
 
-      return stockRequestService.list().then(
+      return stockRequestService.list(params.todayOnly, params.type).then(
         response => {
           commit('fetchListSuccess', response.data)
           commit('setLoading', false)

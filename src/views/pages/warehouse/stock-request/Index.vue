@@ -30,11 +30,12 @@
 </template>
 
 <script>
-import { ref } from '@vue/composition-api/dist/vue-composition-api'
+import { ref, watch } from '@vue/composition-api/dist/vue-composition-api'
 import {
   mdiBottleSodaClassicOutline,
   mdiBottleSodaClassic,
 } from '@mdi/js'
+import store from '@/store'
 import StockRequestTable from './BlownBottles/StockRequestTable.vue'
 import BottleFillingsTable from './BottleFillings/BottleFillingsTable.vue'
 
@@ -50,6 +51,20 @@ export default {
       { title: 'Blown Bottles', icon: mdiBottleSodaClassicOutline },
       { title: 'Bottle Filling', icon: mdiBottleSodaClassic },
     ]
+
+    watch(tab, () => {
+      if (tab.value === 1) {
+        store.dispatch('StockRequestStore/list', {
+          todayOnly: false,
+          type: 'Bottle Filling',
+        })
+      } else {
+        store.dispatch('StockRequestStore/list', {
+          todayOnly: false,
+          type: 'Bottle Blowing',
+        })
+      }
+    })
 
     return {
       tab,
